@@ -29,8 +29,19 @@ pub fn move_mothership(time: Res<Time>, mut query: Query<&mut Transform>) {
     }
 }
 
-pub fn process_torpedo_collision(world: &World) {
-    let entity_query = world.query::<&Components>().unwrap();
+pub fn process_torpedo_collision(mut commands: Commands, torpedo_query: Query<(Entity, &Transform, &Torpedo)>, structure_query: Query<(Entity, &Transform, &Structure), Without<Torpedo>>) {
+    
+    for (t_ent, torpedo_trans, torpedo) in &torpedo_query {
 
-    for entity in entity_query.iter_entities(world)
+        let t_pos = torpedo_trans.translation;
+
+        for (s_ent, struc_trans, struc) in &structure_query {
+            let s_pos = struc_trans.translation;
+
+            let d_sq = (s_pos - t_pos).length_squared();
+            if d_sq < (torpedo.detonate_radius * torpedo.detonate_radius) {
+                // detonate?
+            }
+        }
+    }
 }
