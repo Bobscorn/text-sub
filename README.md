@@ -7,8 +7,6 @@ A small game based on the bevy engine
 
     rustup target install wasm32-unknown-unknown
 
-    rustup default wasm32-unknown-unknown
-
     cargo install wasm-pack
 
     cargo install cargo-generate
