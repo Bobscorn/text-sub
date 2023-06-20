@@ -1,3 +1,5 @@
+use std::vec;
+
 use bevy::prelude::*;
 
 use crate::constants::*;
@@ -14,6 +16,24 @@ pub fn setup_world(mut commands: Commands) {
             ..default()
         },
         transform: Transform::from_translation(Vec3::new(-50., 0., 0.)),
+        ..default()
+    });
+}
+
+pub fn spawn_text(mut commands: Commands, asset_server: Res<AssetServer>) {
+
+    let font = asset_server.load("fonts/FallingSkyBlack.otf");
+    let text_style = TextStyle {
+        font: font.clone(),
+        font_size: 60.0,
+        color: Color::WHITE,
+    };
+
+    commands.spawn(Text2dBundle{
+        text: Text {
+            sections: vec![TextSection::new("Test!!!", text_style.clone())],
+            ..default()
+        },
         ..default()
     });
 }
