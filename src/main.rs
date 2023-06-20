@@ -15,3 +15,4 @@ fn main() {
         .add_plugin(crate::plugin::GamePlugin)
         .run();
 }
+
