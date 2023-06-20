@@ -17,7 +17,7 @@ A small game based on the bevy engine
 
     sudo apt-get install wasm-bindgen
 
-- Add this to your ,cargo/config.toml file
+- Add this to your .cargo/config.toml file
 
     [target.wasm32-unknown-unknown]
     runner = "wasm-server-runner"
