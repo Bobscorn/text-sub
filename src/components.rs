@@ -29,7 +29,8 @@ pub struct Armour {
 #[derive(Component)]
 pub struct Torpedo {
     pub damage: u8,
-    pub explosion_radius: u8
+    pub detonate_radius: f32,
+    pub explosion_radius: f32
 }
 
 #[derive(Component)]
