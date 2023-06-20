@@ -45,12 +45,6 @@
 - create a sprite sheet for all the characters
 
 - web assembly based game
-
-- design stage: 
-
-    - build a mothership out of ascii characters
-
-    - click and drag to draw lots of a type of character
  
 - battle stage: 
 
@@ -71,3 +65,9 @@
 - factor collision velocity between motherships into the integrity damage of Structure entities
 
 - decrease integrity of torpedoes when hit by a bullet
+
+- editor design stage: 
+
+    - build a mothership out of ascii characters
+
+    - click and drag to draw lots of a type of character
