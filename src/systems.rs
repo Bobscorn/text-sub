@@ -68,7 +68,7 @@ pub fn do_torpedo_events(mut commands: Commands, mut t_events: EventReader<Torpe
 
         for (ent, trans, mut struc) in &mut struc_query {
             let dif = pos - trans.translation;
-
+            
             if dif.length_squared() >= radius_sq {
                 continue;
             }

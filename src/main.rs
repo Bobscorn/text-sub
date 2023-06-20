@@ -5,7 +5,6 @@ mod constants;
 mod events;
 mod plugin;
 
-
 use bevy::prelude::*;
 
 

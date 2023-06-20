@@ -10,22 +10,22 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
-
+  # Run cargo test
+  test:
+    name: Test Suite
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout sources
         uses: actions/checkout@v3
       - name: Cache
-        uses: actions/cache@v3 
+        uses: actions/cache@v3
         with:
           path: |
-              ~/.cargo/bin/
-              ~/.cargo/registry/index/
-              ~/.cargo/registry/cache/
-              ~/.cargo/git/db/
-              target/
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
           key: ${{ runner.os }}-cargo-test-${{ hashFiles('**/Cargo.toml') }}
       - name: Install stable toolchain
         uses: dtolnay/rust-toolchain@stable
