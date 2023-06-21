@@ -20,7 +20,7 @@ pub fn setup_world(mut commands: Commands) {
     });
 }
 
-pub fn spawn_text(mut commands: Commands, asset_server: Res<AssetServer>) {
+pub fn spawn_mothership(mut commands: Commands, asset_server: Res<AssetServer>) {
 
     let font = asset_server.load("fonts/FallingSkyBlack.otf");
     let text_style = TextStyle {
@@ -29,33 +29,33 @@ pub fn spawn_text(mut commands: Commands, asset_server: Res<AssetServer>) {
         color: Color::WHITE,
     };
 
-    let count = 10;
-    let start_pos = Vec3::new(-150., -50., 0.);
-    let end_pos = start_pos + Vec3::new(MOTHERSHIP_STRUCTURE_SPACING, 0., 0.) * count as f32;
+    let bottom_left = Vec3::new(-(MOTHERSHIP_STRUCTURE_SPACING * 5.5), -(MOTHERSHIP_STRUCTURE_SPACING * 2.5), 0.);
+    let mothership_pos = Vec3::new(0., 0., 0.);
+
+    let width = 11;
+    let height = 5;
 
     let chars = vec!["}", "{", "6", "=", "-", "/", ":", "]", "[", "!", "#", "%", "$"];
-    for i in 0..count {
-        let pos = start_pos.lerp(end_pos, i as f32 / count as f32);
 
-        commands.spawn(Text2dBundle{
-            text: Text {
-                sections: vec![TextSection::new(chars[i], text_style.clone())],
-                ..default()
-            },
-            transform: Transform::from_translation(pos),
-            ..default()
-        });
-
-        commands.spawn(SpriteBundle {
-            sprite: Sprite {
-                color: Color::rgb(0.75, 0.25, 0.25),
-                custom_size: Some(Vec2::new(5., 5.)),
-                ..default()
-            },
-            transform: Transform::from_translation(pos),
-            ..default()
-        });
-    }
+    commands.spawn((SpriteBundle{ transform: Transform::from_translation(mothership_pos), ..default() }, Mothership::default()))
+        .with_children(|parent| {
+            for x in 0..width {
+                for y in 0..height {
+                    parent.spawn((
+                        Text2dBundle{ 
+                            text: Text { 
+                                sections: vec![TextSection::new(chars[(x + y) % 13], text_style.clone())],
+                                ..default()
+                            },
+                            transform: Transform::from_translation(bottom_left + Vec3::new(x as f32 * MOTHERSHIP_STRUCTURE_SPACING, y as f32 * MOTHERSHIP_STRUCTURE_SPACING, 0.)),
+                            ..default()
+                        }, 
+                        Structure{ integrity: 5, max_integrity: 5 }
+                    ));
+                }
+            }
+        }
+    );
 }
 
 pub fn print_position_system(query: Query<&Transform>) {
@@ -73,7 +73,7 @@ pub fn move_projectile(time: Res<Time>, mut query: Query<(&mut Transform, &Veloc
     }
 }
 
-pub fn move_mothership(time: Res<Time>, mut query: Query<&mut Transform>) {
+pub fn move_mothership(time: Res<Time>, mut query: Query<&mut Transform, With<Mothership>>) {
     let dt = time.delta_seconds();
 
     for mut transform in &mut query {
