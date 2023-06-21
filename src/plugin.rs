@@ -10,7 +10,7 @@ impl Plugin for GamePlugin {
         app
             .add_event::<TorpedoCollisionEvent>()
             .add_startup_system(hello_world)
-            .add_startup_system(spawn_text)
+            .add_startup_system(spawn_mothership)
             .add_startup_system(setup_world);
     }
 }
