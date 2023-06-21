@@ -93,7 +93,7 @@ pub struct FighterDrone {
 
 }
 
-#[derive(Component)]
+#[derive(Component, Default)]
 pub struct Mothership {
     pub num_entities: u32
 }
