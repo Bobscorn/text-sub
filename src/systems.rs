@@ -111,7 +111,7 @@ pub fn move_projectile(time: Res<Time>, mut query: Query<(&mut Transform, &Veloc
     }
 }
 
-pub fn move_mothership(time: Res<Time>, mut query: Query<&mut Transform>) {
+pub fn move_mothership(time: Res<Time>, mut query: Query<&mut Transform, With<Mothership>>) {
     let dt = time.delta_seconds();
 
     for mut transform in &mut query {
