@@ -20,6 +20,44 @@ pub fn setup_world(mut commands: Commands) {
     });
 }
 
+pub fn spawn_mothership(mut commands: Commands, asset_server: Res<AssetServer>) {
+
+    let font = asset_server.load("fonts/FallingSkyBlack.otf");
+    let text_style = TextStyle {
+        font: font.clone(),
+        font_size: 60.0,
+        color: Color::WHITE,
+    };
+
+    let bottom_left = Vec3::new(-(MOTHERSHIP_STRUCTURE_SPACING * 5.5), -(MOTHERSHIP_STRUCTURE_SPACING * 2.5), 0.);
+    let mothership_pos = Vec3::new(0., 0., 0.);
+
+    let width = 11;
+    let height = 5;
+
+    let chars = vec!["}", "{", "6", "=", "-", "/", ":", "]", "[", "!", "#", "%", "$"];
+
+    commands.spawn((SpriteBundle{ transform: Transform::from_translation(mothership_pos), ..default() }, Mothership::default()))
+        .with_children(|parent| {
+            for x in 0..width {
+                for y in 0..height {
+                    parent.spawn((
+                        Text2dBundle{ 
+                            text: Text { 
+                                sections: vec![TextSection::new(chars[(x + y) % 13], text_style.clone())],
+                                ..default()
+                            },
+                            transform: Transform::from_translation(bottom_left + Vec3::new(x as f32 * MOTHERSHIP_STRUCTURE_SPACING, y as f32 * MOTHERSHIP_STRUCTURE_SPACING, 0.)),
+                            ..default()
+                        }, 
+                        Structure{ integrity: 5, max_integrity: 5 }
+                    ));
+                }
+            }
+        }
+    );
+}
+
 pub fn spawn_text(mut commands: Commands, asset_server: Res<AssetServer>) {
 
     let font = asset_server.load("fonts/FallingSkyBlack.otf");
