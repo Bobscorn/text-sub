@@ -1,3 +1,5 @@
+use std::vec;
+
 use bevy::prelude::*;
 
 use crate::constants::*;
@@ -16,6 +18,44 @@ pub fn setup_world(mut commands: Commands) {
         transform: Transform::from_translation(Vec3::new(-50., 0., 0.)),
         ..default()
     });
+}
+
+pub fn spawn_text(mut commands: Commands, asset_server: Res<AssetServer>) {
+
+    let font = asset_server.load("fonts/FallingSkyBlack.otf");
+    let text_style = TextStyle {
+        font: font.clone(),
+        font_size: 60.0,
+        color: Color::WHITE,
+    };
+
+    let count = 10;
+    let start_pos = Vec3::new(-150., -50., 0.);
+    let end_pos = start_pos + Vec3::new(MOTHERSHIP_STRUCTURE_SPACING, 0., 0.) * count as f32;
+
+    let chars = vec!["}", "{", "6", "=", "-", "/", ":", "]", "[", "!", "#", "%", "$"];
+    for i in 0..count {
+        let pos = start_pos.lerp(end_pos, i as f32 / count as f32);
+
+        commands.spawn(Text2dBundle{
+            text: Text {
+                sections: vec![TextSection::new(chars[i], text_style.clone())],
+                ..default()
+            },
+            transform: Transform::from_translation(pos),
+            ..default()
+        });
+
+        commands.spawn(SpriteBundle {
+            sprite: Sprite {
+                color: Color::rgb(0.75, 0.25, 0.25),
+                custom_size: Some(Vec2::new(5., 5.)),
+                ..default()
+            },
+            transform: Transform::from_translation(pos),
+            ..default()
+        });
+    }
 }
 
 pub fn print_position_system(query: Query<&Transform>) {
