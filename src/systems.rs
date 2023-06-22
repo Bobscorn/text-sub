@@ -83,7 +83,7 @@ pub fn move_mothership(time: Res<Time>, mut query: Query<&mut Transform, With<Mo
     }
 }
 
-pub fn process_torpedo_collision(mut torpedo_events: EventWriter<TorpedoCollisionEvent>, mut commands: Commands, torpedo_query: Query<(Entity, &Transform, &Torpedo)>, structure_query: Query<(Entity, &Transform, &Structure), Without<Torpedo>>) {
+pub fn process_torpedo_collision(mut torpedo_events: EventWriter<TorpedoCollisionEvent>, torpedo_query: Query<(Entity, &Transform, &Torpedo)>, structure_query: Query<(Entity, &Transform, &Structure), Without<Torpedo>>) {
     
     for (t_ent, torpedo_trans, torpedo) in &torpedo_query {
         let t_pos = torpedo_trans.translation;
