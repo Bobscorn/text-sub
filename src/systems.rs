@@ -30,32 +30,37 @@ pub fn spawn_mothership(mut commands: Commands, asset_server: Res<AssetServer>) 
     };
 
     let bottom_left = Vec3::new(-(MOTHERSHIP_STRUCTURE_SPACING * 5.5), -(MOTHERSHIP_STRUCTURE_SPACING * 2.5), 0.);
-    let mothership_pos = Vec3::new(0., 0., 0.);
 
     let width = 11;
     let height = 5;
 
     let chars = vec!["}", "{", "6", "=", "-", "/", ":", "]", "[", "!", "#", "%", "$"];
 
-    commands.spawn((SpriteBundle{ transform: Transform::from_translation(mothership_pos), ..default() }, Mothership::default()))
-        .with_children(|parent| {
-            for x in 0..width {
-                for y in 0..height {
-                    parent.spawn((
-                        Text2dBundle{ 
-                            text: Text { 
-                                sections: vec![TextSection::new(chars[(x + y) % 13], text_style.clone())],
+    let base_poses = vec![Vec3::new(-400., 0., 0.), Vec3::new(400., 0., 0.)];
+
+    for i in 0..2 {
+        let ship_pos = base_poses[i];
+        println!("Spawning ship at {:?}", ship_pos);
+        commands.spawn((SpriteBundle{ transform: Transform::from_translation(ship_pos), ..default() }, Mothership::default()))
+            .with_children(|parent| {
+                for x in 0..width {
+                    for y in 0..height {
+                        parent.spawn((
+                            Text2dBundle{ 
+                                text: Text { 
+                                    sections: vec![TextSection::new(chars[(x + y) % 13], text_style.clone())],
+                                    ..default()
+                                },
+                                transform: Transform::from_translation(bottom_left + Vec3::new(x as f32 * MOTHERSHIP_STRUCTURE_SPACING, y as f32 * MOTHERSHIP_STRUCTURE_SPACING, 0.)),
                                 ..default()
-                            },
-                            transform: Transform::from_translation(bottom_left + Vec3::new(x as f32 * MOTHERSHIP_STRUCTURE_SPACING, y as f32 * MOTHERSHIP_STRUCTURE_SPACING, 0.)),
-                            ..default()
-                        }, 
-                        Structure{ integrity: 5, max_integrity: 5 }
-                    ));
+                            }, 
+                            Structure{ integrity: 5, max_integrity: 5 }
+                        ));
+                    }
                 }
             }
-        }
-    );
+        );
+    }
 }
 
 pub fn print_position_system(query: Query<&Transform>) {
