@@ -1,9 +1,11 @@
+use std::thread::spawn;
 use std::vec;
 
 use bevy::prelude::*;
 
 use crate::constants::*;
 use crate::components::*;
+use crate::events::SpawnTorpedoEvent;
 use crate::events::TorpedoCollisionEvent;
 
 pub fn setup_world(mut commands: Commands) {
@@ -86,6 +88,17 @@ pub fn move_mothership(time: Res<Time>, mut query: Query<&mut Transform, With<Mo
         let rotation = Quat::from_rotation_z(MOTHERSHIP_SPEED * dt);
         transform.rotate_around(origin, rotation);
     }
+}
+
+pub fn simple_input(mut spawn_events: EventWriter<SpawnTorpedoEvent>, keys: Res<Input<KeyCode>>) {
+
+    let spawn_key = KeyCode::Space;
+
+    if keys.just_pressed(spawn_key) {
+        spawn_events.send(SpawnTorpedoEvent { position: Vec3::ZERO, velocity: Vec3::ZERO });
+        println!("Spawn key pressed");
+    }
+
 }
 
 pub fn process_torpedo_collision(mut torpedo_events: EventWriter<TorpedoCollisionEvent>, torpedo_query: Query<(Entity, &Transform, &Torpedo)>, structure_query: Query<(Entity, &Transform, &Structure), Without<Torpedo>>) {

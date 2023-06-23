@@ -9,3 +9,9 @@ pub struct TorpedoCollisionEvent {
     pub torpedo: Entity
 }
 
+#[derive(Debug)]
+pub struct SpawnTorpedoEvent {
+    pub position: Vec3,
+    pub velocity: Vec3
+}
+
