@@ -9,3 +9,13 @@ pub struct TorpedoCollisionEvent {
     pub torpedo: Entity
 }
 
+#[derive(Debug)]
+pub struct SpawnTorpedoEvent {
+    pub position: Vec3,
+    pub velocity: Vec3
+}
+
+#[derive(Resource, Default)]
+pub struct FontResource {
+    pub font: TextStyle
+}
