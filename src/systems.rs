@@ -105,6 +105,22 @@ pub fn simple_input(mut spawn_events: EventWriter<SpawnTorpedoEvent>, keys: Res<
 
 }
 
+pub fn spawn_torpedos(mut spawn_events: EventReader<SpawnTorpedoEvent>, mut commands: Commands, fonts: Res<FontResource>) {
+
+    let text_style = fonts.font.clone();
+
+    for spawn in spawn_events.iter() {
+        commands.spawn((Text2dBundle{ 
+            text: Text {
+                sections: vec![TextSection::new("!", text_style.clone())],
+                ..default()
+            },
+            transform: Transform::from_translation(spawn.position),
+            ..default()
+        }, Torpedo{ damage: 3, detonate_radius: 0.5, explosion_radius: 2.5 }));
+    }
+}
+
 pub fn process_torpedo_collision(mut torpedo_events: EventWriter<TorpedoCollisionEvent>, torpedo_query: Query<(Entity, &Transform, &Torpedo)>, structure_query: Query<(Entity, &Transform, &Structure), Without<Torpedo>>) {
     
     for (t_ent, torpedo_trans, torpedo) in &torpedo_query {
