@@ -5,10 +5,9 @@ use bevy::prelude::*;
 
 use crate::constants::*;
 use crate::components::*;
-use crate::events::SpawnTorpedoEvent;
-use crate::events::TorpedoCollisionEvent;
+use crate::events::*;
 
-pub fn setup_world(mut commands: Commands) {
+pub fn setup_world(mut commands: Commands, mut font_res: ResMut<FontResource>, asset_server: Res<AssetServer>) {
     commands.spawn(Camera2dBundle::default());
 
     commands.spawn(SpriteBundle{ 
@@ -20,16 +19,21 @@ pub fn setup_world(mut commands: Commands) {
         transform: Transform::from_translation(Vec3::new(-50., 0., 0.)),
         ..default()
     });
-}
 
-pub fn spawn_mothership(mut commands: Commands, asset_server: Res<AssetServer>) {
+    let font: Handle<Font> = asset_server.load("fonts/FallingSkyBlack.otf");
 
-    let font = asset_server.load("fonts/FallingSkyBlack.otf");
     let text_style = TextStyle {
         font: font.clone(),
         font_size: 60.0,
         color: Color::WHITE,
     };
+
+    font_res.font = text_style.clone();
+}
+
+pub fn spawn_mothership(mut commands: Commands, fonts: Res<FontResource>) {
+
+    let text_style = fonts.font.clone();
 
     let bottom_left = Vec3::new(-(MOTHERSHIP_STRUCTURE_SPACING * 5.5), -(MOTHERSHIP_STRUCTURE_SPACING * 2.5), 0.);
 

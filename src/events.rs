@@ -15,3 +15,7 @@ pub struct SpawnTorpedoEvent {
     pub velocity: Vec3
 }
 
+#[derive(Resource, Default)]
+pub struct FontResource {
+    pub font: TextStyle
+}
