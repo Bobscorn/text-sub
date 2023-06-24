@@ -40,3 +40,7 @@ wasm-bindgen --out-dir ./out/ --target web ./target/
 - bevy unofficial book: https://bevy-cheatbook.github.io/
 
 - wasm with rust book: https://rustwasm.github.io/docs/book/
+
+- wasm bindgen book: https://rustwasm.github.io/docs/wasm-bindgen/
+
+- wasm pack book: https://rustwasm.github.io/docs/wasm-pack/
