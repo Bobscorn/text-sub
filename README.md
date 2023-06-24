@@ -44,3 +44,6 @@ wasm-bindgen --out-dir ./out/ --target web ./target/
 - wasm bindgen book: https://rustwasm.github.io/docs/wasm-bindgen/
 
 - wasm pack book: https://rustwasm.github.io/docs/wasm-pack/
+
+- wasm_bindgen api: https://docs.rs/wasm-bindgen/latest/wasm_bindgen/
+
