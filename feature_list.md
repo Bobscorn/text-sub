@@ -34,8 +34,6 @@
 
     - ' bullet
 
-    - ; ????
-
     - : hangar shield door?
 
     - <> thrusters
