@@ -10,6 +10,7 @@ bevy = { version = "0.10.1", features = [] }
 bevy-inspector-egui = "0.18.3"
 bevy_mod_debugdump = "0.7.0"
 bevycheck = "0.5.2"
+console_error_panic_hook = "0.1"
 
 # Enable a small amount of optimization in debug mode
 [profile.dev]
