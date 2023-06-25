@@ -32,7 +32,13 @@ Build a spaceship out of ASCII Symbols and fight in a 2 Player deathmatch.
 ## Run a development build ##
 
 ```
-wasm-pack test --firefox
+cargo run --target wasm32-unknown-unknown
+```
+
+### Run tests ###
+
+```
+wasm-pack test --headless --firefox
 ```
 
 ## Build a release ##
