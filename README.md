@@ -67,3 +67,4 @@ wasm-pack build --release --target bundler --out-dir target/bundle
 
 - wasm-bindgen-futures api: https://rustwasm.github.io/wasm-bindgen/api/wasm_bindgen_futures/
 
+- rocket api: https://api.rocket.rs/v0.5-rc/rocket/
