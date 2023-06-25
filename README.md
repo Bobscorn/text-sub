@@ -1,10 +1,12 @@
-# bevy-project-1 #
-A small game based on the bevy engine
+# Textship #
+
+Build a spaceship out of ASCII Symbols and fight in a 2 Player deathmatch.
 
 ## Setup Bevy to run in the browser ##
 
 - Run the following commands:
 
+    ```
     rustup target install wasm32-unknown-unknown
 
     cargo install wasm-pack
@@ -17,19 +19,27 @@ A small game based on the bevy engine
 
     sudo apt-get install wasm-bindgen
 
+    curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sudo sh
+    ```
+
 - Add this to your .cargo/config.toml file
 
+    ```
     [target.wasm32-unknown-unknown]
     runner = "wasm-server-runner"
+    ```
 
-- run the game in a browser
+## Run a development build ##
 
-    cargo run --target wasm32-unknown-unknown
+```
+wasm-pack test --firefox
+```
 
 ## Build a release ##
 
-cargo build --release --target wasm32-unknown-unknown
-wasm-bindgen --out-dir ./out/ --target web ./target/
+```
+wasm-pack build
+```
 
 ## Libraries ##
 
@@ -46,4 +56,8 @@ wasm-bindgen --out-dir ./out/ --target web ./target/
 - wasm pack book: https://rustwasm.github.io/docs/wasm-pack/
 
 - wasm_bindgen api: https://docs.rs/wasm-bindgen/latest/wasm_bindgen/
+
+- web_sys api: https://rustwasm.github.io/wasm-bindgen/api/web_sys/
+
+- wasm-bindgen-futures api: https://rustwasm.github.io/wasm-bindgen/api/wasm_bindgen_futures/
 
