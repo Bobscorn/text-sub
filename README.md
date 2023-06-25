@@ -29,19 +29,19 @@ Build a spaceship out of ASCII Symbols and fight in a 2 Player deathmatch.
     runner = "wasm-server-runner"
     ```
 
-## Run a development build ##
+## Client: Run a development build ##
 
 ```
 cargo run --target wasm32-unknown-unknown
 ```
 
-### Run tests ###
+### Client: Run tests ###
 
 ```
 wasm-pack test --headless --firefox
 ```
 
-## Build a release ##
+## Client: Build a release ##
 
 ```
 wasm-pack build --release --target bundler --out-dir target/bundle
