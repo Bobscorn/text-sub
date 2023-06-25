@@ -44,7 +44,7 @@ wasm-pack test --headless --firefox
 ## Build a release ##
 
 ```
-wasm-pack build
+wasm-pack build --release --target bundler --out-dir target/bundle
 ```
 
 ## Libraries ##
