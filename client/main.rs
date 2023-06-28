@@ -1,5 +1,3 @@
-use wasm_bindgen::prelude::*;
-
 mod utils;
 mod components;
 mod systems;
@@ -8,6 +6,7 @@ mod events;
 mod plugin;
 mod start;
 
+use wasm_bindgen::prelude::*;
 use start::start;
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
