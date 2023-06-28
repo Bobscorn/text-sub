@@ -2,10 +2,17 @@ use std::thread::spawn;
 use std::vec;
 
 use bevy::prelude::*;
+use bevy_matchbox::prelude::*;
 
 use crate::constants::*;
 use crate::components::*;
 use crate::events::*;
+
+pub fn start_matchbox_socket(mut commands: Commands) {
+    let room_url = "ws://127.0.0.1:3536/extreme_bevy?next=2";
+    info!("connecting to matchbox server: {:?}", room_url);
+    commands.insert_resource(MatchboxSocket::new_ggrs(room_url));
+}
 
 pub fn setup_world(mut commands: Commands, mut font_res: ResMut<FontResource>, asset_server: Res<AssetServer>) {
     commands.spawn(Camera2dBundle::default());
