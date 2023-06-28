@@ -1,6 +1,11 @@
 
 mod start;
 mod utils;
+mod plugin;
+mod systems;
+mod events;
+mod constants;
+mod components;
 use start::start;
 use utils::set_panic_hook;
 
