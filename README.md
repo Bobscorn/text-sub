@@ -11,13 +11,13 @@ Build a spaceship out of ASCII Symbols and fight in a 2 Player deathmatch.
 
     cargo install wasm-pack
 
-    cargo install cargo-generate
-
     sudo apt-get install npm
 
     cargo install wasm-server-runner
 
     sudo apt-get install wasm-bindgen
+
+    cargo install cargo-watch
 
     curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sudo sh
     ```
