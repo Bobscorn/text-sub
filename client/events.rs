@@ -1,6 +1,5 @@
 use bevy::prelude::*;
 
-
 #[derive(Debug)]
 pub struct TorpedoCollisionEvent {
     pub position: Vec3,

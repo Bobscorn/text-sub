@@ -31,6 +31,10 @@ opt-level = 3
 # Tell `rustc` to optimize for small code size.
 opt-level = "s"
 
+[[bin]]
+name = "textship"
+path = "main.rs"
+
 [lib]
-crate-type = ["cdylib", "rlib"]
+crate-type = ["rlib"]
 path = "lib.rs"

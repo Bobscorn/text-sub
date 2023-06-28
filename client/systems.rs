@@ -95,14 +95,12 @@ pub fn move_mothership(time: Res<Time>, mut query: Query<&mut Transform, With<Mo
 }
 
 pub fn simple_input(mut spawn_events: EventWriter<SpawnTorpedoEvent>, keys: Res<Input<KeyCode>>) {
-
     let spawn_key = KeyCode::Space;
 
     if keys.just_pressed(spawn_key) {
         spawn_events.send(SpawnTorpedoEvent { position: Vec3::ZERO, velocity: Vec3::ZERO });
         println!("Spawn key pressed");
     }
-
 }
 
 pub fn spawn_torpedos(mut spawn_events: EventReader<SpawnTorpedoEvent>, mut commands: Commands, fonts: Res<FontResource>) {
