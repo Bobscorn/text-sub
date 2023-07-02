@@ -5,6 +5,7 @@ mod systems;
 mod events;
 mod constants;
 mod components;
+mod macros;
 
 use start::start;
 use utils::set_panic_hook;

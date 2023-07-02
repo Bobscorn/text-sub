@@ -5,6 +5,7 @@ mod constants;
 mod events;
 mod plugin;
 mod start;
+mod macros;
 
 use wasm_bindgen::prelude::*;
 use start::start;
