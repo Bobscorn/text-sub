@@ -1,4 +1,3 @@
-use std::thread::spawn;
 use std::vec;
 
 use bevy::prelude::*;
@@ -12,6 +11,25 @@ pub fn start_matchbox_socket(mut commands: Commands) {
     let room_url = "ws://127.0.0.1:3536/extreme_bevy?next=2";
     info!("connecting to matchbox server: {:?}", room_url);
     commands.insert_resource(MatchboxSocket::new_ggrs(room_url));
+}
+
+pub fn wait_for_players(mut socket: ResMut<MatchboxSocket<SingleChannel>>) {
+    if socket.get_channel(0).is_err() {
+        return;
+    }
+
+    socket.update_peers();
+    let players = socket.players();
+
+    let num_players = 2;
+    if players.len() < num_players {
+        return; // Not enough players yet
+    }
+
+    info!("All peers have joined, going in game!");
+    crate::log!("All peers have joined, going in game!");
+
+    // Going in game not yet done
 }
 
 pub fn setup_world(mut commands: Commands, mut font_res: ResMut<FontResource>, asset_server: Res<AssetServer>) {

@@ -14,6 +14,8 @@ impl Plugin for GamePlugin {
             .add_system(move_mothership)
             .add_system(simple_input)
             .add_system(spawn_torpedos)
+            .add_system(wait_for_players)
+            .add_startup_system(start_matchbox_socket)
             .add_startup_system(hello_world)
             .add_startup_system(spawn_mothership)
             .add_startup_system(setup_world.before(spawn_mothership));
