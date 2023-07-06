@@ -2,10 +2,23 @@ use std::vec;
 
 use bevy::prelude::*;
 use bevy_matchbox::prelude::*;
+use bevy_ggrs::*;
+use matchbox_socket::{WebRtcSocket, PeerId};
 
 use crate::constants::*;
 use crate::components::*;
 use crate::events::*;
+
+
+struct GgrsConfig;
+
+impl ggrs::Config for GgrsConfig {
+    // A single byte should fit a bunch of inputs
+    type Input = u8;
+    type State = u8;
+    
+    type Address = PeerId;
+}
 
 pub fn start_matchbox_socket(mut commands: Commands) {
     let room_url = "ws://127.0.0.1:3536/extreme_bevy?next=2";
@@ -29,7 +42,25 @@ pub fn wait_for_players(mut socket: ResMut<MatchboxSocket<SingleChannel>>) {
     info!("All peers have joined, going in game!");
     crate::log!("All peers have joined, going in game!");
 
-    // Going in game not yet done
+    let mut session_builder = ggrs::SessionBuilder::<GgrsConfig>::new()
+        .with_num_players(2)
+        .with_input_delay(2);
+
+    for (i, player) in players.into_iter().enumerate() {
+        session_builder = session_builder
+            .add_player(player, i)
+            .expect("Failed to add player");
+    }
+
+    // Move channel out of socket to give to ggrs
+    let channel = socket.take_channel(0).unwrap();
+
+    // Start the GGRS Session
+    let ggrs_session = session_builder
+        .start_p2p_session(channel)
+        .expect("Failed to start session");
+
+    commands.insert_resource(bevy_ggrs::Session::P2PSession(ggrs_session));
 }
 
 pub fn setup_world(mut commands: Commands, mut font_res: ResMut<FontResource>, asset_server: Res<AssetServer>) {
