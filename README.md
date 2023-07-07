@@ -20,6 +20,9 @@ Build a spaceship out of ASCII Symbols and fight in a 2 Player deathmatch.
     cargo install cargo-watch
 
     curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sudo sh
+
+    # (Optional) Install the signalling server
+    cargo install matchbox_server
     ```
 
 - Add this to your .cargo/config.toml file
@@ -31,9 +34,22 @@ Build a spaceship out of ASCII Symbols and fight in a 2 Player deathmatch.
 
 ## Client: Run a development build ##
 
+Start the wasm-server-runner:
 ```
 cargo run --target wasm32-unknown-unknown
 ```
+
+Open a browser tab at 127.0.0.1:1334 (or whatever the wasm-server-runner says).
+Docs for [wasm-server-runner](https://github.com/jakobhellermann/wasm-server-runner)
+
+To host the signalling server locally:
+```
+cargo install matchbox_server
+
+matchbox_server
+```
+
+Multiple tabs can connect to the wasm-server-runner, which means you can run multiple clients on the same machine.
 
 ### Client: Run tests ###
 
@@ -68,3 +84,5 @@ wasm-pack build --release --target bundler --out-dir target/bundle
 - wasm-bindgen-futures api: https://rustwasm.github.io/wasm-bindgen/api/wasm_bindgen_futures/
 
 - rocket api: https://api.rocket.rs/v0.5-rc/rocket/
+
+- matchbox: https://github.com/johanhelsing/matchbox/
