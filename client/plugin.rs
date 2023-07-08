@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy_ggrs::GGRSSchedule;
 
 use crate::events::{TorpedoCollisionEvent, SpawnTorpedoEvent, FontResource};
 use crate::systems::*;
@@ -11,10 +12,9 @@ impl Plugin for GamePlugin {
             .add_event::<TorpedoCollisionEvent>()
             .add_event::<SpawnTorpedoEvent>()
             .insert_resource(FontResource::default())
-            .add_system(move_mothership)
-            .add_system(simple_input)
+            //.add_system(move_mothership)
             .add_system(spawn_torpedos)
-            .add_system(wait_for_players)
+            .add_systems((player_action.in_schedule(GGRSSchedule), wait_for_players))
             .add_startup_system(start_matchbox_socket)
             .add_startup_system(hello_world)
             .add_startup_system(spawn_mothership)

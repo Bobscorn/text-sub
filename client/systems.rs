@@ -3,14 +3,13 @@ use std::vec;
 use bevy::prelude::*;
 use bevy_matchbox::prelude::*;
 use bevy_ggrs::*;
-use matchbox_socket::{WebRtcSocket, PeerId};
 
 use crate::constants::*;
 use crate::components::*;
 use crate::events::*;
 
 
-struct GgrsConfig;
+pub struct GgrsConfig;
 
 impl ggrs::Config for GgrsConfig {
     // A single byte should fit a bunch of inputs
@@ -26,7 +25,7 @@ pub fn start_matchbox_socket(mut commands: Commands) {
     commands.insert_resource(MatchboxSocket::new_ggrs(room_url));
 }
 
-pub fn wait_for_players(mut socket: ResMut<MatchboxSocket<SingleChannel>>) {
+pub fn wait_for_players(mut socket: ResMut<MatchboxSocket<SingleChannel>>, mut commands: Commands) {
     if socket.get_channel(0).is_err() {
         return;
     }
@@ -61,6 +60,70 @@ pub fn wait_for_players(mut socket: ResMut<MatchboxSocket<SingleChannel>>) {
         .expect("Failed to start session");
 
     commands.insert_resource(bevy_ggrs::Session::P2PSession(ggrs_session));
+}
+
+pub fn player_input(_: In<ggrs::PlayerHandle>, keys: Res<Input<KeyCode>>) -> u8 {
+    let mut input = 0u8;
+
+    if keys.any_pressed([KeyCode::Up, KeyCode::W]) {
+        input |= INPUT_FORWARD;
+    }
+
+    if keys.any_pressed([KeyCode::Down, KeyCode::S]) {
+        input |= INPUT_BACKWARD;
+    }
+
+    if keys.any_pressed([KeyCode::Left, KeyCode::A]) {
+        input |= INPUT_LEFT;
+    }
+
+    if keys.any_pressed([KeyCode::Right, KeyCode::D]) {
+        input |= INPUT_RIGHT;
+    }
+
+    if keys.any_pressed([KeyCode::Space, KeyCode::Z]) {
+        input |= INPUT_FIRE;
+    }
+
+    input
+}
+
+pub fn player_action(
+    inputs: Res<PlayerInputs<GgrsConfig>>,
+    mut player_query: Query<&mut Transform, With<Mothership>>
+) {
+    // Basic demonstrational movement for now
+
+    let mut direction = Vec2::ZERO;
+
+    let (input, _) = inputs[0];
+
+    if input & INPUT_FORWARD != 0 {
+        direction.y += 1.;
+    }
+
+    if input & INPUT_BACKWARD != 0 {
+        direction.y -= 1.;
+    }
+
+    if input & INPUT_LEFT != 0 {
+        direction.x -= 1.;
+    }
+
+    if input & INPUT_RIGHT != 0 {
+        direction.x += 1.;
+    }
+
+    if direction == Vec2::ZERO {
+        return;
+    }
+
+    let move_speed = 0.13;
+    let move_delta = (direction * move_speed).extend(0.);
+
+    for mut transform in player_query.iter_mut() {
+        transform.translation += move_delta;
+    }
 }
 
 pub fn setup_world(mut commands: Commands, mut font_res: ResMut<FontResource>, asset_server: Res<AssetServer>) {
@@ -100,7 +163,7 @@ pub fn spawn_mothership(mut commands: Commands, fonts: Res<FontResource>) {
 
     let base_poses = vec![Vec3::new(-400., 0., 0.), Vec3::new(400., 0., 0.)];
 
-    for i in 0..2 {
+    for i in 0..1 {
         let ship_pos = base_poses[i];
         println!("Spawning ship at {:?}", ship_pos);
         commands.spawn((SpriteBundle{ transform: Transform::from_translation(ship_pos), ..default() }, Mothership::default()))

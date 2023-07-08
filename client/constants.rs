@@ -31,3 +31,9 @@ pub const DOLLAR: char = '$';
 pub const QUESTION: char = '?';
 pub const APOSTROPHE: char = '\'';
 pub const COLON: char = ':';
+
+pub const INPUT_FIRE: u8 =      1 << 0;
+pub const INPUT_LEFT: u8 =      1 << 1;
+pub const INPUT_RIGHT: u8 =     1 << 2;
+pub const INPUT_FORWARD: u8 =   1 << 3;
+pub const INPUT_BACKWARD: u8 =  1 << 4;
