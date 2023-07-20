@@ -148,6 +148,8 @@ pub fn setup_world(mut commands: Commands, mut font_res: ResMut<FontResource>, a
     };
 
     font_res.font = text_style.clone();
+    font_res.p1_font = TextStyle{ font: font.clone(), font_size: 60., color: Color::BLUE };
+    font_res.p2_font = TextStyle{ font: font.clone(), font_size: 60., color: Color::ORANGE };
 }
 
 pub fn spawn_mothership(mut commands: Commands, fonts: Res<FontResource>) {
