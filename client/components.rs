@@ -99,4 +99,6 @@ pub struct Mothership {
 }
 
 #[derive(Component)]
-pub struct Player;
+pub struct Player {
+    pub handle: usize
+}

@@ -22,12 +22,17 @@ impl ggrs::Config for GgrsConfig {
 pub fn start_matchbox_socket(mut commands: Commands) {
     let room_url = "ws://127.0.0.1:3536/extreme_bevy?next=2";
     info!("connecting to matchbox server: {:?}", room_url);
-    commands.insert_resource(MatchboxSocket::new_ggrs(room_url));
+
+    let socket: MatchboxSocket<SingleChannel> = WebRtcSocketBuilder::new(room_url)
+        .add_channel(ChannelConfig::reliable())
+        .into();
+
+    commands.insert_resource(socket);
 }
 
 pub fn wait_for_players(mut socket: ResMut<MatchboxSocket<SingleChannel>>, mut commands: Commands) {
     if socket.get_channel(0).is_err() {
-        return;
+        return; // We've already started
     }
 
     socket.update_peers();
@@ -62,7 +67,7 @@ pub fn wait_for_players(mut socket: ResMut<MatchboxSocket<SingleChannel>>, mut c
     commands.insert_resource(bevy_ggrs::Session::P2PSession(ggrs_session));
 }
 
-pub fn player_input(_: In<ggrs::PlayerHandle>, keys: Res<Input<KeyCode>>) -> u8 {
+pub fn player_input(In(_handle): In<ggrs::PlayerHandle>, keys: Res<Input<KeyCode>>) -> u8 {
     let mut input = 0u8;
 
     if keys.any_pressed([KeyCode::Up, KeyCode::W]) {
@@ -90,38 +95,36 @@ pub fn player_input(_: In<ggrs::PlayerHandle>, keys: Res<Input<KeyCode>>) -> u8 
 
 pub fn player_action(
     inputs: Res<PlayerInputs<GgrsConfig>>,
-    mut player_query: Query<&mut Transform, (With<Mothership>, With<Player>)>
+    mut player_query: Query<(&mut Transform, &Player), With<Mothership>>
 ) {
     // Basic demonstrational movement for now
+    for (mut transform, player) in player_query.iter_mut() {
+        let mut direction = Vec2::ZERO;
 
-    let mut direction = Vec2::ZERO;
+        let (input, _) = inputs[player.handle];
 
-    let (input, _) = inputs[0];
+        if input & INPUT_FORWARD != 0 {
+            direction.y += 1.;
+        }
 
-    if input & INPUT_FORWARD != 0 {
-        direction.y += 1.;
-    }
+        if input & INPUT_BACKWARD != 0 {
+            direction.y -= 1.;
+        }
 
-    if input & INPUT_BACKWARD != 0 {
-        direction.y -= 1.;
-    }
+        if input & INPUT_LEFT != 0 {
+            direction.x -= 1.;
+        }
 
-    if input & INPUT_LEFT != 0 {
-        direction.x -= 1.;
-    }
+        if input & INPUT_RIGHT != 0 {
+            direction.x += 1.;
+        }
 
-    if input & INPUT_RIGHT != 0 {
-        direction.x += 1.;
-    }
+        if direction == Vec2::ZERO {
+            continue;
+        }
 
-    if direction == Vec2::ZERO {
-        return;
-    }
-
-    let move_speed = 0.13;
-    let move_delta = (direction * move_speed).extend(0.);
-
-    for mut transform in player_query.iter_mut() {
+        let move_speed = 0.13;
+        let move_delta = (direction * move_speed).extend(0.);
         transform.translation += move_delta;
     }
 }
@@ -172,7 +175,7 @@ pub fn spawn_mothership(mut commands: Commands, fonts: Res<FontResource>, mut ri
         commands.spawn((
             SpriteBundle{ transform: Transform::from_translation(ship_pos), ..default() }, 
             Mothership::default(), 
-            Player,
+            Player{ handle: i },
             rip.next()
         ))
             .with_children(|parent| {
