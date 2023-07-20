@@ -90,7 +90,7 @@ pub fn player_input(_: In<ggrs::PlayerHandle>, keys: Res<Input<KeyCode>>) -> u8 
 
 pub fn player_action(
     inputs: Res<PlayerInputs<GgrsConfig>>,
-    mut player_query: Query<&mut Transform, With<Mothership>>
+    mut player_query: Query<&mut Transform, (With<Mothership>, With<Player>)>
 ) {
     // Basic demonstrational movement for now
 
@@ -152,7 +152,7 @@ pub fn setup_world(mut commands: Commands, mut font_res: ResMut<FontResource>, a
     font_res.p2_font = TextStyle{ font: font.clone(), font_size: 60., color: Color::ORANGE };
 }
 
-pub fn spawn_mothership(mut commands: Commands, fonts: Res<FontResource>) {
+pub fn spawn_mothership(mut commands: Commands, fonts: Res<FontResource>, mut rip: ResMut<RollbackIdProvider>) {
 
     let text_style = fonts.font.clone();
 
@@ -164,18 +164,24 @@ pub fn spawn_mothership(mut commands: Commands, fonts: Res<FontResource>) {
     let chars = vec!["}", "{", "6", "=", "-", "/", ":", "]", "[", "!", "#", "%", "$"];
 
     let base_poses = vec![Vec3::new(-400., 0., 0.), Vec3::new(400., 0., 0.)];
+    let text_styles = vec![fonts.p1_font.clone(), fonts.p2_font.clone()];
 
-    for i in 0..1 {
+    for i in 0..2 {
         let ship_pos = base_poses[i];
         println!("Spawning ship at {:?}", ship_pos);
-        commands.spawn((SpriteBundle{ transform: Transform::from_translation(ship_pos), ..default() }, Mothership::default()))
+        commands.spawn((
+            SpriteBundle{ transform: Transform::from_translation(ship_pos), ..default() }, 
+            Mothership::default(), 
+            Player,
+            rip.next()
+        ))
             .with_children(|parent| {
                 for x in 0..width {
                     for y in 0..height {
                         parent.spawn((
                             Text2dBundle{ 
                                 text: Text { 
-                                    sections: vec![TextSection::new(chars[(x + y) % 13], text_style.clone())],
+                                    sections: vec![TextSection::new(chars[(x + y) % 13], text_styles[i].clone())],
                                     ..default()
                                 },
                                 transform: Transform::from_translation(bottom_left + Vec3::new(x as f32 * MOTHERSHIP_STRUCTURE_SPACING, y as f32 * MOTHERSHIP_STRUCTURE_SPACING, 0.)),

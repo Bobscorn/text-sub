@@ -10,6 +10,7 @@ pub fn start() {
 
     GGRSPlugin::<GgrsConfig>::new()
         .with_input_system(player_input)
+        .register_rollback_component::<Transform>()
         .build(&mut app);
 
     app.add_plugins(DefaultPlugins)
