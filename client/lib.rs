@@ -6,6 +6,9 @@ mod events;
 mod constants;
 mod components;
 mod macros;
+mod input;
+mod resources;
+mod game_state;
 
 use start::start;
 use utils::set_panic_hook;

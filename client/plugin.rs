@@ -2,6 +2,7 @@ use bevy::prelude::*;
 use bevy_ggrs::GGRSSchedule;
 
 use crate::events::{TorpedoCollisionEvent, SpawnTorpedoEvent, FontResource};
+use crate::game_state::GameState;
 use crate::systems::*;
 
 pub struct GamePlugin;
@@ -9,6 +10,7 @@ pub struct GamePlugin;
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         app
+            .add_state::<GameState>()
             .add_event::<TorpedoCollisionEvent>()
             .add_event::<SpawnTorpedoEvent>()
             .insert_resource(FontResource::default())

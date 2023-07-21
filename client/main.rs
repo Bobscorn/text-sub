@@ -6,6 +6,9 @@ mod events;
 mod plugin;
 mod start;
 mod macros;
+mod input;
+mod resources;
+mod game_state;
 
 use wasm_bindgen::prelude::*;
 use start::start;

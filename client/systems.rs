@@ -3,10 +3,12 @@ use std::vec;
 use bevy::prelude::*;
 use bevy_matchbox::prelude::*;
 use bevy_ggrs::*;
+use bevy_ggrs::ggrs::*;
 
 use crate::constants::*;
 use crate::components::*;
 use crate::events::*;
+use crate::resources::*;
 
 
 pub struct GgrsConfig;
@@ -51,6 +53,9 @@ pub fn wait_for_players(mut socket: ResMut<MatchboxSocket<SingleChannel>>, mut c
         .with_input_delay(2);
 
     for (i, player) in players.into_iter().enumerate() {
+        if player == PlayerType::Local {
+            commands.insert_resource(LocalPlayerHandle(i));
+        }
         session_builder = session_builder
             .add_player(player, i)
             .expect("Failed to add player");
@@ -67,57 +72,15 @@ pub fn wait_for_players(mut socket: ResMut<MatchboxSocket<SingleChannel>>, mut c
     commands.insert_resource(bevy_ggrs::Session::P2PSession(ggrs_session));
 }
 
-pub fn player_input(In(_handle): In<ggrs::PlayerHandle>, keys: Res<Input<KeyCode>>) -> u8 {
-    let mut input = 0u8;
-
-    if keys.any_pressed([KeyCode::Up, KeyCode::W]) {
-        input |= INPUT_FORWARD;
-    }
-
-    if keys.any_pressed([KeyCode::Down, KeyCode::S]) {
-        input |= INPUT_BACKWARD;
-    }
-
-    if keys.any_pressed([KeyCode::Left, KeyCode::A]) {
-        input |= INPUT_LEFT;
-    }
-
-    if keys.any_pressed([KeyCode::Right, KeyCode::D]) {
-        input |= INPUT_RIGHT;
-    }
-
-    if keys.any_pressed([KeyCode::Space, KeyCode::Z]) {
-        input |= INPUT_FIRE;
-    }
-
-    input
-}
-
 pub fn player_action(
     inputs: Res<PlayerInputs<GgrsConfig>>,
     mut player_query: Query<(&mut Transform, &Player), With<Mothership>>
 ) {
     // Basic demonstrational movement for now
     for (mut transform, player) in player_query.iter_mut() {
-        let mut direction = Vec2::ZERO;
-
         let (input, _) = inputs[player.handle];
 
-        if input & INPUT_FORWARD != 0 {
-            direction.y += 1.;
-        }
-
-        if input & INPUT_BACKWARD != 0 {
-            direction.y -= 1.;
-        }
-
-        if input & INPUT_LEFT != 0 {
-            direction.x -= 1.;
-        }
-
-        if input & INPUT_RIGHT != 0 {
-            direction.x += 1.;
-        }
+        let direction = crate::input::direction(input);
 
         if direction == Vec2::ZERO {
             continue;

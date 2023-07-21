@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy_ggrs::GGRSPlugin;
 
 use crate::plugin::GamePlugin;
-use crate::systems::player_input;
+use crate::input::player_input;
 use crate::systems::GgrsConfig;
 
 pub fn start() {
