@@ -95,16 +95,6 @@ pub fn player_action(
 pub fn setup_world(mut commands: Commands, mut font_res: ResMut<FontResource>, asset_server: Res<AssetServer>) {
     commands.spawn(Camera2dBundle::default());
 
-    commands.spawn(SpriteBundle{ 
-        sprite: Sprite {
-            color: Color::rgb(0.25, 0.75, 0.25),
-            custom_size: Some(Vec2::new(50., 100.)),
-            ..default()
-        },
-        transform: Transform::from_translation(Vec3::new(-50., 0., 0.)),
-        ..default()
-    });
-
     let font: Handle<Font> = asset_server.load("fonts/FallingSkyBlack.otf");
 
     let text_style = TextStyle {

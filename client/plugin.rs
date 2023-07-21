@@ -1,9 +1,11 @@
 use bevy::prelude::*;
 use bevy_ggrs::GGRSSchedule;
+use bevy_asset_loader::prelude::*;
 
 use crate::events::{TorpedoCollisionEvent, SpawnTorpedoEvent, FontResource};
 use crate::game_state::GameState;
 use crate::systems::*;
+use crate::resources::*;
 
 pub struct GamePlugin;
 
@@ -11,20 +13,23 @@ impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         app
             .add_state::<GameState>()
+            .add_loading_state(
+                LoadingState::new(GameState::AssetLoading)
+                    .continue_to_state(GameState::MatchMaking)
+            )
+            .add_collection_to_loading_state::<_, ImageAssets>(GameState::AssetLoading)
             .add_event::<TorpedoCollisionEvent>()
             .add_event::<SpawnTorpedoEvent>()
             .insert_resource(FontResource::default())
-            //.add_system(move_mothership)
-            .add_system(spawn_torpedos)
-            .add_systems((player_action.in_schedule(GGRSSchedule), wait_for_players))
-            .add_startup_system(start_matchbox_socket)
-            .add_startup_system(hello_world)
-            .add_startup_system(spawn_mothership)
-            .add_startup_system(setup_world.before(spawn_mothership));
+            .add_systems((
+                wait_for_players.run_if(in_state(GameState::MatchMaking)),
+                player_action.in_schedule(GGRSSchedule)
+            ))
+            .add_systems((
+                setup_world.before(spawn_mothership), 
+                start_matchbox_socket, 
+                spawn_mothership
+            ).in_schedule(OnEnter(GameState::MatchMaking)));
     }
-}
-
-pub fn hello_world() {
-    println!("Yo wassup world");
 }
 

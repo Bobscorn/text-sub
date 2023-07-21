@@ -16,6 +16,7 @@ wasm-bindgen-futures = "0.4.37"
 wee_alloc = { version = "0.4.5", optional = true } #enables smaller builds at the cost of runtime allocation time
 bevy_ggrs = { version = "0.12", features = ["wasm-bindgen"] }
 bevy_matchbox = { version = "0.6", features = ["ggrs"] }
+bevy_asset_loader = "0.15"
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3.13"
