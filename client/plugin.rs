@@ -24,7 +24,9 @@ impl Plugin for GamePlugin {
             .add_system(wait_for_players.run_if(in_state(GameState::MatchMaking)))
             .add_systems((
                 fire_torpedo.after(player_action),
-                player_action
+                player_action,
+                reload_torpedo.before(fire_torpedo),
+                move_projectile.after(fire_torpedo).after(player_action),
             ).in_schedule(GGRSSchedule))
             .add_systems((
                 setup_world.before(spawn_mothership), 

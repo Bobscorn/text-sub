@@ -33,6 +33,9 @@ pub struct Torpedo {
     pub explosion_radius: f32
 }
 
+#[derive(Component, Reflect, Default)]
+pub struct BulletReady(pub bool);
+
 #[derive(Component)]
 pub struct TorpedoLauncher {
 

@@ -1,6 +1,7 @@
 use std::vec;
 
 use bevy::prelude::*;
+use bevy::window::PrimaryWindow;
 use bevy_matchbox::prelude::*;
 use bevy_ggrs::*;
 use bevy_ggrs::ggrs::*;
@@ -100,21 +101,31 @@ pub fn player_action(
     }
 }
 
+pub fn reload_torpedo(inputs: Res<PlayerInputs<GgrsConfig>>, mut query: Query<(&mut BulletReady, &Player)>) {
+    for (mut can_fire, player) in query.iter_mut() {
+        let (input, _) = inputs[player.handle];
+        if !fire(input) {
+            can_fire.0 = true;
+        }
+    }
+}
+
 pub fn fire_torpedo(
     mut commands: Commands,
     inputs: Res<PlayerInputs<GgrsConfig>>,
     images: Res<ImageAssets>,
-    player_query: Query<(&Transform, &Player)>
+    mut player_query: Query<(&Transform, &Player, &mut BulletReady)>,
+    mut rip: ResMut<RollbackIdProvider>
 ) {
-    for (transform, player) in player_query.iter() {
+    for (transform, player, mut bullet_ready) in player_query.iter_mut() {
         let (input, _) = inputs[player.handle];
-        if fired(input) {
+        if fire(input) && bullet_ready.0 {
             commands.spawn((
                 SpriteBundle {
                 transform: Transform::from_translation(transform.translation),
                 texture: images.bullet.clone(),
                 sprite: Sprite {
-                    custom_size: Some(Vec2::new(0.3, 0.1)),
+                    custom_size: Some(Vec2::new(5., 5.)),
                     ..default()
                 },
                 ..default()
@@ -123,8 +134,10 @@ pub fn fire_torpedo(
                 detonate_radius: 1.,
                 explosion_radius: 1.
             }, Velocity {
-                value: Vec2::new(1., 0.)
-            }));
+                value: Vec2::new(20., 0.)
+            }, rip.next()));
+
+            bullet_ready.0 = false;
         }
     }
 }
@@ -145,9 +158,18 @@ pub fn setup_world(mut commands: Commands, mut font_res: ResMut<FontResource>, a
     font_res.p2_font = TextStyle{ font: font.clone(), font_size: 60., color: Color::ORANGE };
 }
 
-pub fn spawn_mothership(mut commands: Commands, fonts: Res<FontResource>, mut rip: ResMut<RollbackIdProvider>) {
+pub fn spawn_mothership(
+    mut commands: Commands, 
+    fonts: Res<FontResource>, 
+    mut rip: ResMut<RollbackIdProvider>,
+    wind_q: Query<&Window, With<PrimaryWindow>>
+) {
+    let window = wind_q.single();
+    let win_width = window.width();
 
-    let text_style = fonts.font.clone();
+    let ship_width = 5.5 * MOTHERSHIP_STRUCTURE_SPACING;
+    let min_gap = 0.1; // 0.1 = 10% of window width
+    let pos = (0.25 * win_width).max(min_gap * win_width + ship_width * 0.5);
 
     let bottom_left = Vec3::new(-(MOTHERSHIP_STRUCTURE_SPACING * 5.5), -(MOTHERSHIP_STRUCTURE_SPACING * 2.5), 0.);
 
@@ -156,7 +178,7 @@ pub fn spawn_mothership(mut commands: Commands, fonts: Res<FontResource>, mut ri
 
     let chars = vec!["}", "{", "6", "=", "-", "/", ":", "]", "[", "!", "#", "%", "$"];
 
-    let base_poses = vec![Vec3::new(-400., 0., 0.), Vec3::new(400., 0., 0.)];
+    let base_poses = vec![Vec3::new(-pos, 0., 0.), Vec3::new(pos, 0., 0.)];
     let text_styles = vec![fonts.p1_font.clone(), fonts.p2_font.clone()];
 
     for i in 0..2 {
@@ -166,6 +188,7 @@ pub fn spawn_mothership(mut commands: Commands, fonts: Res<FontResource>, mut ri
             SpriteBundle{ transform: Transform::from_translation(ship_pos), ..default() }, 
             Mothership::default(), 
             Player{ handle: i },
+            BulletReady(true),
             rip.next()
         ))
             .with_children(|parent| {
