@@ -8,7 +8,9 @@ use bevy_ggrs::ggrs::*;
 use crate::constants::*;
 use crate::components::*;
 use crate::events::*;
+use crate::game_state::GameState;
 use crate::resources::*;
+use crate::input::*;
 
 
 pub struct GgrsConfig;
@@ -32,7 +34,11 @@ pub fn start_matchbox_socket(mut commands: Commands) {
     commands.insert_resource(socket);
 }
 
-pub fn wait_for_players(mut socket: ResMut<MatchboxSocket<SingleChannel>>, mut commands: Commands) {
+pub fn wait_for_players(
+    mut socket: ResMut<MatchboxSocket<SingleChannel>>,
+    mut commands: Commands,
+    mut next_state: ResMut<NextState<GameState>>
+) {
     if socket.get_channel(0).is_err() {
         return; // We've already started
     }
@@ -70,6 +76,8 @@ pub fn wait_for_players(mut socket: ResMut<MatchboxSocket<SingleChannel>>, mut c
         .expect("Failed to start session");
 
     commands.insert_resource(bevy_ggrs::Session::P2PSession(ggrs_session));
+
+    next_state.set(GameState::InGame);
 }
 
 pub fn player_action(
@@ -89,6 +97,35 @@ pub fn player_action(
         let move_speed = 0.13;
         let move_delta = (direction * move_speed).extend(0.);
         transform.translation += move_delta;
+    }
+}
+
+pub fn fire_torpedo(
+    mut commands: Commands,
+    inputs: Res<PlayerInputs<GgrsConfig>>,
+    images: Res<ImageAssets>,
+    player_query: Query<(&Transform, &Player)>
+) {
+    for (transform, player) in player_query.iter() {
+        let (input, _) = inputs[player.handle];
+        if fired(input) {
+            commands.spawn((
+                SpriteBundle {
+                transform: Transform::from_translation(transform.translation),
+                texture: images.bullet.clone(),
+                sprite: Sprite {
+                    custom_size: Some(Vec2::new(0.3, 0.1)),
+                    ..default()
+                },
+                ..default()
+            }, Torpedo {
+                damage: 1u8,
+                detonate_radius: 1.,
+                explosion_radius: 1.
+            }, Velocity {
+                value: Vec2::new(1., 0.)
+            }));
+        }
     }
 }
 
@@ -174,15 +211,6 @@ pub fn move_mothership(time: Res<Time>, mut query: Query<&mut Transform, With<Mo
         let origin  = Vec3::ZERO;
         let rotation = Quat::from_rotation_z(MOTHERSHIP_SPEED * dt);
         transform.rotate_around(origin, rotation);
-    }
-}
-
-pub fn simple_input(mut spawn_events: EventWriter<SpawnTorpedoEvent>, keys: Res<Input<KeyCode>>) {
-    let spawn_key = KeyCode::Space;
-
-    if keys.just_pressed(spawn_key) {
-        spawn_events.send(SpawnTorpedoEvent { position: Vec3::ZERO, velocity: Vec3::ZERO });
-        println!("Spawn key pressed");
     }
 }
 

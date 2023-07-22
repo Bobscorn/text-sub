@@ -21,10 +21,11 @@ impl Plugin for GamePlugin {
             .add_event::<TorpedoCollisionEvent>()
             .add_event::<SpawnTorpedoEvent>()
             .insert_resource(FontResource::default())
+            .add_system(wait_for_players.run_if(in_state(GameState::MatchMaking)))
             .add_systems((
-                wait_for_players.run_if(in_state(GameState::MatchMaking)),
-                player_action.in_schedule(GGRSSchedule)
-            ))
+                fire_torpedo.after(player_action),
+                player_action
+            ).in_schedule(GGRSSchedule))
             .add_systems((
                 setup_world.before(spawn_mothership), 
                 start_matchbox_socket, 

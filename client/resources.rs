@@ -8,5 +8,5 @@ pub struct LocalPlayerHandle(pub usize);
 #[derive(AssetCollection, Resource)]
 pub struct ImageAssets {
     #[asset(path = "bullet.png")]
-    bullet: Handle<Image>,
+    pub bullet: Handle<Image>,
 }

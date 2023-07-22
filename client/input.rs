@@ -49,3 +49,7 @@ pub fn direction(input: u8) -> Vec2 {
     }
     direction
 }
+
+pub fn fired(input: u8) -> bool {
+    return input & INPUT_FIRE != 0;
+}
