@@ -26,6 +26,7 @@ impl Plugin for GamePlugin {
                 fire_torpedo.after(player_action),
                 player_action,
                 reload_torpedo.before(fire_torpedo),
+                accelerate_projectile.before(move_projectile),
                 move_projectile.after(fire_torpedo).after(player_action),
             ).in_schedule(GGRSSchedule))
             .add_systems((

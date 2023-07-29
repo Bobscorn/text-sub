@@ -13,6 +13,8 @@ pub fn start() {
         .with_input_system(player_input)
         .register_rollback_component::<Transform>()
         .register_rollback_component::<BulletReady>()
+        .register_rollback_component::<Velocity>()
+        .register_rollback_component::<Acceleration>()
         .build(&mut app);
 
     app.add_plugins(DefaultPlugins.set(WindowPlugin {

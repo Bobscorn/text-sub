@@ -135,7 +135,9 @@ pub fn fire_torpedo(
                 explosion_radius: 1.
             }, Velocity {
                 value: Vec2::new(20., 0.)
-            }, rip.next()));
+            }, Acceleration(
+                Vec2::new(5., 0.)
+            ), rip.next()));
 
             bullet_ready.0 = false;
         }
@@ -224,6 +226,15 @@ pub fn move_projectile(time: Res<Time>, mut query: Query<(&mut Transform, &Veloc
     for (mut transform, vel) in &mut query {
         let movement_2d = vel.value * dt;
         transform.translation += Vec3::new(movement_2d.x, movement_2d.y, 0.0f32);
+    }
+}
+
+pub fn accelerate_projectile(time: Res<Time>, mut query: Query<(&mut Velocity, &Acceleration)>) {
+    let dt = time.delta_seconds();
+
+    for (mut vel, acc) in &mut query {
+        let incr = acc.0 * dt;
+        vel.value = vel.value + incr;
     }
 }
 

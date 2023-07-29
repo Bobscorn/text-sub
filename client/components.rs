@@ -1,9 +1,12 @@
 use bevy::prelude::*;
 
-#[derive(Component)]
+#[derive(Component, Reflect, Default)]
 pub struct Velocity {
     pub value: Vec2
 }
+
+#[derive(Component, Reflect, Default)]
+pub struct Acceleration(pub Vec2);
 
 #[derive(Component)]
 pub struct Colour {
