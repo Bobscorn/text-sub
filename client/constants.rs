@@ -1,7 +1,7 @@
 
 pub const MOTHERSHIP_SPEED: f32 = 0.25;
 
-pub const MOTHERSHIP_STRUCTURE_SPACING: f32 = 40.0;
+pub const MOTHERSHIP_STRUCTURE_SPACING: f32 = 7.5;
 
 pub const SQUARE_OPEN: char = '[';
 pub const SQUARE_CLOSE: char = ']';

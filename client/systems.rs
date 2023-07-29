@@ -130,9 +130,9 @@ pub fn fire_torpedo(
                 },
                 ..default()
             }, Torpedo {
-                damage: 1u8,
-                detonate_radius: 1.,
-                explosion_radius: 1.
+                damage: 10u8,
+                detonate_radius: 4.,
+                explosion_radius: 7.5
             }, Velocity {
                 value: Vec2::new(20., 0.)
             }, Acceleration(
@@ -145,19 +145,22 @@ pub fn fire_torpedo(
 }
 
 pub fn setup_world(mut commands: Commands, mut font_res: ResMut<FontResource>, asset_server: Res<AssetServer>) {
-    commands.spawn(Camera2dBundle::default());
+    commands.spawn(Camera2dBundle{
+        projection: OrthographicProjection { scaling_mode: bevy::render::camera::ScalingMode::FixedVertical(100.), ..default() },
+        ..default()
+    });
 
     let font: Handle<Font> = asset_server.load("fonts/FallingSkyBlack.otf");
 
     let text_style = TextStyle {
         font: font.clone(),
-        font_size: 60.0,
+        font_size: 15.,
         color: Color::WHITE,
     };
 
     font_res.font = text_style.clone();
-    font_res.p1_font = TextStyle{ font: font.clone(), font_size: 60., color: Color::BLUE };
-    font_res.p2_font = TextStyle{ font: font.clone(), font_size: 60., color: Color::ORANGE };
+    font_res.p1_font = TextStyle{ font: font.clone(), font_size: 15., color: Color::BLUE };
+    font_res.p2_font = TextStyle{ font: font.clone(), font_size: 15., color: Color::ORANGE };
 }
 
 pub fn spawn_mothership(
@@ -166,14 +169,16 @@ pub fn spawn_mothership(
     mut rip: ResMut<RollbackIdProvider>,
     wind_q: Query<&Window, With<PrimaryWindow>>
 ) {
-    let window = wind_q.single();
-    let win_width = window.width();
+    //let window = wind_q.single();
+    //let win_width = window.width();
 
-    let ship_width = 5.5 * MOTHERSHIP_STRUCTURE_SPACING;
-    let min_gap = 0.1; // 0.1 = 10% of window width
-    let pos = (0.25 * win_width).max(min_gap * win_width + ship_width * 0.5);
+    //let ship_width = 5.5 * MOTHERSHIP_STRUCTURE_SPACING;
+    //let min_gap = 0.1; // 0.1 = 10% of window width
+    //let pos = (0.25 * win_width).max(min_gap * view_width + ship_width * 0.5);
+    let pos = MOTHERSHIP_STRUCTURE_SPACING * 10.5;
 
     let bottom_left = Vec3::new(-(MOTHERSHIP_STRUCTURE_SPACING * 5.5), -(MOTHERSHIP_STRUCTURE_SPACING * 2.5), 0.);
+
 
     let width = 11;
     let height = 5;
@@ -291,13 +296,13 @@ pub fn do_torpedo_events(
     sprites: Res<ImageAssets>,
     mut commands: Commands, 
     mut t_events: EventReader<TorpedoCollisionEvent>, 
-    mut struc_query: Query<(Entity, &Transform, &mut Structure), Without<Torpedo>>) {
+    mut struc_query: Query<(Entity, &GlobalTransform, &mut Structure), Without<Torpedo>>) {
     for event in t_events.iter() {
         let pos = event.position;
         let dmg = event.damage;
         let radius_sq = event.radius * event.radius;
 
-        info!("Torpedo Collision Event at {:?}, with dmg {}!", pos, dmg);
+        info!("Torpedo Collision Event at {:?}, with dmg {} and radius {}!", pos, dmg, event.radius);
 
         commands.spawn((
             SpriteBundle{
@@ -312,13 +317,15 @@ pub fn do_torpedo_events(
         ));
 
         for (ent, trans, mut struc) in &mut struc_query {
-            let dif = pos - trans.translation;
+            let dif = pos - trans.translation();
             
             if dif.length_squared() >= radius_sq {
                 continue;
             }
 
             let new_health = struc.integrity as i32 - dmg as i32;
+            
+            info!("Damaging Structure: new: {}, old: {}, dmg: {}", new_health, struc.integrity, dmg);
             if new_health <= 0 {
                 struc.integrity = 0;
                 if let Some(mut coms) = commands.get_entity(ent) {
