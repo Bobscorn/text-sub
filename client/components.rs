@@ -108,3 +108,8 @@ pub struct Mothership {
 pub struct Player {
     pub handle: usize
 }
+
+#[derive(Component, Reflect, Default, Clone, Copy)]
+pub struct Lifetime {
+    pub lifetime: f32 // Remaining Lifetime in seconds
+}

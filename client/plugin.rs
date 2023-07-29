@@ -28,6 +28,9 @@ impl Plugin for GamePlugin {
                 reload_torpedo.before(fire_torpedo),
                 accelerate_projectile.before(move_projectile),
                 move_projectile.after(fire_torpedo).after(player_action),
+                process_torpedo_collision.after(move_projectile),
+                do_torpedo_events.after(process_torpedo_collision),
+                do_lifetime.after(do_torpedo_events)
             ).in_schedule(GGRSSchedule))
             .add_systems((
                 setup_world.before(spawn_mothership), 

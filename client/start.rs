@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_ggrs::GGRSPlugin;
 
-use crate::components::BulletReady;
+use crate::components::*;
 use crate::plugin::GamePlugin;
 use crate::input::player_input;
 use crate::systems::GgrsConfig;
@@ -15,6 +15,7 @@ pub fn start() {
         .register_rollback_component::<BulletReady>()
         .register_rollback_component::<Velocity>()
         .register_rollback_component::<Acceleration>()
+        .register_rollback_component::<Lifetime>()
         .build(&mut app);
 
     app.add_plugins(DefaultPlugins.set(WindowPlugin {

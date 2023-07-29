@@ -9,4 +9,6 @@ pub struct LocalPlayerHandle(pub usize);
 pub struct ImageAssets {
     #[asset(path = "bullet.png")]
     pub bullet: Handle<Image>,
+    #[asset(path = "explosion.png")]
+    pub explosion: Handle<Image>,
 }

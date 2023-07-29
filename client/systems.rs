@@ -264,28 +264,52 @@ pub fn spawn_torpedos(mut spawn_events: EventReader<SpawnTorpedoEvent>, mut comm
     }
 }
 
-pub fn process_torpedo_collision(mut torpedo_events: EventWriter<TorpedoCollisionEvent>, torpedo_query: Query<(Entity, &Transform, &Torpedo)>, structure_query: Query<(Entity, &Transform, &Structure), Without<Torpedo>>) {
-    
+pub fn process_torpedo_collision(
+    mut torpedo_events: EventWriter<TorpedoCollisionEvent>, 
+    torpedo_query: Query<(Entity, &GlobalTransform, &Torpedo)>, 
+    structure_query: Query<(&GlobalTransform, &Structure), Without<Torpedo>>, 
+    mut commands: Commands
+) {
     for (t_ent, torpedo_trans, torpedo) in &torpedo_query {
-        let t_pos = torpedo_trans.translation;
+        let t_pos = torpedo_trans.translation();
 
-        for (s_ent, struc_trans, struc) in &structure_query {
-            let s_pos = struc_trans.translation;
+        for (struc_trans, _struc) in &structure_query {
+            let s_pos = struc_trans.translation();
 
             let d_sq = (s_pos - t_pos).length_squared();
             if d_sq < (torpedo.detonate_radius * torpedo.detonate_radius) {
-                torpedo_events.send(TorpedoCollisionEvent { position: t_pos, torpedo: t_ent, damage: torpedo.damage, radius: torpedo.explosion_radius });
+                info!("Sending torpedo collision event!");
+                torpedo_events.send(TorpedoCollisionEvent { position: t_pos, damage: torpedo.damage, radius: torpedo.explosion_radius });
+                commands.get_entity(t_ent).map(|x| { x.despawn_recursive(); Some(()) });
                 break; // break to not send the event more than once
             }
         }
     }
 }
 
-pub fn do_torpedo_events(mut commands: Commands, mut t_events: EventReader<TorpedoCollisionEvent>, mut struc_query: Query<(Entity, &Transform, &mut Structure), Without<Torpedo>>) {
+pub fn do_torpedo_events(
+    sprites: Res<ImageAssets>,
+    mut commands: Commands, 
+    mut t_events: EventReader<TorpedoCollisionEvent>, 
+    mut struc_query: Query<(Entity, &Transform, &mut Structure), Without<Torpedo>>) {
     for event in t_events.iter() {
         let pos = event.position;
         let dmg = event.damage;
         let radius_sq = event.radius * event.radius;
+
+        info!("Torpedo Collision Event at {:?}, with dmg {}!", pos, dmg);
+
+        commands.spawn((
+            SpriteBundle{
+                sprite: Sprite{
+                    custom_size: Some(Vec2::new(16., 16.)),
+                    ..default()
+                },
+                texture: sprites.explosion.clone(),
+                transform: Transform::from_translation(pos),
+                ..default()
+            }, Lifetime{ lifetime: 3. }
+        ));
 
         for (ent, trans, mut struc) in &mut struc_query {
             let dif = pos - trans.translation;
@@ -304,6 +328,21 @@ pub fn do_torpedo_events(mut commands: Commands, mut t_events: EventReader<Torpe
             else {
                 struc.integrity = new_health as u8;
             }
+        }
+    }
+}
+
+pub fn do_lifetime(
+    time: Res<Time>,
+    mut commands: Commands, 
+    mut query: Query<(Entity, &mut Lifetime)>
+) {
+    let dt = time.delta_seconds();
+
+    for (ent, mut life) in &mut query {
+        life.lifetime -= dt;
+        if life.lifetime <= 0. {
+            commands.get_entity(ent).map(|x| { x.despawn_recursive(); Some(()) });
         }
     }
 }
