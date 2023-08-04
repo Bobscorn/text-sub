@@ -19,7 +19,7 @@ Build a spaceship out of ASCII Symbols and fight in a 2 Player deathmatch.
 
     cargo install cargo-watch
 
-    curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sudo sh
+    curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 
     # (Optional) Install the signalling server
     cargo install matchbox_server
