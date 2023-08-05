@@ -12,8 +12,6 @@ use crate::events::*;
 use crate::game_state::GameState;
 use crate::resources::*;
 use crate::input::*;
-
-
 pub struct GgrsConfig;
 
 impl ggrs::Config for GgrsConfig {
