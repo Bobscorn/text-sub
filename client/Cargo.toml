@@ -39,5 +39,6 @@ name = "textship"
 path = "main.rs"
 
 [lib]
+name = "textship_lib"
 crate-type = ["cdylib", "rlib"]
 path = "lib.rs"
