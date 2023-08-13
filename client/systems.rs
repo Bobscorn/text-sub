@@ -139,7 +139,10 @@ pub fn fire_torpedo(
                 value: Vec2::new(20., 0.)
             }, Acceleration(
                 Vec2::new(5., 0.)
-            ), rip.next()));
+            ), 
+            rip.next(),
+            AngularVelocity::default()
+        ));
 
             bullet_ready.0 = false;
         }
