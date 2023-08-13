@@ -149,9 +149,10 @@ pub fn fire_torpedo(
 
 pub fn setup_world(mut commands: Commands, mut font_res: ResMut<FontResource>, asset_server: Res<AssetServer>) {
     commands.spawn(Camera2dBundle{
-        projection: OrthographicProjection { scaling_mode: bevy::render::camera::ScalingMode::FixedVertical(250.), ..default() },
+        projection: OrthographicProjection { scaling_mode: bevy::render::camera::ScalingMode::FixedVertical(250.), ..default() },        
         ..default()
     });
+    commands.insert_resource(ClearColor {0: Color::BLACK});
 
     let font: Handle<Font> = asset_server.load("fonts/FallingSkyBlack.otf");
 
