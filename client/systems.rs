@@ -140,8 +140,7 @@ pub fn fire_torpedo(
             }, Acceleration(
                 Vec2::new(5., 0.)
             ), 
-            rip.next(),
-            AngularVelocity::default()
+            rip.next()
         ));
 
             bullet_ready.0 = false;
@@ -200,6 +199,7 @@ pub fn spawn_mothership(
             SpriteBundle{ transform: Transform::from_translation(ship_pos), ..default() }, 
             Mothership::default(), 
             Velocity{ value: Vec2::ZERO },
+            AngularVelocity::default(),
             Player{ handle: i },
             BulletReady(true),
             rip.next()
