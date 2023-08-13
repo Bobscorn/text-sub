@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_ggrs::ggrs::PlayerHandle;
 
-use crate::constants::MOTHERSHIP_SPEED;
+use crate::constants::*;
 
 pub const INPUT_FIRE: u8 =      1 << 0;
 pub const INPUT_LEFT: u8 =      1 << 1;
