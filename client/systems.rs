@@ -1,3 +1,4 @@
+use std::f32::consts::PI;
 use std::vec;
 
 use bevy::prelude::*;
@@ -97,9 +98,9 @@ pub fn player_action(
         let angular_direction = crate::input::get_rotation(input);
         
         if angular_direction != 0.0_f32 {
-            angular.rotation += angular_direction;
-            transform.rotate_local_z(angular.rotation);
-        }        
+            angular.rotation += angular_direction;            
+        }   
+        transform.rotate_local_z(angular.rotation * PI / 180.0);     
     }
 }
 

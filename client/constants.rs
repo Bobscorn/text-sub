@@ -1,5 +1,6 @@
 
 pub const MOTHERSHIP_SPEED: f32 = 0.25;
+pub const ROTATION_SPEED: f32 = 0.025;
 
 pub const MOTHERSHIP_STRUCTURE_SPACING: f32 = 7.5;
 
