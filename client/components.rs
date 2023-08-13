@@ -6,6 +6,11 @@ pub struct Velocity {
 }
 
 #[derive(Component, Reflect, Default)]
+pub struct AngularVelocity {
+    pub rotation: f32
+}
+
+#[derive(Component, Reflect, Default)]
 pub struct Acceleration(pub Vec2);
 
 #[derive(Component)]

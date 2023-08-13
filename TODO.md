@@ -1,4 +1,4 @@
-- preserve momentum of ships
+-add ship rotation
 
 - reduce text size
 

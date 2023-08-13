@@ -81,21 +81,25 @@ pub fn wait_for_players(
 
 pub fn player_action(
     inputs: Res<PlayerInputs<GgrsConfig>>,
-    mut player_query: Query<(&mut Velocity, &Player), With<Mothership>>
+    mut player_query: Query<(&mut Velocity, &Player, &mut Transform, &mut AngularVelocity), With<Mothership>>
 ) {
     // Basic demonstrational movement for now
-    for (mut velocity, player) in player_query.iter_mut() {
+    for (mut velocity, player, mut transform, mut angular) in player_query.iter_mut() {
         let (input, _) = inputs[player.handle];
 
         let direction = crate::input::direction(input);
 
-        if direction == Vec2::ZERO {
-            continue;
+        if direction != Vec2::ZERO { //player did not move
+            let move_delta = direction * MOTHERSHIP_SPEED;
+            velocity.value += move_delta;
         }
 
-        let move_speed = 0.13;
-        let move_delta = (direction * move_speed);
-        velocity.value += move_delta;
+        let angular_direction = crate::input::get_rotation(input);
+        
+        if angular_direction != 0.0_f32 {
+            angular.rotation += angular_direction;
+            transform.rotate_local_z(angular.rotation);
+        }        
     }
 }
 
