@@ -70,3 +70,4 @@
 
     - click and drag to draw lots of a type of character
 
+- Thrust to Weight Ratio speed calculation
