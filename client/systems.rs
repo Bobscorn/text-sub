@@ -149,7 +149,7 @@ pub fn fire_torpedo(
 
 pub fn setup_world(mut commands: Commands, mut font_res: ResMut<FontResource>, asset_server: Res<AssetServer>) {
     commands.spawn(Camera2dBundle{
-        projection: OrthographicProjection { scaling_mode: bevy::render::camera::ScalingMode::FixedVertical(100.), ..default() },
+        projection: OrthographicProjection { scaling_mode: bevy::render::camera::ScalingMode::FixedVertical(250.), ..default() },
         ..default()
     });
 
@@ -157,13 +157,13 @@ pub fn setup_world(mut commands: Commands, mut font_res: ResMut<FontResource>, a
 
     let text_style = TextStyle {
         font: font.clone(),
-        font_size: 15.,
+        font_size: TEXT_FONT_SIZE,
         color: Color::WHITE,
     };
 
     font_res.font = text_style.clone();
-    font_res.p1_font = TextStyle{ font: font.clone(), font_size: 15., color: Color::BLUE };
-    font_res.p2_font = TextStyle{ font: font.clone(), font_size: 15., color: Color::ORANGE };
+    font_res.p1_font = TextStyle{ font: font.clone(), font_size: TEXT_FONT_SIZE, color: Color::BLUE };
+    font_res.p2_font = TextStyle{ font: font.clone(), font_size: TEXT_FONT_SIZE, color: Color::ORANGE };
 }
 
 pub fn spawn_mothership(
@@ -195,7 +195,7 @@ pub fn spawn_mothership(
         let ship_pos = base_poses[i];
         println!("Spawning ship at {:?}", ship_pos);
         commands.spawn((
-            SpriteBundle{ transform: Transform::from_translation(ship_pos), ..default() }, 
+            SpriteBundle{ transform: Transform::from_scale(Vec3::ONE * 0.2f32) * Transform::from_translation(ship_pos), ..default() }, 
             Mothership::default(), 
             Velocity{ value: Vec2::ZERO },
             AngularVelocity::default(),
