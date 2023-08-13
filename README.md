@@ -75,6 +75,12 @@ wasm-pack test --headless --firefox
 wasm-pack build --release --target bundler --out-dir target/bundle
 ```
 
+## FAQ ##
+
+### My ships don't move when I open two tabs! ###
+
+This is a known bug with the ship detection algorithm. It will work with multi windows and real 2 player scenarios.
+
 ## Libraries ##
 
 - rust syntax refresher: https://learnxinyminutes.com/docs/rust/

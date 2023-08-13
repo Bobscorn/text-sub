@@ -81,10 +81,10 @@ pub fn wait_for_players(
 
 pub fn player_action(
     inputs: Res<PlayerInputs<GgrsConfig>>,
-    mut player_query: Query<(&mut Transform, &Player), With<Mothership>>
+    mut player_query: Query<(&mut Velocity, &Player), With<Mothership>>
 ) {
     // Basic demonstrational movement for now
-    for (mut transform, player) in player_query.iter_mut() {
+    for (mut velocity, player) in player_query.iter_mut() {
         let (input, _) = inputs[player.handle];
 
         let direction = crate::input::direction(input);
@@ -94,8 +94,8 @@ pub fn player_action(
         }
 
         let move_speed = 0.13;
-        let move_delta = (direction * move_speed).extend(0.);
-        transform.translation += move_delta;
+        let move_delta = (direction * move_speed);
+        velocity.value += move_delta;
     }
 }
 
@@ -192,6 +192,7 @@ pub fn spawn_mothership(
         commands.spawn((
             SpriteBundle{ transform: Transform::from_translation(ship_pos), ..default() }, 
             Mothership::default(), 
+            Velocity{ value: Vec2::ZERO },
             Player{ handle: i },
             BulletReady(true),
             rip.next()
@@ -226,8 +227,8 @@ pub fn print_position_system(query: Query<&Transform>) {
 pub fn move_projectile(time: Res<Time>, mut query: Query<(&mut Transform, &Velocity)>) {
     let dt = time.delta_seconds();
     
-    for (mut transform, vel) in &mut query {
-        let movement_2d = vel.value * dt;
+    for (mut transform, velocity) in &mut query {
+        let movement_2d = velocity.value * dt;
         transform.translation += Vec3::new(movement_2d.x, movement_2d.y, 0.0f32);
     }
 }
