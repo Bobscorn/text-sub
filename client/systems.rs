@@ -158,7 +158,7 @@ pub fn setup_world(mut commands: Commands, mut font_res: ResMut<FontResource>, a
     let text_style = TextStyle {
         font: font.clone(),
         font_size: TEXT_FONT_SIZE,
-        color: Color::WHITE,
+        color: Color::LIME_GREEN,
     };
 
     font_res.font = text_style.clone();
