@@ -162,8 +162,7 @@ pub fn setup_world(mut commands: Commands, mut font_res: ResMut<FontResource>, a
     };
 
     font_res.font = text_style.clone();
-    font_res.p1_font = TextStyle{ font: font.clone(), font_size: TEXT_FONT_SIZE, color: Color::BLUE };
-    font_res.p2_font = TextStyle{ font: font.clone(), font_size: TEXT_FONT_SIZE, color: Color::ORANGE };
+    font_res.p1_font = TextStyle{ font: font.clone(), font_size: TEXT_FONT_SIZE, color: Color::LIME_GREEN };
 }
 
 pub fn spawn_mothership(
@@ -189,7 +188,6 @@ pub fn spawn_mothership(
     let chars = vec!["}", "{", "6", "=", "-", "/", ":", "]", "[", "!", "#", "%", "$"];
 
     let base_poses = vec![Vec3::new(-pos, 0., 0.), Vec3::new(pos, 0., 0.)];
-    let text_styles = vec![fonts.p1_font.clone(), fonts.p2_font.clone()];
 
     for i in 0..2 {
         let ship_pos = base_poses[i];
@@ -209,7 +207,7 @@ pub fn spawn_mothership(
                         parent.spawn((
                             Text2dBundle{ 
                                 text: Text { 
-                                    sections: vec![TextSection::new(chars[(x + y) % 13], text_styles[i].clone())],
+                                    sections: vec![TextSection::new(chars[(x + y) % 13], fonts.p1_font.clone())],
                                     ..default()
                                 },
                                 transform: Transform::from_translation(bottom_left + Vec3::new(x as f32 * MOTHERSHIP_STRUCTURE_SPACING, y as f32 * MOTHERSHIP_STRUCTURE_SPACING, 0.)),
