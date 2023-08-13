@@ -1,9 +1,17 @@
 use bevy::prelude::*;
 
-#[derive(Component)]
+#[derive(Component, Reflect, Default)]
 pub struct Velocity {
     pub value: Vec2
 }
+
+#[derive(Component, Reflect, Default)]
+pub struct AngularVelocity {
+    pub rotation: f32
+}
+
+#[derive(Component, Reflect, Default)]
+pub struct Acceleration(pub Vec2);
 
 #[derive(Component)]
 pub struct Colour {
@@ -32,6 +40,19 @@ pub struct Torpedo {
     pub detonate_radius: f32,
     pub explosion_radius: f32
 }
+
+impl Torpedo {
+    pub fn default() -> Torpedo {
+        Torpedo {
+            damage: 10_u8,
+            detonate_radius: 4.0_f32,
+            explosion_radius: 7.5_f32
+        }
+    }
+}
+
+#[derive(Component, Reflect, Default)]
+pub struct BulletReady(pub bool);
 
 #[derive(Component)]
 pub struct TorpedoLauncher {
@@ -96,4 +117,14 @@ pub struct FighterDrone {
 #[derive(Component, Default)]
 pub struct Mothership {
     pub num_entities: u32
+}
+
+#[derive(Component)]
+pub struct Player {
+    pub handle: usize
+}
+
+#[derive(Component, Reflect, Default, Clone, Copy)]
+pub struct Lifetime {
+    pub lifetime: f32 // Remaining Lifetime in seconds
 }

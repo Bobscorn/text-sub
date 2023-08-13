@@ -1,12 +1,10 @@
 use bevy::prelude::*;
 
-
 #[derive(Debug)]
 pub struct TorpedoCollisionEvent {
     pub position: Vec3,
     pub damage: u8,
-    pub radius: f32,
-    pub torpedo: Entity
+    pub radius: f32
 }
 
 #[derive(Debug)]
@@ -17,5 +15,6 @@ pub struct SpawnTorpedoEvent {
 
 #[derive(Resource, Default)]
 pub struct FontResource {
-    pub font: TextStyle
+    pub font: TextStyle,
+    pub p1_font: TextStyle,
 }
