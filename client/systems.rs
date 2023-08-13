@@ -131,11 +131,9 @@ pub fn fire_torpedo(
                     ..default()
                 },
                 ..default()
-            }, Torpedo {
-                damage: 10u8,
-                detonate_radius: 4.,
-                explosion_radius: 7.5
-            }, Velocity {
+            }, 
+            Torpedo::default(),
+            Velocity {
                 value: Vec2::new(20., 0.)
             }, Acceleration(
                 Vec2::new(5., 0.)

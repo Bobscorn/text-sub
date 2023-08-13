@@ -41,6 +41,16 @@ pub struct Torpedo {
     pub explosion_radius: f32
 }
 
+impl Torpedo {
+    pub fn default() -> Torpedo {
+        Torpedo {
+            damage: 10_u8,
+            detonate_radius: 4.0_f32,
+            explosion_radius: 7.5_f32
+        }
+    }
+}
+
 #[derive(Component, Reflect, Default)]
 pub struct BulletReady(pub bool);
 
