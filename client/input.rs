@@ -66,11 +66,11 @@ pub fn get_rotation(input: u8) -> f32 {
     let mut angular_velocity = 0.0_f32;
 
     if input & INPUT_CCLOCKWISE != 0 {
-        angular_velocity += -ROTATION_SPEED;
+        angular_velocity += ROTATION_SPEED;
     }
 
     if input & INPUT_CLOCKWISE != 0 {
-        angular_velocity += ROTATION_SPEED;
+        angular_velocity += -ROTATION_SPEED;
     }
     angular_velocity
 }
