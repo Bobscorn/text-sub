@@ -1,0 +1,20 @@
+DRAFT FOR SHIP BUILDER AND MAIN MENU:
+
+ - New Game States
+ - UI For Main Menu
+    - Play Button -> Go to MatchMaking state
+    - Draft other buttons:
+        - Quit (is there a point in wasm?)
+        - Options (possibly a stretch goal)
+ - UI For Ship Builder
+    - Draft: 
+        - Buttons to pick a ship part to place
+        - Visible Grid to place ship parts onto
+        - Left click to place picked part
+        - Right click to erase part
+        - E/Q/Scroll wheel (without shift) to rotate hovered piece
+        - Middle Mouse + Mouse Movement/WASD/Arrow keys to move around Grid
+        - Shift + Scroll wheel/Page Up/Page Down to zoom in or out
+
+
+

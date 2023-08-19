@@ -15,7 +15,7 @@ impl Plugin for GamePlugin {
             .add_state::<GameState>()
             .add_loading_state(
                 LoadingState::new(GameState::AssetLoading)
-                    .continue_to_state(GameState::MatchMaking)
+                    .continue_to_state(GameState::MainMenu)
             )
             .add_collection_to_loading_state::<_, ImageAssets>(GameState::AssetLoading)
             .add_event::<TorpedoCollisionEvent>()
