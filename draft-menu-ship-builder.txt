@@ -2,6 +2,7 @@ DRAFT FOR SHIP BUILDER AND MAIN MENU:
 
  - New Game States
  - UI For Main Menu
+    - Build Ships button -> go to builder scene
     - Play Button -> Go to MatchMaking state
     - Draft other buttons:
         - Quit (is there a point in wasm?)

@@ -3,8 +3,8 @@ use bevy_ggrs::GGRSPlugin;
 
 use crate::components::*;
 use crate::plugin::GamePlugin;
-use crate::input::player_input;
-use crate::systems::GgrsConfig;
+use crate::input::*;
+use crate::implementations::*;
 
 pub fn start() {
     let mut app = App::new();

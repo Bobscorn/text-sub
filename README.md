@@ -85,6 +85,10 @@ This is a known bug with the ship detection algorithm. It will work with multi w
 
 - rust syntax refresher: https://learnxinyminutes.com/docs/rust/
 
+- rust book: https://doc.rust-lang.org/stable/book/
+
+- rust api: https://doc.rust-lang.org/std/
+
 - bevy api: https://docs.rs/bevy/latest/bevy/
 
 - bevy unofficial book: https://bevy-cheatbook.github.io/
@@ -106,3 +110,5 @@ This is a known bug with the ship detection algorithm. It will work with multi w
 - matchbox: https://github.com/johanhelsing/matchbox/
 
 - wasm server runner: https://github.com/jakobhellermann/wasm-server-runner
+
+- bevy_ggrs api: https://docs.rs/bevy_ggrs/0.13.0/bevy_ggrs/

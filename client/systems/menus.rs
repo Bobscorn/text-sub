@@ -1,6 +1,6 @@
 use bevy::prelude::*;
-
-use crate::{game_state::GameState, events::FontResource};
+use crate::events::*;
+use crate::enums::*;
 
 #[derive(PartialEq)]
 pub enum ButtonType {

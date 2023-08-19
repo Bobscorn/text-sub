@@ -3,10 +3,13 @@ use bevy_ggrs::GGRSSchedule;
 use bevy_asset_loader::prelude::*;
 
 use crate::events::{TorpedoCollisionEvent, SpawnTorpedoEvent, FontResource};
-use crate::game_state::GameState;
-use crate::systems::*;
+use crate::enums::*;
 use crate::resources::*;
-use crate::mainmenu::*;
+use crate::systems::movement::*;
+use crate::systems::menus::*;
+use crate::systems::multiplayer::*;
+use crate::systems::torpedos::*;
+use crate::systems::utils::*;
 
 pub struct GamePlugin;
 
