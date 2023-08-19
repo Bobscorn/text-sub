@@ -6,6 +6,7 @@ use crate::events::{TorpedoCollisionEvent, SpawnTorpedoEvent, FontResource};
 use crate::game_state::GameState;
 use crate::systems::*;
 use crate::resources::*;
+use crate::mainmenu::*;
 
 pub struct GamePlugin;
 
@@ -21,7 +22,14 @@ impl Plugin for GamePlugin {
             .add_event::<TorpedoCollisionEvent>()
             .add_event::<SpawnTorpedoEvent>()
             .insert_resource(FontResource::default())
+            // General Setup
+            .add_startup_system(setup_world)
+            // Main Menu
+            .add_system(setup_mainmenu.after(setup_world).in_schedule(OnEnter(GameState::MainMenu)))
+            .add_system(handle_buttons.run_if(in_state(GameState::MainMenu)))
+            // Match making
             .add_system(wait_for_players.run_if(in_state(GameState::MatchMaking)))
+            // In Game
             .add_systems((
                 fire_torpedo.after(player_action),
                 player_action.before(move_projectile).before(accelerate_projectile),
@@ -33,9 +41,8 @@ impl Plugin for GamePlugin {
                 do_lifetime.after(do_torpedo_events)
             ).in_schedule(GGRSSchedule))
             .add_systems((
-                setup_world.before(spawn_mothership), 
                 start_matchbox_socket, 
-                spawn_mothership
+                spawn_mothership.after(setup_world)
             ).in_schedule(OnEnter(GameState::MatchMaking)));
     }
 }

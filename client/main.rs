@@ -9,6 +9,7 @@ mod macros;
 mod input;
 mod resources;
 mod game_state;
+mod mainmenu;
 
 use wasm_bindgen::prelude::*;
 use start::start;

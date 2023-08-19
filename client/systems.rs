@@ -156,13 +156,7 @@ pub fn setup_world(mut commands: Commands, mut font_res: ResMut<FontResource>, a
 
     let font: Handle<Font> = asset_server.load("fonts/FallingSkyBlack.otf");
 
-    let text_style = TextStyle {
-        font: font.clone(),
-        font_size: TEXT_FONT_SIZE,
-        color: Color::LIME_GREEN,
-    };
-
-    font_res.font = text_style.clone();
+    font_res.font = font.clone();
     font_res.p1_font = TextStyle{ font: font.clone(), font_size: TEXT_FONT_SIZE, color: Color::LIME_GREEN };
 }
 
@@ -259,7 +253,7 @@ pub fn move_mothership(time: Res<Time>, mut query: Query<&mut Transform, With<Mo
 
 pub fn spawn_torpedos(mut spawn_events: EventReader<SpawnTorpedoEvent>, mut commands: Commands, fonts: Res<FontResource>) {
 
-    let text_style = fonts.font.clone();
+    let text_style = fonts.p1_font.clone();
 
     for spawn in spawn_events.iter() {
         commands.spawn((Text2dBundle{ 

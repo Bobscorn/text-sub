@@ -9,6 +9,7 @@ mod macros;
 mod input;
 mod resources;
 mod game_state;
+mod mainmenu;
 
 use start::start;
 use utils::set_panic_hook;
