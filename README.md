@@ -49,17 +49,17 @@ Build a spaceship out of ASCII Symbols and fight in a 2 Player deathmatch.
 
 ## Client: Run a development build ##
 
+- Run the signalling server locally:
+    ```
+    matchbox_server
+    ```
+
 - Start the wasm-server-runner:
     ```
     cargo run --target wasm32-unknown-unknown
     ```
 
 - Open a browser tab at 127.0.0.1:1334 (or whatever the port is).
-
-- Run the signalling server locally:
-    ```
-    matchbox_server
-    ```
 
 Multiple tabs can connect to the wasm-server-runner, which means you can run multiple clients on the same machine.
 
