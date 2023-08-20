@@ -11,6 +11,7 @@ use crate::systems::menus::*;
 use crate::systems::multiplayer::*;
 use crate::systems::torpedos::*;
 use crate::systems::utils::*;
+use crate::systems::ui::{check_ui_interaction, UiHandling};
 
 pub struct GamePlugin;
 
@@ -26,8 +27,10 @@ impl Plugin for GamePlugin {
             .add_event::<TorpedoCollisionEvent>()
             .add_event::<SpawnTorpedoEvent>()
             .insert_resource(FontResource::default())
-            // General Setup
+            .insert_resource(UiHandling::default())
+            // General Systems
             .add_startup_system(setup_world)
+            .add_system(check_ui_interaction)
             // Main Menu
             .add_system(setup_mainmenu.after(setup_world).in_schedule(OnEnter(GameState::MainMenu)))
             .add_system(handle_buttons.run_if(in_state(GameState::MainMenu)))
