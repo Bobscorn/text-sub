@@ -22,8 +22,7 @@ pub struct MyButton {
 pub struct MenuColors {
     menu_background: Color,
     button_normal: Color,
-    button_pressed: Color,
-    button_selected: Color
+    button_pressed: Color
 }
 
 pub fn setup_mainmenu(
