@@ -30,6 +30,7 @@ impl Plugin for GamePlugin {
             // Main Menu
             .add_system(setup_mainmenu.after(setup_world).in_schedule(OnEnter(GameState::MainMenu)))
             .add_system(handle_buttons.run_if(in_state(GameState::MainMenu)))
+            .add_system(exit_menu.in_schedule(OnExit(GameState::MainMenu)))
             // Match making
             .add_system(wait_for_players.run_if(in_state(GameState::MatchMaking)))
             // In Game

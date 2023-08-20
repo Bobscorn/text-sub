@@ -8,6 +8,11 @@ pub enum ButtonType {
     // QuitButton
 }
 
+#[derive(Resource)]
+pub struct MainMenu {
+    pub ui: Entity
+}
+
 #[derive(Component)]
 pub struct MyButton {
     pub identifier: ButtonType
@@ -23,11 +28,11 @@ pub struct MenuColors {
 
 pub fn setup_mainmenu(
     mut commands: Commands,
-    fonts: Res<FontResource>,
+    fonts: Res<FontResource>
 ) {
     let colors = MenuColors{ menu_background: Color::rgb(0.1, 0.1, 0.1), button_normal: Color::GRAY, button_pressed: Color::DARK_GRAY, button_selected: Color::rgb(0.35, 0.35, 0.35) };
 
-    commands.spawn(NodeBundle{
+    let root = commands.spawn(NodeBundle{
         style: Style {
             size: Size { width: Val::Percent(100.0), height: Val::Percent(100.0) },
             align_items: AlignItems::Center,
@@ -53,8 +58,20 @@ pub fn setup_mainmenu(
                 color: Color::rgb(0.8, 0.8, 0.8)
             }));
         });
-    });
+    }).id();
+
+    commands.insert_resource(MainMenu{ ui: root });
     commands.insert_resource(colors);
+}
+
+pub fn exit_menu(
+    mut commands: Commands,
+    menu_res: Res<MainMenu>
+) {
+    if let Some(ent) = commands.get_entity(menu_res.ui) {
+        ent.despawn_recursive();
+    }
+    commands.remove_resource::<MainMenu>();
 }
 
 pub fn handle_buttons(
