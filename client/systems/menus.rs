@@ -29,7 +29,7 @@ pub fn setup_mainmenu(
     mut commands: Commands,
     fonts: Res<FontResource>
 ) {
-    let colors = MenuColors{ menu_background: Color::rgb(0.1, 0.1, 0.1), button_normal: Color::GRAY, button_pressed: Color::DARK_GRAY, button_selected: Color::rgb(0.35, 0.35, 0.35) };
+    let colors = MenuColors{ menu_background: Color::rgb(0.1, 0.1, 0.1), button_normal: Color::GRAY, button_pressed: Color::DARK_GRAY };
 
     let root = commands.spawn(NodeBundle{
         style: Style {
