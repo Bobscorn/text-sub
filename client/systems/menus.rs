@@ -28,7 +28,9 @@ pub fn setup_mainmenu(
         style: Style {
             size: Size { width: Val::Percent(100.0), height: Val::Percent(100.0) },
             align_items: AlignItems::Center,
+            flex_direction: FlexDirection::Column,
             justify_content: JustifyContent::Center,
+            gap: Size { width: Val::Px(0.0), height: Val::Px(25.0) },
             ..default()
         },
         background_color: colors.menu_background.into(),
@@ -36,7 +38,7 @@ pub fn setup_mainmenu(
     }).with_children(|node_parent| {
         node_parent.spawn((ButtonBundle {
             style: Style {
-                size: Size { width: Val::Px(150.0), height: Val::Px(50.0) },
+                size: Size { width: Val::Px(225.0), height: Val::Px(50.0) },
                 justify_content: JustifyContent::Center,
                 align_items: AlignItems::Center,
                 ..default()
@@ -53,7 +55,7 @@ pub fn setup_mainmenu(
         });
         node_parent.spawn((ButtonBundle{ 
             style: Style {
-                size: Size { width: Val::Px(150.0), height: Val::Px(50.0) },
+                size: Size { width: Val::Px(225.0), height: Val::Px(50.0) },
                 justify_content: JustifyContent::Center,
                 align_items: AlignItems::Center,
                 ..default()
