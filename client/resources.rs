@@ -12,3 +12,12 @@ pub struct ImageAssets {
     #[asset(path = "explosion.png")]
     pub explosion: Handle<Image>,
 }
+
+#[derive(Resource)]
+pub struct Colors {
+    pub normal_text: Color,
+    pub ship_text: Color,
+    pub menu_background: Color,
+    pub button_normal: Color,
+    pub button_pressed: Color
+}

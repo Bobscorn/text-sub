@@ -1,11 +1,12 @@
 use bevy::prelude::*;
 use crate::events::*;
 use crate::enums::*;
+use crate::resources::*;
 
 #[derive(PartialEq)]
 pub enum ButtonType {
     PlayButton,
-    // QuitButton
+    ShipBuilderButton,
 }
 
 #[derive(Resource)]
@@ -18,19 +19,11 @@ pub struct MyButton {
     pub identifier: ButtonType
 }
 
-#[derive(Resource)]
-pub struct MenuColors {
-    menu_background: Color,
-    button_normal: Color,
-    button_pressed: Color
-}
-
 pub fn setup_mainmenu(
     mut commands: Commands,
+    colors: Res<Colors>,
     fonts: Res<FontResource>
 ) {
-    let colors = MenuColors{ menu_background: Color::rgb(0.1, 0.1, 0.1), button_normal: Color::GRAY, button_pressed: Color::DARK_GRAY };
-
     let root = commands.spawn(NodeBundle{
         style: Style {
             size: Size { width: Val::Percent(100.0), height: Val::Percent(100.0) },
@@ -38,20 +31,38 @@ pub fn setup_mainmenu(
             justify_content: JustifyContent::Center,
             ..default()
         },
+        background_color: colors.menu_background.into(),
         ..default()
-    }).with_children(|parent| {
-        parent.spawn((ButtonBundle {
+    }).with_children(|node_parent| {
+        node_parent.spawn((ButtonBundle {
             style: Style {
                 size: Size { width: Val::Px(150.0), height: Val::Px(50.0) },
                 justify_content: JustifyContent::Center,
                 align_items: AlignItems::Center,
                 ..default()
             },
-            background_color: colors.menu_background.into(),
+            background_color: colors.button_normal.into(),
             ..default()
         }, MyButton{ identifier: ButtonType::PlayButton }))
-        .with_children(|parent| {
-            parent.spawn(TextBundle::from_section("Play", TextStyle{ 
+        .with_children(|button_parent| {
+            button_parent.spawn(TextBundle::from_section("Play", TextStyle{ 
+                font: fonts.font.clone(),
+                font_size: 40.0,
+                color: Color::rgb(0.8, 0.8, 0.8)
+            }));
+        });
+        node_parent.spawn((ButtonBundle{ 
+            style: Style {
+                size: Size { width: Val::Px(150.0), height: Val::Px(50.0) },
+                justify_content: JustifyContent::Center,
+                align_items: AlignItems::Center,
+                ..default()
+            },
+            background_color: colors.button_normal.into(),
+            ..default()
+        }, MyButton{ identifier: ButtonType::ShipBuilderButton }))
+        .with_children(|button_parent| {
+            button_parent.spawn(TextBundle::from_section("Ship Builder", TextStyle{
                 font: fonts.font.clone(),
                 font_size: 40.0,
                 color: Color::rgb(0.8, 0.8, 0.8)
@@ -60,10 +71,9 @@ pub fn setup_mainmenu(
     }).id();
 
     commands.insert_resource(MainMenu{ ui: root });
-    commands.insert_resource(colors);
 }
 
-pub fn exit_menu(
+pub fn exit_main_menu(
     mut commands: Commands,
     menu_res: Res<MainMenu>
 ) {
@@ -74,7 +84,7 @@ pub fn exit_menu(
 }
 
 pub fn handle_buttons(
-    colors: Res<MenuColors>,
+    colors: Res<Colors>,
     mut interaction_query: Query<
         (
             &Interaction,
@@ -97,9 +107,19 @@ pub fn handle_buttons(
             Interaction::Hovered => (),
         }
 
-        if button_type.identifier == ButtonType::PlayButton && *interaction == Interaction::Clicked {
-            info!("Play button pressed, going into matchmaking.");
-            next_state.set(GameState::MatchMaking);
+        if *interaction != Interaction::Clicked {
+            continue;
+        }
+
+        match button_type.identifier {
+            ButtonType::PlayButton => {
+                info!("Play button pressed, going into matchmaking.");
+                next_state.set(GameState::MatchMaking);
+            },
+            ButtonType::ShipBuilderButton => {
+                info!("Ship builder button pressed, going into.... something......");
+                next_state.set(GameState::ShipBuilding);
+            }
         }
     }
 }

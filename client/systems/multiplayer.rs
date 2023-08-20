@@ -93,19 +93,6 @@ pub fn player_action(
     }
 }
 
-pub fn setup_world(mut commands: Commands, mut font_res: ResMut<FontResource>, asset_server: Res<AssetServer>) {
-    commands.spawn(Camera2dBundle{
-        projection: OrthographicProjection { scaling_mode: bevy::render::camera::ScalingMode::FixedVertical(250.), ..default() },        
-        ..default()
-    });
-    commands.insert_resource(ClearColor {0: Color::BLACK});
-
-    let font: Handle<Font> = asset_server.load("fonts/FallingSkyBlack.otf");
-
-    font_res.font = font.clone();
-    font_res.p1_font = TextStyle{ font: font.clone(), font_size: TEXT_FONT_SIZE, color: Color::LIME_GREEN };
-}
-
 pub fn spawn_mothership(
     mut commands: Commands, 
     fonts: Res<FontResource>, 
