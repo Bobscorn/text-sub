@@ -36,6 +36,10 @@ impl Plugin for GamePlugin {
             .add_system(setup_mainmenu.after(setup_world).in_schedule(OnEnter(GameState::MainMenu)))
             .add_system(handle_main_menu_buttons.run_if(in_state(GameState::MainMenu)))
             .add_system(exit_main_menu.in_schedule(OnExit(GameState::MainMenu)))
+            // Ship Building
+            .add_system(setup_ship_builder.in_schedule(OnEnter(GameState::ShipBuilding)))
+            .add_system(handle_ship_builder_buttons.run_if(in_state(GameState::ShipBuilding)))
+            .add_system(exit_ship_builder.in_schedule(OnExit(GameState::ShipBuilding)))
             // Match making
             .add_system(wait_for_players.run_if(in_state(GameState::MatchMaking)))
             // In Game
@@ -71,6 +75,7 @@ pub fn setup_world(mut commands: Commands, mut font_res: ResMut<FontResource>, a
         normal_text: Color::rgb(0.8, 0.8, 0.8), 
         ship_text: Color::LIME_GREEN, 
         menu_background: Color::rgb(0.1, 0.1, 0.1), 
+        node_background: Color::rgb(0.2, 0.2, 0.2),
         button_normal: Color::GRAY, 
         button_pressed: Color::DARK_GRAY 
     };

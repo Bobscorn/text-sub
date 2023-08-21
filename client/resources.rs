@@ -18,6 +18,7 @@ pub struct Colors {
     pub normal_text: Color,
     pub ship_text: Color,
     pub menu_background: Color,
+    pub node_background: Color,
     pub button_normal: Color,
     pub button_pressed: Color
 }
