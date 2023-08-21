@@ -45,10 +45,9 @@ pub fn setup_mainmenu(
                 align_items: AlignItems::Center,
                 ..default()
             },
-            background_color: colors.button_normal.into(),
-            ..default()
-        }, MyButton{ identifier: ButtonType::PlayButton }))
-        .with_children(|button_parent| {
+            InteractButton::from_clicked(colors.button_normal, colors.button_pressed),
+            MyButton{ identifier: ButtonType::PlayButton })
+        ).with_children(|button_parent| {
             button_parent.spawn(TextBundle::from_section("Play", TextStyle{ 
                 font: fonts.font.clone(),
                 font_size: 40.0,
@@ -61,11 +60,10 @@ pub fn setup_mainmenu(
                 justify_content: JustifyContent::Center,
                 align_items: AlignItems::Center,
                 ..default()
-            },
-            background_color: colors.button_normal.into(),
-            ..default()
-        }, MyButton{ identifier: ButtonType::ShipBuilderButton }))
-        .with_children(|button_parent| {
+            }, 
+            InteractButton::from_clicked(colors.button_normal, colors.button_pressed), 
+            MyButton{ identifier: ButtonType::ShipBuilderButton })
+        ).with_children(|button_parent| {
             button_parent.spawn(TextBundle::from_section("Ship Builder", TextStyle{
                 font: fonts.font.clone(),
                 font_size: 40.0,
