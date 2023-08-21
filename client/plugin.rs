@@ -2,6 +2,7 @@ use bevy::prelude::*;
 use bevy_ggrs::GGRSSchedule;
 use bevy_asset_loader::prelude::*;
 
+use crate::components::MainCamera;
 use crate::events::{TorpedoCollisionEvent, SpawnTorpedoEvent, FontResource};
 use crate::enums::*;
 use crate::resources::*;
@@ -39,6 +40,7 @@ impl Plugin for GamePlugin {
             // Ship Building
             .add_system(setup_ship_builder.in_schedule(OnEnter(GameState::ShipBuilding)))
             .add_system(handle_ship_builder_buttons.run_if(in_state(GameState::ShipBuilding)))
+            .add_system(place_ship_builder_parts.run_if(in_state(GameState::ShipBuilding)))
             .add_system(exit_ship_builder.in_schedule(OnExit(GameState::ShipBuilding)))
             // Match making
             .add_system(wait_for_players.run_if(in_state(GameState::MatchMaking)))
@@ -63,10 +65,10 @@ impl Plugin for GamePlugin {
 
 
 pub fn setup_world(mut commands: Commands, mut font_res: ResMut<FontResource>, asset_server: Res<AssetServer>) {
-    commands.spawn(Camera2dBundle{
+    commands.spawn((Camera2dBundle{
         projection: OrthographicProjection { scaling_mode: bevy::render::camera::ScalingMode::FixedVertical(250.), ..default() },        
         ..default()
-    });
+    }, MainCamera));
     commands.insert_resource(ClearColor {0: Color::BLACK});
 
     let font: Handle<Font> = asset_server.load("fonts/FallingSkyBlack.otf");

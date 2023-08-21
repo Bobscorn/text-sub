@@ -1,9 +1,12 @@
 use bevy::prelude::*;
+use bevy::window::PrimaryWindow;
+use crate::components::MainCamera;
 use crate::events::*;
 use crate::enums::*;
 use crate::resources::*;
 
 use super::ui::InteractButton;
+use super::ui::UiHandling;
 
 #[derive(PartialEq)]
 pub enum ButtonType {
@@ -201,7 +204,7 @@ pub fn setup_ship_builder(
                     flex_direction: FlexDirection::ColumnReverse,
                     ..default()
                 },
-                background_color: colors.menu_background.into(),
+                background_color: Color::rgba(0.0, 0.0, 0.0, 0.0).into(),
                 ..default()
             }
         ).with_children(|root_parent| {
@@ -220,7 +223,7 @@ pub fn setup_ship_builder(
                 // for now just a simple button
                 node_parent.spawn((ButtonBundle {
                     style: Style {
-                        size: Size { width: Val::Px(40.0), height: Val::Percent(40.0) },
+                        size: Size { width: Val::Px(40.0), height: Val::Px(40.0) },
                         align_items: AlignItems::Center,
                         justify_content: JustifyContent::Center,
                         ..default()
@@ -234,6 +237,11 @@ pub fn setup_ship_builder(
 
     let root_id = root_commands.id();
     commands.insert_resource(UIMenu{ ui: root_id });
+
+    // Spawn the placement grid
+
+
+
 }
 
 pub fn exit_ship_builder(
@@ -260,4 +268,50 @@ pub fn handle_ship_builder_buttons(
     mut next_state: ResMut<NextState<GameState>>
 ) {
 
+}
+
+pub fn place_ship_builder_parts(
+    mut commands: Commands,
+    window_query: Query<&Window, With<PrimaryWindow>>,
+    cam_query: Query<(&Camera, &GlobalTransform), With<MainCamera>>,
+    input: Res<Input<MouseButton>>,
+    over_ui: Res<UiHandling>,
+    fonts: Res<FontResource>
+) {
+    if !over_ui.is_pointer_over_ui && input.just_pressed(MouseButton::Left) {
+        // Do all that juicy cursor pos -> world pos stuff
+
+        let (cam, cam_trans) = match cam_query.get_single() {
+            Ok((c, ct)) => (c, ct),
+            Err(_) => return
+        };
+
+        let window = match window_query.get_single() {
+            Ok(w) => w,
+            Err(_) => return
+        };
+
+        let cursor_pos = match window.cursor_position() {
+            Some(pos) => pos,
+            None => return
+        };
+
+        let ray = match cam.viewport_to_world(cam_trans, cursor_pos) {
+            Some(r) => r,
+            None => return
+        };
+
+        // *wipes forehead* phew that took a lot of matching
+        let world_pos = ray.origin.truncate();
+
+        info!("Clicked on {:?}!", world_pos);
+
+        commands.spawn(
+            Text2dBundle
+            { 
+                transform: Transform::from_translation(world_pos.extend(0.0)),
+                text: Text::from_section("$", fonts.p1_font.clone()),
+                ..default()
+            });
+    }
 }

@@ -128,3 +128,6 @@ pub struct Player {
 pub struct Lifetime {
     pub lifetime: f32 // Remaining Lifetime in seconds
 }
+
+#[derive(Component)]
+pub struct MainCamera;
