@@ -3,6 +3,8 @@ use crate::events::*;
 use crate::enums::*;
 use crate::resources::*;
 
+use super::ui::InteractButton;
+
 #[derive(PartialEq)]
 pub enum ButtonType {
     PlayButton,

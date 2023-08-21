@@ -11,7 +11,7 @@ use crate::systems::menus::*;
 use crate::systems::multiplayer::*;
 use crate::systems::torpedos::*;
 use crate::systems::utils::*;
-use crate::systems::ui::{check_ui_interaction, UiHandling};
+use crate::systems::ui::{check_ui_interaction, UiHandling, handle_interaction_buttons};
 
 pub struct GamePlugin;
 
@@ -31,9 +31,10 @@ impl Plugin for GamePlugin {
             // General Systems
             .add_startup_system(setup_world)
             .add_system(check_ui_interaction)
+            .add_system(handle_interaction_buttons)
             // Main Menu
             .add_system(setup_mainmenu.after(setup_world).in_schedule(OnEnter(GameState::MainMenu)))
-            .add_system(handle_buttons.run_if(in_state(GameState::MainMenu)))
+            .add_system(handle_main_menu_buttons.run_if(in_state(GameState::MainMenu)))
             .add_system(exit_main_menu.in_schedule(OnExit(GameState::MainMenu)))
             // Match making
             .add_system(wait_for_players.run_if(in_state(GameState::MatchMaking)))
