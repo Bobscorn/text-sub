@@ -32,9 +32,9 @@ impl Plugin for GamePlugin {
             .add_startup_system(setup_world)
             .add_system(check_ui_interaction)
             .add_system(handle_interaction_buttons)
+            .add_system(handle_menu_buttons)
             // Main Menu
             .add_system(setup_mainmenu.after(setup_world).in_schedule(OnEnter(GameState::MainMenu)))
-            .add_system(handle_main_menu_buttons.run_if(in_state(GameState::MainMenu)))
             .add_system(exit_main_menu.in_schedule(OnExit(GameState::MainMenu)))
             // Ship Building
             .add_system(setup_ship_builder.in_schedule(OnEnter(GameState::ShipBuilding)))

@@ -9,6 +9,7 @@ use super::ui::InteractButton;
 pub enum ButtonType {
     PlayButton,
     ShipBuilderButton,
+    BackToMenuButton
 }
 
 #[derive(Resource)]
@@ -96,13 +97,15 @@ pub fn exit_main_menu(
     commands.remove_resource::<UIMenu>();
 }
 
-pub fn handle_main_menu_buttons(
+pub fn handle_menu_buttons(
     interaction_query: Query<
         (
             &Interaction,
             &MyButton
-        ),
-        (Changed<Interaction>, With<Button>)
+        ), (
+            Changed<Interaction>, 
+            With<Button>
+        )
     >,
     mut next_state: ResMut<NextState<GameState>>
 ) {
@@ -119,6 +122,10 @@ pub fn handle_main_menu_buttons(
             ButtonType::ShipBuilderButton => {
                 info!("Ship builder button pressed, going into.... something......");
                 next_state.set(GameState::ShipBuilding);
+            },
+            ButtonType::BackToMenuButton => {
+                info!("Back to Menu button pressed, going back.");
+                next_state.set(GameState::MainMenu);
             }
         }
     }
@@ -131,44 +138,102 @@ pub fn setup_ship_builder(
     fonts: Res<FontResource>,
     colors: Res<Colors>
 ) {
-    let root = commands.spawn(
-        NodeBundle{ 
+    //
+    let mut root_commands = commands.spawn(
+        NodeBundle{
             style: Style {
-                size: Size { width: Val::Percent(100.0), height: Val::Percent(100.0) },
-                align_items: AlignItems::Center,
-                justify_content: JustifyContent::End,
-                flex_direction: FlexDirection::ColumnReverse,
-                ..default()
-            },
-            background_color: colors.menu_background.into(),
-            ..default()
-        }
-    ).with_children(|root_parent| {
-        root_parent.spawn(NodeBundle {
-            style: Style {
-                size: Size { width: Val::Percent(100.0), height: Val::Percent(30.0) },
+                size: Size{ width: Val::Percent(100.0), height: Val::Percent(100.0) },
                 align_items: AlignItems::Center,
                 justify_content: JustifyContent::Center,
                 flex_direction: FlexDirection::Column,
                 ..default()
             },
-            background_color: colors.node_background.into(),
             ..default()
-        }).with_children(|node_parent| {
-            node_parent.spawn((ButtonBundle {
+        }
+    );
+
+    // Back Button
+    // README: To make UI work with multiple screen/window sizes, use a mix of the flex 
+    // sizing stuff (margin, padding, border, flex_shrink, flex_grow) and the min/max sizing stuff
+    root_commands.with_children(|root_parent| {
+        root_parent.spawn(
+            NodeBundle{
                 style: Style {
-                    size: Size { width: Val::Px(40.0), height: Val::Percent(40.0) },
-                    align_items: AlignItems::Center,
-                    justify_content: JustifyContent::Center,
+                    size: Size{ width: Val::Percent(100.0), height: Val::Percent(10.0) },
+                    align_content: AlignContent::Start,
+                    justify_content: JustifyContent::Start,
                     ..default()
                 },
-                background_color: colors.button_normal.into(),
                 ..default()
-            }, InteractButton::from_clicked(colors.button_normal, colors.button_pressed)));
+            }
+        ).with_children(|node_parent| {
+            node_parent.spawn(
+                (
+                    ButtonBundle {
+                        style: Style {
+                            size: Size{ width: Val::Px(50.0), height: Val::Px(25.0) },
+                            ..default()
+                        },
+                        background_color: colors.button_normal.into(),
+                        ..default()
+                    },
+                    MyButton { identifier: ButtonType::BackToMenuButton },
+                    InteractButton::from_clicked(colors.button_normal, colors.button_pressed)
+                )
+            ).with_children(|button_parent| {
+                button_parent.spawn(TextBundle::from_section("Back", TextStyle {
+                    font: fonts.font.clone(),
+                    font_size: 20.0,
+                    color: colors.normal_text
+                }));
+            });
         });
-    }).id();
+    });
 
-    commands.insert_resource(UIMenu{ ui: root });
+    // Ship building buttons
+    root_commands.with_children(|root_parent| {
+        root_parent.spawn(
+            NodeBundle{ 
+                style: Style {
+                    size: Size { width: Val::Percent(100.0), height: Val::Percent(90.0) },
+                    align_items: AlignItems::Center,
+                    justify_content: JustifyContent::End,
+                    flex_direction: FlexDirection::ColumnReverse,
+                    ..default()
+                },
+                background_color: colors.menu_background.into(),
+                ..default()
+            }
+        ).with_children(|root_parent| {
+            // Spawn the ship building buttons
+            root_parent.spawn(NodeBundle {
+                style: Style {
+                    size: Size { width: Val::Percent(100.0), height: Val::Percent(30.0) },
+                    align_items: AlignItems::Center,
+                    justify_content: JustifyContent::Center,
+                    flex_direction: FlexDirection::Column,
+                    ..default()
+                },
+                background_color: colors.node_background.into(),
+                ..default()
+            }).with_children(|node_parent| {
+                // for now just a simple button
+                node_parent.spawn((ButtonBundle {
+                    style: Style {
+                        size: Size { width: Val::Px(40.0), height: Val::Percent(40.0) },
+                        align_items: AlignItems::Center,
+                        justify_content: JustifyContent::Center,
+                        ..default()
+                    },
+                    background_color: colors.button_normal.into(),
+                    ..default()
+                }, InteractButton::from_clicked(colors.button_normal, colors.button_pressed)));
+            });
+        });
+    });
+
+    let root_id = root_commands.id();
+    commands.insert_resource(UIMenu{ ui: root_id });
 }
 
 pub fn exit_ship_builder(
