@@ -139,7 +139,7 @@ pub fn setup_ship_builder(
                 justify_content: JustifyContent::End,
                 flex_direction: FlexDirection::ColumnReverse,
                 ..default()
-            } ,
+            },
             background_color: colors.menu_background.into(),
             ..default()
         }
