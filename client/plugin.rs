@@ -40,7 +40,7 @@ impl Plugin for GamePlugin {
             // Ship Building
             .add_system(setup_ship_builder.in_schedule(OnEnter(GameState::ShipBuilding)))
             .add_system(handle_ship_builder_buttons.run_if(in_state(GameState::ShipBuilding)))
-            .add_system(place_ship_builder_parts.run_if(in_state(GameState::ShipBuilding)))
+            .add_system(do_ship_builder_parts.run_if(in_state(GameState::ShipBuilding)))
             .add_system(exit_ship_builder.in_schedule(OnExit(GameState::ShipBuilding)))
             // Match making
             .add_system(wait_for_players.run_if(in_state(GameState::MatchMaking)))
@@ -84,6 +84,7 @@ pub fn setup_world(mut commands: Commands, mut font_res: ResMut<FontResource>, a
     
     font_res.font = font.clone();
     font_res.p1_font = TextStyle{ font: font.clone(), font_size: TEXT_FONT_SIZE, color: colors.ship_text };
+    font_res.preview_font = TextStyle{ font: font.clone(), font_size: TEXT_FONT_SIZE, color: colors.ship_text.with_a(0.5) };
     
     commands.insert_resource(colors);
 }

@@ -16,5 +16,6 @@ pub struct SpawnTorpedoEvent {
 #[derive(Resource, Default)]
 pub struct FontResource {
     pub font: Handle<Font>,
+    pub preview_font: TextStyle,
     pub p1_font: TextStyle,
 }

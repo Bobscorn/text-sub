@@ -20,6 +20,11 @@ pub struct UIMenu {
     pub ui: Entity
 }
 
+#[derive(Resource)]
+pub struct ShipBuilderPreview {
+    pub ent: Entity
+}
+
 #[derive(Component)]
 pub struct MyButton {
     pub identifier: ButtonType
@@ -240,8 +245,15 @@ pub fn setup_ship_builder(
 
     // Spawn the placement grid
 
+    // TODO: that ^
 
+    // Temporarily insert ship builder preview resource
+    let preview_ent = commands.spawn(Text2dBundle{
+        text: Text::from_section("$", fonts.preview_font.clone()),
+        ..default()
+     }).id();
 
+     commands.insert_resource(ShipBuilderPreview{ ent: preview_ent });
 }
 
 pub fn exit_ship_builder(
@@ -270,42 +282,57 @@ pub fn handle_ship_builder_buttons(
 
 }
 
-pub fn place_ship_builder_parts(
+pub fn do_ship_builder_parts(
     mut commands: Commands,
     window_query: Query<&Window, With<PrimaryWindow>>,
     cam_query: Query<(&Camera, &GlobalTransform), With<MainCamera>>,
     input: Res<Input<MouseButton>>,
     over_ui: Res<UiHandling>,
-    fonts: Res<FontResource>
+    fonts: Res<FontResource>,
+    preview_opt: Option<Res<ShipBuilderPreview>>,
+    mut trans_query: Query<&mut Transform, (Without<Camera>, Without<Window>)>
 ) {
-    if !over_ui.is_pointer_over_ui && input.just_pressed(MouseButton::Left) {
-        // Do all that juicy cursor pos -> world pos stuff
+    if over_ui.is_pointer_over_ui {
+        return;
+    }
 
-        let (cam, cam_trans) = match cam_query.get_single() {
-            Ok((c, ct)) => (c, ct),
-            Err(_) => return
-        };
+    // Do all that juicy cursor pos -> world pos stuff
+    // Possibly unnecessary safety, there's not a real reason there won't be a main camera or primary window
 
-        let window = match window_query.get_single() {
-            Ok(w) => w,
-            Err(_) => return
-        };
+    let (cam, cam_trans) = match cam_query.get_single() {
+        Ok((c, ct)) => (c, ct),
+        Err(_) => return
+    };
 
-        let cursor_pos = match window.cursor_position() {
-            Some(pos) => pos,
-            None => return
-        };
+    let window = match window_query.get_single() {
+        Ok(w) => w,
+        Err(_) => return
+    };
 
-        let ray = match cam.viewport_to_world(cam_trans, cursor_pos) {
-            Some(r) => r,
-            None => return
-        };
+    let cursor_pos = match window.cursor_position() {
+        Some(pos) => pos,
+        None => return
+    };
 
-        // *wipes forehead* phew that took a lot of matching
-        let world_pos = ray.origin.truncate();
+    // Use the camera's raycast method to get a world space pos (the origin of the ray)
+    let ray = match cam.viewport_to_world(cam_trans, cursor_pos) {
+        Some(r) => r,
+        None => return
+    };
 
-        info!("Clicked on {:?}!", world_pos);
+    // *wipes forehead* phew that took a lot of matching
+    let world_pos = ray.origin.truncate();
 
+    // Move preview if it exists
+    if let Some(preview) = preview_opt {
+        if let Ok(mut trans) = trans_query.get_mut(preview.ent) {
+            trans.translation = world_pos.extend(0.0);
+        }
+    }
+
+    if input.just_pressed(MouseButton::Left) {
+        info!("Just clicked on {:?}!", world_pos);
+    
         commands.spawn(
             Text2dBundle
             { 
