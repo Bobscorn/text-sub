@@ -121,7 +121,7 @@ pub fn spawn_mothership(
         let ship_pos = base_poses[i];
         println!("Spawning ship at {:?}", ship_pos);
         commands.spawn((
-            SpriteBundle{ transform: Transform::from_scale(Vec3::ONE * 0.2f32) * Transform::from_translation(ship_pos), ..default() }, 
+            SpriteBundle{ transform: Transform::from_translation(ship_pos), ..default() }, 
             Mothership::default(), 
             Velocity{ value: Vec2::ZERO },
             AngularVelocity::default(),
@@ -138,7 +138,7 @@ pub fn spawn_mothership(
                                     sections: vec![TextSection::new(chars[(x + y) % 13], fonts.p1_font.clone())],
                                     ..default()
                                 },
-                                transform: Transform::from_translation(bottom_left + Vec3::new(x as f32 * MOTHERSHIP_STRUCTURE_SPACING, y as f32 * MOTHERSHIP_STRUCTURE_SPACING, 0.)),
+                                transform: Transform::from_scale(Vec3::ONE * MOTHERSHIP_SCALE).with_translation(bottom_left + Vec3::new(x as f32 * MOTHERSHIP_STRUCTURE_SPACING, y as f32 * MOTHERSHIP_STRUCTURE_SPACING, 0.)),
                                 ..default()
                             }, 
                             Structure{ integrity: 5, max_integrity: 5 }

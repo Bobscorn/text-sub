@@ -1,6 +1,8 @@
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 use crate::components::MainCamera;
+use crate::constants::MOTHERSHIP_SCALE;
+use crate::constants::MOTHERSHIP_STRUCTURE_SPACING;
 use crate::events::*;
 use crate::enums::*;
 use crate::resources::*;
@@ -250,6 +252,7 @@ pub fn setup_ship_builder(
     // Temporarily insert ship builder preview resource
     let preview_ent = commands.spawn(Text2dBundle{
         text: Text::from_section("$", fonts.preview_font.clone()),
+        transform: Transform::from_translation(Vec3::new(-4000.0, 0.0, 0.0)).with_scale(Vec3::ONE * MOTHERSHIP_SCALE),
         ..default()
      }).id();
 
@@ -323,6 +326,12 @@ pub fn do_ship_builder_parts(
     // *wipes forehead* phew that took a lot of matching
     let world_pos = ray.origin.truncate();
 
+    // Round to the nearest grid position
+    let world_pos = Vec2::new(
+        (world_pos.x / MOTHERSHIP_STRUCTURE_SPACING).round() * MOTHERSHIP_STRUCTURE_SPACING, 
+        (world_pos.y / MOTHERSHIP_STRUCTURE_SPACING).round() * MOTHERSHIP_STRUCTURE_SPACING
+    );
+
     // Move preview if it exists
     if let Some(preview) = preview_opt {
         if let Ok(mut trans) = trans_query.get_mut(preview.ent) {
@@ -336,7 +345,7 @@ pub fn do_ship_builder_parts(
         commands.spawn(
             Text2dBundle
             { 
-                transform: Transform::from_translation(world_pos.extend(0.0)),
+                transform: Transform::from_translation(world_pos.extend(0.0)).with_scale(Vec3::ONE * MOTHERSHIP_SCALE),
                 text: Text::from_section("$", fonts.p1_font.clone()),
                 ..default()
             });

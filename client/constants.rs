@@ -3,6 +3,7 @@ pub const MOTHERSHIP_SPEED: f32 = 0.25;
 pub const ROTATION_SPEED: f32 = 0.025;
 
 pub const MOTHERSHIP_STRUCTURE_SPACING: f32 = 15.0;
+pub const MOTHERSHIP_SCALE: f32 = 0.2;
 
 pub const TEXT_FONT_SIZE: f32 = 30.0;
 

@@ -66,7 +66,7 @@ impl Plugin for GamePlugin {
 
 pub fn setup_world(mut commands: Commands, mut font_res: ResMut<FontResource>, asset_server: Res<AssetServer>) {
     commands.spawn((Camera2dBundle{
-        projection: OrthographicProjection { scaling_mode: bevy::render::camera::ScalingMode::FixedVertical(250.), ..default() },        
+        projection: OrthographicProjection { scaling_mode: bevy::render::camera::ScalingMode::FixedVertical(250.0), ..default() },        
         ..default()
     }, MainCamera));
     commands.insert_resource(ClearColor {0: Color::BLACK});
@@ -84,7 +84,7 @@ pub fn setup_world(mut commands: Commands, mut font_res: ResMut<FontResource>, a
     
     font_res.font = font.clone();
     font_res.p1_font = TextStyle{ font: font.clone(), font_size: TEXT_FONT_SIZE, color: colors.ship_text };
-    font_res.preview_font = TextStyle{ font: font.clone(), font_size: TEXT_FONT_SIZE, color: colors.ship_text.with_a(0.5) };
+    font_res.preview_font = TextStyle{ font: font.clone(), font_size: TEXT_FONT_SIZE, color: colors.ship_text.with_a(0.2) };
     
     commands.insert_resource(colors);
 }
