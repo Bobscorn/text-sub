@@ -39,7 +39,7 @@ impl Plugin for GamePlugin {
             .add_system(exit_main_menu.in_schedule(OnExit(GameState::MainMenu)))
             // Ship Building
             .add_system(setup_ship_builder.in_schedule(OnEnter(GameState::ShipBuilding)))
-            .add_system(handle_ship_builder_buttons.run_if(in_state(GameState::ShipBuilding)))
+            .add_system(ship_builder_piece_buttons.run_if(in_state(GameState::ShipBuilding)))
             .add_system(do_ship_builder_parts.run_if(in_state(GameState::ShipBuilding)))
             .add_system(exit_ship_builder.in_schedule(OnExit(GameState::ShipBuilding)))
             // Match making

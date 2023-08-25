@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 use crate::components::MainCamera;
+use crate::constants::DOLLAR;
 use crate::constants::EMPTY_CHAR;
 use crate::constants::MOTHERSHIP_MAX_HEIGHT;
 use crate::constants::MOTHERSHIP_MAX_WIDTH;
@@ -28,7 +29,8 @@ pub struct UIMenu {
 
 #[derive(Resource)]
 pub struct ShipBuilderPreview {
-    pub ent: Entity
+    pub ent: Entity,
+    pub piece: char
 }
 
 #[derive(Component)]
@@ -223,7 +225,7 @@ pub fn setup_ship_builder(
             // Spawn the ship building buttons
             root_parent.spawn(NodeBundle {
                 style: Style {
-                    size: Size { width: Val::Percent(100.0), height: Val::Percent(30.0) },
+                    size: Size { width: Val::Percent(100.0), height: Val::Percent(20.0) },
                     align_items: AlignItems::Center,
                     justify_content: JustifyContent::SpaceEvenly,
                     flex_direction: FlexDirection::Row,
@@ -270,7 +272,7 @@ pub fn setup_ship_builder(
         ..default()
     }).id();
 
-    commands.insert_resource(ShipBuilderPreview{ ent: preview_ent });
+    commands.insert_resource(ShipBuilderPreview{ ent: preview_ent, piece: DOLLAR });
 
 
     // Add the ShipbuilderShip resource
@@ -329,12 +331,11 @@ pub fn exit_ship_builder(
     commands.remove_resource::<ShipBuilderPreview>();
 }
 
-pub fn handle_ship_builder_buttons(
+pub fn ship_builder_navigation_buttons(
     colors: Res<Colors>,
-    mut interaction_query: Query<
+    interaction_query: Query<
             (
                 &Interaction,
-                &mut BackgroundColor,
                 &MyButton
             ),
             (Changed<Interaction>, With<Button>)
@@ -344,24 +345,52 @@ pub fn handle_ship_builder_buttons(
 
 }
 
+pub fn ship_builder_piece_buttons(
+    mut preview: ResMut<ShipBuilderPreview>,
+    button_query: Query<
+        (
+            &Interaction,
+            &ShipBuilderButton
+        ),
+        (Changed<Interaction>, With<Button>)
+    >,
+    mut text_query: Query<&mut Text, (Without<Button>, Without<Interaction>, Without<ShipBuilderButton>)>
+) {
+    for (interaction, builder_button) in &button_query {
+        match *interaction {
+            Interaction::Clicked => {
+                if let Ok(mut text) = text_query.get_mut(preview.ent) {
+                    text.sections[0].value = String::from(builder_button.character);
+                    preview.piece = builder_button.character;
+                }
+            },
+            Interaction::Hovered => (),
+            Interaction::None => ()
+        }
+    }
+}
+
 pub fn do_ship_builder_parts(
     mut commands: Commands,
+    // For converting coordinates v
     window_query: Query<&Window, With<PrimaryWindow>>,
     cam_query: Query<(&Camera, &GlobalTransform), With<MainCamera>>,
+    // For getting and moving preview v
+    preview_opt: Option<Res<ShipBuilderPreview>>,
+    mut trans_query: Query<&mut Transform, (Without<Camera>, Without<Window>)>,
+    // For destroying and placing pieces v
+    input: Res<Input<MouseButton>>,
+    fonts: Res<FontResource>,
+    over_ui: Res<UiHandling>,
     mut ship: ResMut<Ship>,
     mut shipbuilder_ship: ResMut<ShipbuilderShip>,
-    input: Res<Input<MouseButton>>,
-    over_ui: Res<UiHandling>,
-    fonts: Res<FontResource>,
-    preview_opt: Option<Res<ShipBuilderPreview>>,
-    mut trans_query: Query<&mut Transform, (Without<Camera>, Without<Window>)>
 ) {
     if over_ui.is_pointer_over_ui {
         return;
     }
 
-    // Do all that juicy cursor pos -> world pos stuff
-    // Possibly unnecessary safety, there's not a real reason there won't be a main camera or primary window
+    // Convert mouse position to world position
+    // v
 
     let (cam, cam_trans) = match cam_query.get_single() {
         Ok((c, ct)) => (c, ct),
@@ -378,14 +407,12 @@ pub fn do_ship_builder_parts(
         None => return
     };
 
-    // Use the camera's raycast method to get a world space pos (the origin of the ray)
-    let ray = match cam.viewport_to_world(cam_trans, cursor_pos) {
+    let camera_ray = match cam.viewport_to_world(cam_trans, cursor_pos) {
         Some(r) => r,
         None => return
     };
 
-    // *wipes forehead* phew that took a lot of matching
-    let world_pos = ray.origin.truncate();
+    let world_pos = camera_ray.origin.truncate();
     let grid_pos = Vec2::new(world_pos.x / MOTHERSHIP_STRUCTURE_SPACING, world_pos.y / MOTHERSHIP_STRUCTURE_SPACING).round();
 
     // Round to the nearest grid position
@@ -393,52 +420,74 @@ pub fn do_ship_builder_parts(
         grid_pos.x * MOTHERSHIP_STRUCTURE_SPACING, 
         grid_pos.y * MOTHERSHIP_STRUCTURE_SPACING
     );
-
-    // Move preview if it exists
-    if let Some(preview) = preview_opt {
-        if let Ok(mut trans) = trans_query.get_mut(preview.ent) {
-            trans.translation = world_pos.extend(2.0);
-        }
-    }
+    // ^
+    // Convert mouse position to world position
 
     let place_key = MouseButton::Left;
     let destroy_key = MouseButton::Right;
 
-    if input.any_pressed([place_key, destroy_key]) {
+    // Do Piece destruction
+    // v
+    if input.pressed(destroy_key) {
         let left = -25;
         let bottom = -20;
         let x = (grid_pos.x as i32 - left).clamp(0, MOTHERSHIP_MAX_WIDTH as i32 - 1) as usize;
         let y = (grid_pos.y as i32 - bottom).clamp(0, MOTHERSHIP_MAX_HEIGHT as i32 - 1) as usize;
-        info!("Just clicked on {:?}, grid: ({}, {})", world_pos, x, y);
 
         if let Some(ent) = shipbuilder_ship.pieces[x][y] {
             if let Some(e_coms) = commands.get_entity(ent) {
                 e_coms.despawn_recursive();
             }
             shipbuilder_ship.pieces[x][y] = None;
-        }
-
-        if input.pressed(destroy_key) {
-            shipbuilder_ship.pieces[x][y] = None;
+            info!("Deleting ship builder piece '{}' at: {:?}", ship.pieces[x][y], world_pos);
             ship.pieces[x][y] = '\0';
         }
-        else {
-                
-            let piece = commands.spawn(
-                Text2dBundle
-                { 
-                    transform: Transform::from_scale(Vec3::ONE * MOTHERSHIP_SCALE).with_translation(world_pos.extend(0.0)),
-                    text: Text::from_section("$", fonts.p1_font.clone()),
-                    ..default()
-                }).id();
-            
-            // Make the spawned piece a child of the shipbuilder root so it'll be destroyed when destroying the root
-            if let Some(mut e_coms) = commands.get_entity(shipbuilder_ship.root) {
-                e_coms.add_child(piece);
-            }
-
-            shipbuilder_ship.pieces[x][y] = Some(piece);
-            ship.pieces[x][y] = '$';
-        }
     }
+    // ^
+    // Piece destruction
+
+    // Move Preview
+    // v
+    
+    let preview = match preview_opt {
+        Some(p) => p,
+        None => return // return as piece placement depends on preview existing
+    };
+
+    if let Ok(mut trans) = trans_query.get_mut(preview.ent) {
+        trans.translation = world_pos.extend(2.0);
+    }
+    // ^
+    // Move Preview
+
+    // Piece Placement v
+    if input.pressed(place_key) {
+        let left = -25;
+        let bottom = -20;
+        let x = (grid_pos.x as i32 - left).clamp(0, MOTHERSHIP_MAX_WIDTH as i32 - 1) as usize;
+        let y = (grid_pos.y as i32 - bottom).clamp(0, MOTHERSHIP_MAX_HEIGHT as i32 - 1) as usize;
+
+        if ship.pieces[x][y] != EMPTY_CHAR {
+            return;
+        }
+
+        info!("Placing piece '{}' at {:?}", preview.piece, world_pos);
+        let piece = commands.spawn(
+            Text2dBundle
+            { 
+                transform: Transform::from_scale(Vec3::ONE * MOTHERSHIP_SCALE).with_translation(world_pos.extend(0.0)),
+                text: Text::from_section(preview.piece, fonts.p1_font.clone()),
+                ..default()
+            }).id();
+        
+        // Make the spawned piece a child of the shipbuilder root so it'll be destroyed when destroying the root
+        if let Some(mut e_coms) = commands.get_entity(shipbuilder_ship.root) {
+            e_coms.add_child(piece);
+        }
+
+        shipbuilder_ship.pieces[x][y] = Some(piece);
+        ship.pieces[x][y] = preview.piece;
+    }
+    // ^
+    // Piece Placement
 }
