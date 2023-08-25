@@ -7,7 +7,7 @@ use crate::constants::SUB_MAX_HEIGHT;
 use crate::constants::SUB_MAX_WIDTH;
 use crate::constants::SUB_SCALE;
 use crate::constants::SUB_STRUCTURE_SPACING;
-use crate::constants::sub_PIECES;
+use crate::constants::SUB_PIECES;
 use crate::events::*;
 use crate::enums::*;
 use crate::resources::*;
@@ -236,7 +236,7 @@ pub fn setup_sub_builder(
                 ..default()
             }).with_children(|node_parent| {
                 // Spawn buttons for all characters
-                for piece in sub_PIECES {
+                for piece in SUB_PIECES {
                     node_parent.spawn(
                         (ButtonBundle {
                             style: Style {

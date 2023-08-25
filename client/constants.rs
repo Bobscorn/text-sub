@@ -39,7 +39,7 @@ pub const QUESTION: char = '?';
 pub const APOSTROPHE: char = '\'';
 pub const COLON: char = ':';
 
-pub const sub_PIECES: [char; 25] = [
+pub const SUB_PIECES: [char; 25] = [
     SQUARE_OPEN, SQUARE_CLOSE, ANGLE_OPEN, ANGLE_CLOSE, 
     ROUND_OPEN, ROUND_CLOSE, CURLY_OPEN, CURL_CLOSE, 
     BACKSLASH, FORWARD_SLASH, PIPE, EQUALS, PERCENT, TILDE,
