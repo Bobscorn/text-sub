@@ -6,6 +6,10 @@
 
     - Save button to store the created sub in client cache
 
+    - fix not able to draw outside the box
+
+    - fix being able to draw where parts are not connected
+
 - fixes
 
     - direction of torpedo should rotate with ship
