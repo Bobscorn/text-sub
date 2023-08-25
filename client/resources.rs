@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
 
-use crate::constants::{MOTHERSHIP_MAX_WIDTH, MOTHERSHIP_MAX_HEIGHT, EMPTY_CHAR};
+use crate::constants::{MOTHERsub_MAX_WIDTH, MOTHERsub_MAX_HEIGHT, EMPTY_CHAR};
 
 
 #[derive(Resource)]
@@ -18,7 +18,7 @@ pub struct ImageAssets {
 #[derive(Resource)]
 pub struct Colors {
     pub normal_text: Color,
-    pub ship_text: Color,
+    pub sub_text: Color,
     pub menu_background: Color,
     pub node_background: Color,
     pub button_normal: Color,
@@ -26,24 +26,24 @@ pub struct Colors {
 }
 
 #[derive(Resource)]
-pub struct Ship {
-    pub pieces: [[char; MOTHERSHIP_MAX_HEIGHT]; MOTHERSHIP_MAX_WIDTH]
+pub struct sub {
+    pub pieces: [[char; MOTHERsub_MAX_HEIGHT]; MOTHERsub_MAX_WIDTH]
 }
 
-impl Default for Ship {
+impl Default for sub {
     fn default() -> Self {
-        Ship{ pieces: [[EMPTY_CHAR; MOTHERSHIP_MAX_HEIGHT]; MOTHERSHIP_MAX_WIDTH] }
+        sub{ pieces: [[EMPTY_CHAR; MOTHERsub_MAX_HEIGHT]; MOTHERsub_MAX_WIDTH] }
     }
 }
 
 #[derive(Resource)]
-pub struct ShipbuilderShip {
+pub struct subbuildersub {
     pub root: Entity,
-    pub pieces: [[Option<Entity>; MOTHERSHIP_MAX_HEIGHT]; MOTHERSHIP_MAX_WIDTH]
+    pub pieces: [[Option<Entity>; MOTHERsub_MAX_HEIGHT]; MOTHERsub_MAX_WIDTH]
 }
 
-impl Default for ShipbuilderShip {
+impl Default for subbuildersub {
     fn default() -> Self {
-        ShipbuilderShip { root: Entity::PLACEHOLDER, pieces: [[None; MOTHERSHIP_MAX_HEIGHT]; MOTHERSHIP_MAX_WIDTH] }
+        subbuildersub { root: Entity::PLACEHOLDER, pieces: [[None; MOTHERsub_MAX_HEIGHT]; MOTHERsub_MAX_WIDTH] }
     }
 }

@@ -3,11 +3,11 @@ use bevy::window::PrimaryWindow;
 use crate::components::MainCamera;
 use crate::constants::DOLLAR;
 use crate::constants::EMPTY_CHAR;
-use crate::constants::MOTHERSHIP_MAX_HEIGHT;
-use crate::constants::MOTHERSHIP_MAX_WIDTH;
-use crate::constants::MOTHERSHIP_SCALE;
-use crate::constants::MOTHERSHIP_STRUCTURE_SPACING;
-use crate::constants::SHIP_PIECES;
+use crate::constants::MOTHERsub_MAX_HEIGHT;
+use crate::constants::MOTHERsub_MAX_WIDTH;
+use crate::constants::MOTHERsub_SCALE;
+use crate::constants::MOTHERsub_STRUCTURE_SPACING;
+use crate::constants::sub_PIECES;
 use crate::events::*;
 use crate::enums::*;
 use crate::resources::*;
@@ -18,7 +18,7 @@ use super::ui::UiHandling;
 #[derive(PartialEq)]
 pub enum ButtonType {
     PlayButton,
-    ShipBuilderButton,
+    subBuilderButton,
     BackToMenuButton
 }
 
@@ -28,7 +28,7 @@ pub struct UIMenu {
 }
 
 #[derive(Resource)]
-pub struct ShipBuilderPreview {
+pub struct subBuilderPreview {
     pub ent: Entity,
     pub piece: char
 }
@@ -39,7 +39,7 @@ pub struct MyButton {
 }
 
 #[derive(Component)]
-pub struct ShipBuilderButton {
+pub struct subBuilderButton {
     pub character: char,
 }
 
@@ -90,9 +90,9 @@ pub fn setup_mainmenu(
                 ..default()
             }, 
             InteractButton::from_clicked(colors.button_normal, colors.button_pressed), 
-            MyButton{ identifier: ButtonType::ShipBuilderButton })
+            MyButton{ identifier: ButtonType::subBuilderButton })
         ).with_children(|button_parent| {
-            button_parent.spawn(TextBundle::from_section("Ship Builder", TextStyle{
+            button_parent.spawn(TextBundle::from_section("sub Builder", TextStyle{
                 font: fonts.font.clone(),
                 font_size: 40.0,
                 color: Color::rgb(0.8, 0.8, 0.8)
@@ -135,9 +135,9 @@ pub fn handle_menu_buttons(
                 info!("Play button pressed, going into matchmaking.");
                 next_state.set(GameState::MatchMaking);
             },
-            ButtonType::ShipBuilderButton => {
-                info!("Ship builder button pressed, going into.... something......");
-                next_state.set(GameState::ShipBuilding);
+            ButtonType::subBuilderButton => {
+                info!("sub builder button pressed, going into.... something......");
+                next_state.set(GameState::subBuilding);
             },
             ButtonType::BackToMenuButton => {
                 info!("Back to Menu button pressed, going back.");
@@ -148,12 +148,12 @@ pub fn handle_menu_buttons(
 }
 
 
-// Ship builder
-pub fn setup_ship_builder(
+// sub builder
+pub fn setup_sub_builder(
     mut commands: Commands,
     fonts: Res<FontResource>,
     colors: Res<Colors>,
-    ship: Res<Ship>
+    sub: Res<sub>
 ) {
     //
     let mut root_commands = commands.spawn(
@@ -207,7 +207,7 @@ pub fn setup_ship_builder(
         });
     });
 
-    // Ship building buttons
+    // sub building buttons
     root_commands.with_children(|root_parent| {
         root_parent.spawn(
             NodeBundle{ 
@@ -222,7 +222,7 @@ pub fn setup_ship_builder(
                 ..default()
             }
         ).with_children(|root_parent| {
-            // Spawn the ship building buttons
+            // Spawn the sub building buttons
             root_parent.spawn(NodeBundle {
                 style: Style {
                     size: Size { width: Val::Percent(100.0), height: Val::Percent(20.0) },
@@ -236,7 +236,7 @@ pub fn setup_ship_builder(
                 ..default()
             }).with_children(|node_parent| {
                 // Spawn buttons for all characters
-                for piece in SHIP_PIECES {
+                for piece in sub_PIECES {
                     node_parent.spawn(
                         (ButtonBundle {
                             style: Style {
@@ -248,7 +248,7 @@ pub fn setup_ship_builder(
                             background_color: colors.button_normal.into(),
                             ..default()
                         }, 
-                        ShipBuilderButton{ character: piece },
+                        subBuilderButton{ character: piece },
                         InteractButton::from_clicked(colors.button_normal, colors.button_pressed)
                     )).with_children(|button_parent| {
                         button_parent.spawn(TextBundle{ text: Text::from_section(piece, fonts.p1_font.clone()), ..default() });
@@ -265,53 +265,53 @@ pub fn setup_ship_builder(
 
     // TODO: that ^
 
-    // Temporarily insert ship builder preview resource
+    // Temporarily insert sub builder preview resource
     let preview_ent = commands.spawn(Text2dBundle{
         text: Text::from_section("$", fonts.preview_font.clone()),
-        transform: Transform::from_translation(Vec3::new(-4000.0, 0.0, 2.0)).with_scale(Vec3::ONE * MOTHERSHIP_SCALE),
+        transform: Transform::from_translation(Vec3::new(-4000.0, 0.0, 2.0)).with_scale(Vec3::ONE * MOTHERsub_SCALE),
         ..default()
     }).id();
 
-    commands.insert_resource(ShipBuilderPreview{ ent: preview_ent, piece: DOLLAR });
+    commands.insert_resource(subBuilderPreview{ ent: preview_ent, piece: DOLLAR });
 
 
-    // Add the ShipbuilderShip resource
-    // Copy entities from the Ship resource
-    let mut builder_ship = ShipbuilderShip::default();
-    builder_ship.root = commands.spawn(SpatialBundle::default()).with_children(|root| {
+    // Add the subbuildersub resource
+    // Copy entities from the sub resource
+    let mut builder_sub = subbuildersub::default();
+    builder_sub.root = commands.spawn(SpatialBundle::default()).with_children(|root| {
 
         let left: i32 = -25;
         let bottom: i32 = -20;
-        for x in 0..MOTHERSHIP_MAX_WIDTH {
-            for y in 0..MOTHERSHIP_MAX_HEIGHT {
-                if ship.pieces[x][y] == EMPTY_CHAR {
+        for x in 0..MOTHERsub_MAX_WIDTH {
+            for y in 0..MOTHERsub_MAX_HEIGHT {
+                if sub.pieces[x][y] == EMPTY_CHAR {
                     continue;
                 }
 
-                let pos = Vec3::new((x as i32 + left) as f32 * MOTHERSHIP_STRUCTURE_SPACING, (y as i32 + bottom) as f32 * MOTHERSHIP_STRUCTURE_SPACING, 0.0);
-                info!("Spawning '{}' at {:?} grid: ({}, {})", ship.pieces[x][y], pos, x, y);
+                let pos = Vec3::new((x as i32 + left) as f32 * MOTHERsub_STRUCTURE_SPACING, (y as i32 + bottom) as f32 * MOTHERsub_STRUCTURE_SPACING, 0.0);
+                info!("Spawning '{}' at {:?} grid: ({}, {})", sub.pieces[x][y], pos, x, y);
 
                 let ent = root.spawn(
                     Text2dBundle{
-                        text: Text::from_section(ship.pieces[x][y], fonts.p1_font.clone()),
-                        transform: Transform::from_scale(Vec3::ONE * MOTHERSHIP_SCALE).with_translation(pos),
+                        text: Text::from_section(sub.pieces[x][y], fonts.p1_font.clone()),
+                        transform: Transform::from_scale(Vec3::ONE * MOTHERsub_SCALE).with_translation(pos),
                         ..default()
                         }
                 ).id();
 
-                builder_ship.pieces[x][y] = Some(ent);
+                builder_sub.pieces[x][y] = Some(ent);
             }
         }
     }).id();
 
-    commands.insert_resource(builder_ship);
+    commands.insert_resource(builder_sub);
 
 }
 
-pub fn exit_ship_builder(
+pub fn exit_sub_builder(
     mut commands: Commands,
-    builder_ship: Res<ShipbuilderShip>,
-    preview: Res<ShipBuilderPreview>,
+    builder_sub: Res<subbuildersub>,
+    preview: Res<subBuilderPreview>,
     menu: Res<UIMenu>
 ) {
     if let Some(root_entity) = commands.get_entity(menu.ui) {
@@ -320,18 +320,18 @@ pub fn exit_ship_builder(
 
     commands.remove_resource::<UIMenu>();
 
-    if let Some(e_coms) = commands.get_entity(builder_ship.root) {
+    if let Some(e_coms) = commands.get_entity(builder_sub.root) {
         e_coms.despawn_recursive();
     }
-    commands.remove_resource::<ShipbuilderShip>();
+    commands.remove_resource::<subbuildersub>();
 
     if let Some(e_coms) = commands.get_entity(preview.ent) {
         e_coms.despawn_recursive();
     }
-    commands.remove_resource::<ShipBuilderPreview>();
+    commands.remove_resource::<subBuilderPreview>();
 }
 
-pub fn ship_builder_navigation_buttons(
+pub fn sub_builder_navigation_buttons(
     colors: Res<Colors>,
     interaction_query: Query<
             (
@@ -345,16 +345,16 @@ pub fn ship_builder_navigation_buttons(
 
 }
 
-pub fn ship_builder_piece_buttons(
-    mut preview: ResMut<ShipBuilderPreview>,
+pub fn sub_builder_piece_buttons(
+    mut preview: ResMut<subBuilderPreview>,
     button_query: Query<
         (
             &Interaction,
-            &ShipBuilderButton
+            &subBuilderButton
         ),
         (Changed<Interaction>, With<Button>)
     >,
-    mut text_query: Query<&mut Text, (Without<Button>, Without<Interaction>, Without<ShipBuilderButton>)>
+    mut text_query: Query<&mut Text, (Without<Button>, Without<Interaction>, Without<subBuilderButton>)>
 ) {
     for (interaction, builder_button) in &button_query {
         match *interaction {
@@ -370,20 +370,20 @@ pub fn ship_builder_piece_buttons(
     }
 }
 
-pub fn do_ship_builder_parts(
+pub fn do_sub_builder_parts(
     mut commands: Commands,
     // For converting coordinates v
     window_query: Query<&Window, With<PrimaryWindow>>,
     cam_query: Query<(&Camera, &GlobalTransform), With<MainCamera>>,
     // For getting and moving preview v
-    preview_opt: Option<Res<ShipBuilderPreview>>,
+    preview_opt: Option<Res<subBuilderPreview>>,
     mut trans_query: Query<&mut Transform, (Without<Camera>, Without<Window>)>,
     // For destroying and placing pieces v
     input: Res<Input<MouseButton>>,
     fonts: Res<FontResource>,
     over_ui: Res<UiHandling>,
-    mut ship: ResMut<Ship>,
-    mut shipbuilder_ship: ResMut<ShipbuilderShip>,
+    mut sub: ResMut<sub>,
+    mut subbuilder_sub: ResMut<subbuildersub>,
 ) {
     if over_ui.is_pointer_over_ui {
         return;
@@ -413,12 +413,12 @@ pub fn do_ship_builder_parts(
     };
 
     let world_pos = camera_ray.origin.truncate();
-    let grid_pos = Vec2::new(world_pos.x / MOTHERSHIP_STRUCTURE_SPACING, world_pos.y / MOTHERSHIP_STRUCTURE_SPACING).round();
+    let grid_pos = Vec2::new(world_pos.x / MOTHERsub_STRUCTURE_SPACING, world_pos.y / MOTHERsub_STRUCTURE_SPACING).round();
 
     // Round to the nearest grid position
     let world_pos = Vec2::new(
-        grid_pos.x * MOTHERSHIP_STRUCTURE_SPACING, 
-        grid_pos.y * MOTHERSHIP_STRUCTURE_SPACING
+        grid_pos.x * MOTHERsub_STRUCTURE_SPACING, 
+        grid_pos.y * MOTHERsub_STRUCTURE_SPACING
     );
     // ^
     // Convert mouse position to world position
@@ -431,16 +431,16 @@ pub fn do_ship_builder_parts(
     if input.pressed(destroy_key) {
         let left = -25;
         let bottom = -20;
-        let x = (grid_pos.x as i32 - left).clamp(0, MOTHERSHIP_MAX_WIDTH as i32 - 1) as usize;
-        let y = (grid_pos.y as i32 - bottom).clamp(0, MOTHERSHIP_MAX_HEIGHT as i32 - 1) as usize;
+        let x = (grid_pos.x as i32 - left).clamp(0, MOTHERsub_MAX_WIDTH as i32 - 1) as usize;
+        let y = (grid_pos.y as i32 - bottom).clamp(0, MOTHERsub_MAX_HEIGHT as i32 - 1) as usize;
 
-        if let Some(ent) = shipbuilder_ship.pieces[x][y] {
+        if let Some(ent) = subbuilder_sub.pieces[x][y] {
             if let Some(e_coms) = commands.get_entity(ent) {
                 e_coms.despawn_recursive();
             }
-            shipbuilder_ship.pieces[x][y] = None;
-            info!("Deleting ship builder piece '{}' at: {:?}", ship.pieces[x][y], world_pos);
-            ship.pieces[x][y] = '\0';
+            subbuilder_sub.pieces[x][y] = None;
+            info!("Deleting sub builder piece '{}' at: {:?}", sub.pieces[x][y], world_pos);
+            sub.pieces[x][y] = '\0';
         }
     }
     // ^
@@ -464,10 +464,10 @@ pub fn do_ship_builder_parts(
     if input.pressed(place_key) {
         let left = -25;
         let bottom = -20;
-        let x = (grid_pos.x as i32 - left).clamp(0, MOTHERSHIP_MAX_WIDTH as i32 - 1) as usize;
-        let y = (grid_pos.y as i32 - bottom).clamp(0, MOTHERSHIP_MAX_HEIGHT as i32 - 1) as usize;
+        let x = (grid_pos.x as i32 - left).clamp(0, MOTHERsub_MAX_WIDTH as i32 - 1) as usize;
+        let y = (grid_pos.y as i32 - bottom).clamp(0, MOTHERsub_MAX_HEIGHT as i32 - 1) as usize;
 
-        if ship.pieces[x][y] != EMPTY_CHAR {
+        if sub.pieces[x][y] != EMPTY_CHAR {
             return;
         }
 
@@ -475,18 +475,18 @@ pub fn do_ship_builder_parts(
         let piece = commands.spawn(
             Text2dBundle
             { 
-                transform: Transform::from_scale(Vec3::ONE * MOTHERSHIP_SCALE).with_translation(world_pos.extend(0.0)),
+                transform: Transform::from_scale(Vec3::ONE * MOTHERsub_SCALE).with_translation(world_pos.extend(0.0)),
                 text: Text::from_section(preview.piece, fonts.p1_font.clone()),
                 ..default()
             }).id();
         
-        // Make the spawned piece a child of the shipbuilder root so it'll be destroyed when destroying the root
-        if let Some(mut e_coms) = commands.get_entity(shipbuilder_ship.root) {
+        // Make the spawned piece a child of the subbuilder root so it'll be destroyed when destroying the root
+        if let Some(mut e_coms) = commands.get_entity(subbuilder_sub.root) {
             e_coms.add_child(piece);
         }
 
-        shipbuilder_ship.pieces[x][y] = Some(piece);
-        ship.pieces[x][y] = preview.piece;
+        subbuilder_sub.pieces[x][y] = Some(piece);
+        sub.pieces[x][y] = preview.piece;
     }
     // ^
     // Piece Placement

@@ -71,7 +71,7 @@ pub fn wait_for_players(
 
 pub fn player_action(
     inputs: Res<PlayerInputs<GgrsConfig>>,
-    mut player_query: Query<(&mut Velocity, &Player, &mut Transform, &mut AngularVelocity), With<Mothership>>
+    mut player_query: Query<(&mut Velocity, &Player, &mut Transform, &mut AngularVelocity), With<Mothersub>>
 ) {
     // Basic demonstrational movement for now
     for (mut velocity, player, mut transform, mut angular) in player_query.iter_mut() {
@@ -80,7 +80,7 @@ pub fn player_action(
         let direction = direction(input);
 
         if direction != Vec2::ZERO { //player did not move
-            let move_delta = direction * MOTHERSHIP_SPEED;
+            let move_delta = direction * MOTHERsub_SPEED;
             velocity.value += move_delta;
         }
 
@@ -93,21 +93,21 @@ pub fn player_action(
     }
 }
 
-pub fn spawn_mothership(
+pub fn spawn_mothersub(
     mut commands: Commands, 
     fonts: Res<FontResource>, 
     mut rip: ResMut<RollbackIdProvider>,
-    wind_q: Query<&Window, With<PrimaryWindow>>
+    _wind_q: Query<&Window, With<PrimaryWindow>>
 ) {
     //let window = wind_q.single();
     //let win_width = window.width();
 
-    //let ship_width = 5.5 * MOTHERSHIP_STRUCTURE_SPACING;
+    //let sub_width = 5.5 * MOTHERsub_STRUCTURE_SPACING;
     //let min_gap = 0.1; // 0.1 = 10% of window width
-    //let pos = (0.25 * win_width).max(min_gap * view_width + ship_width * 0.5);
-    let pos = MOTHERSHIP_STRUCTURE_SPACING * 10.5;
+    //let pos = (0.25 * win_width).max(min_gap * view_width + sub_width * 0.5);
+    let pos = MOTHERsub_STRUCTURE_SPACING * 10.5;
 
-    let bottom_left = Vec3::new(-(MOTHERSHIP_STRUCTURE_SPACING * 5.5), -(MOTHERSHIP_STRUCTURE_SPACING * 2.5), 0.);
+    let bottom_left = Vec3::new(-(MOTHERsub_STRUCTURE_SPACING * 5.5), -(MOTHERsub_STRUCTURE_SPACING * 2.5), 0.);
 
 
     let width = 11;
@@ -118,11 +118,11 @@ pub fn spawn_mothership(
     let base_poses = vec![Vec3::new(-pos, 0., 0.), Vec3::new(pos, 0., 0.)];
 
     for i in 0..2 {
-        let ship_pos = base_poses[i];
-        println!("Spawning ship at {:?}", ship_pos);
+        let sub_pos = base_poses[i];
+        println!("Spawning sub at {:?}", sub_pos);
         commands.spawn((
-            SpriteBundle{ transform: Transform::from_translation(ship_pos), ..default() }, 
-            Mothership::default(), 
+            SpriteBundle{ transform: Transform::from_translation(sub_pos), ..default() }, 
+            Mothersub::default(), 
             Velocity{ value: Vec2::ZERO },
             AngularVelocity::default(),
             Player{ handle: i },
@@ -138,7 +138,7 @@ pub fn spawn_mothership(
                                     sections: vec![TextSection::new(chars[(x + y) % 13], fonts.p1_font.clone())],
                                     ..default()
                                 },
-                                transform: Transform::from_scale(Vec3::ONE * MOTHERSHIP_SCALE).with_translation(bottom_left + Vec3::new(x as f32 * MOTHERSHIP_STRUCTURE_SPACING, y as f32 * MOTHERSHIP_STRUCTURE_SPACING, 0.)),
+                                transform: Transform::from_scale(Vec3::ONE * MOTHERsub_SCALE).with_translation(bottom_left + Vec3::new(x as f32 * MOTHERsub_STRUCTURE_SPACING, y as f32 * MOTHERsub_STRUCTURE_SPACING, 0.)),
                                 ..default()
                             }, 
                             Structure{ integrity: 5, max_integrity: 5 }

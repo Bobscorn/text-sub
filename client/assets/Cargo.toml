@@ -1,5 +1,5 @@
 [package]
-name = "textship"
+name = "textsub"
 version = "0.1.0"
 edition = "2021"
 authors = ["doublecouponday <mail@samueljenks.me>", "bobscorn <qwertster0@gmail.com>" ]

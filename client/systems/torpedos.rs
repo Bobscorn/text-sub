@@ -49,8 +49,6 @@ pub fn fire_torpedo(
     }
 }
 
-
-
 pub fn spawn_torpedos(mut spawn_events: EventReader<SpawnTorpedoEvent>, mut commands: Commands, fonts: Res<FontResource>) {
 
     let text_style = fonts.p1_font.clone();

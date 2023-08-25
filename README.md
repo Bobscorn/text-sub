@@ -1,6 +1,6 @@
-# Textship #
+# Textsub #
 
-Build a spaceship out of ASCII Symbols and fight in a 2 Player deathmatch.
+Build a spacesub out of ASCII Symbols and fight in a 2 Player deathmatch.
 
 ## Setup Bevy to run in the browser ##
 
@@ -77,9 +77,9 @@ wasm-pack build --release --target bundler --out-dir target/bundle
 
 ## FAQ ##
 
-### My ships don't move when I open two tabs! ###
+### My subs don't move when I open two tabs! ###
 
-This is a known bug with the ship detection algorithm. It will work with multi windows and real 2 player scenarios.
+This is a known bug with the sub detection algorithm. It will work with multi windows and real 2 player scenarios.
 
 ## Libraries ##
 

@@ -16,7 +16,7 @@ pub fn setup_world(mut commands: Commands, mut font_res: ResMut<FontResource>, a
 
     let colors = Colors{ 
         normal_text: Color::rgb(0.8, 0.8, 0.8), 
-        ship_text: Color::LIME_GREEN, 
+        sub_text: Color::LIME_GREEN, 
         menu_background: Color::rgb(0.1, 0.1, 0.1), 
         node_background: Color::rgb(0.2, 0.2, 0.2),
         button_normal: Color::GRAY, 
@@ -24,9 +24,9 @@ pub fn setup_world(mut commands: Commands, mut font_res: ResMut<FontResource>, a
     };
     
     font_res.font = font.clone();
-    font_res.p1_font = TextStyle{ font: font.clone(), font_size: TEXT_FONT_SIZE, color: colors.ship_text };
-    font_res.preview_font = TextStyle{ font: font.clone(), font_size: TEXT_FONT_SIZE, color: colors.ship_text.with_a(0.2) };
+    font_res.p1_font = TextStyle{ font: font.clone(), font_size: TEXT_FONT_SIZE, color: colors.sub_text };
+    font_res.preview_font = TextStyle{ font: font.clone(), font_size: TEXT_FONT_SIZE, color: colors.sub_text.with_a(0.2) };
     
     commands.insert_resource(colors);
-    commands.insert_resource(Ship::default());
+    commands.insert_resource(sub::default());
 }

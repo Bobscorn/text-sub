@@ -2,7 +2,7 @@
 
 - 2 player deathmatch
 
-- multiplayer, space ship builder, shoot each other to death
+- multiplayer, space sub builder, shoot each other to death
 
 - some ascii characters are entities
 
@@ -12,7 +12,7 @@
 
     - = torpedo launcher (turrets, launchers can be rotated)
 
-    - % - fighter ship/drone (shoots mini-torpedo)
+    - % - fighter sub/drone (shoots mini-torpedo)
 
     - ` ~ ! - torpedo missiles
 
@@ -46,7 +46,7 @@
 
 - editor design stage: 
 
-    - build a mothership out of ascii characters
+    - build a mothersub out of ascii characters
 
     - click and drag to draw lots of a type of character
  
@@ -62,9 +62,9 @@
 
 - reactor meltdown/explosion
 
-- reflect debris off mothership hulls if they collide
+- reflect debris off mothersub hulls if they collide
 
-- factor collision velocity between motherships into the integrity damage of Structure entities
+- factor collision velocity between mothersubs into the integrity damage of Structure entities
 
 - decrease integrity of torpedoes when hit by a bullet
 

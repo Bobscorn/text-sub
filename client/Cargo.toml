@@ -1,5 +1,5 @@
 [package]
-name = "textship"
+name = "textsub"
 version = "0.1.0"
 edition = "2021"
 authors = ["doublecouponday <mail@samueljenks.me>", "bobscorn <qwertster0@gmail.com>" ]
@@ -35,10 +35,10 @@ opt-level = 3
 opt-level = "s"
 
 [[bin]]
-name = "textship"
+name = "textsub"
 path = "main.rs"
 
 [lib]
-name = "textship_lib"
+name = "textsub_lib"
 crate-type = ["cdylib", "rlib"]
 path = "lib.rs"

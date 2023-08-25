@@ -36,11 +36,11 @@ impl Plugin for GamePlugin {
             // Main Menu
             .add_system(setup_mainmenu.after(setup_world).in_schedule(OnEnter(GameState::MainMenu)))
             .add_system(exit_main_menu.in_schedule(OnExit(GameState::MainMenu)))
-            // Ship Building
-            .add_system(setup_ship_builder.in_schedule(OnEnter(GameState::ShipBuilding)))
-            .add_system(ship_builder_piece_buttons.run_if(in_state(GameState::ShipBuilding)))
-            .add_system(do_ship_builder_parts.run_if(in_state(GameState::ShipBuilding)))
-            .add_system(exit_ship_builder.in_schedule(OnExit(GameState::ShipBuilding)))
+            // sub Building
+            .add_system(setup_sub_builder.in_schedule(OnEnter(GameState::subBuilding)))
+            .add_system(sub_builder_piece_buttons.run_if(in_state(GameState::subBuilding)))
+            .add_system(do_sub_builder_parts.run_if(in_state(GameState::subBuilding)))
+            .add_system(exit_sub_builder.in_schedule(OnExit(GameState::subBuilding)))
             // Match making
             .add_system(wait_for_players.run_if(in_state(GameState::MatchMaking)))
             // In Game
@@ -56,7 +56,7 @@ impl Plugin for GamePlugin {
             ).in_schedule(GGRSSchedule))
             .add_systems((
                 start_matchbox_socket, 
-                spawn_mothership.after(setup_world)
+                spawn_mothersub.after(setup_world)
             ).in_schedule(OnEnter(GameState::MatchMaking)));
     }
 }

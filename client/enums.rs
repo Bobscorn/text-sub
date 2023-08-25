@@ -4,7 +4,7 @@ use bevy::prelude::*;
 pub enum GameState {
     #[default]
     AssetLoading,
-    ShipBuilding,
+    subBuilding,
     MainMenu,
     MatchMaking,
     InGame,
