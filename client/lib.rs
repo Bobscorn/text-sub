@@ -10,7 +10,7 @@ mod implementations;
 mod systems;
 mod enums;
 mod input;
-
+mod world;
 use start::start;
 use utils::set_panic_hook;
 use wasm_bindgen::prelude::*;

@@ -10,6 +10,7 @@ mod implementations;
 mod systems;
 mod enums;
 mod input;
+mod world;
 
 use wasm_bindgen::prelude::*;
 use start::start;
