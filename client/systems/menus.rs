@@ -401,7 +401,10 @@ pub fn do_ship_builder_parts(
         }
     }
 
-    if input.just_pressed(MouseButton::Left) {
+    let place_key = MouseButton::Left;
+    let destroy_key = MouseButton::Right;
+
+    if input.any_pressed([place_key, destroy_key]) {
         let left = -25;
         let bottom = -20;
         let x = (grid_pos.x as i32 - left).clamp(0, MOTHERSHIP_MAX_WIDTH as i32 - 1) as usize;
@@ -414,21 +417,28 @@ pub fn do_ship_builder_parts(
             }
             shipbuilder_ship.pieces[x][y] = None;
         }
-    
-        let piece = commands.spawn(
-            Text2dBundle
-            { 
-                transform: Transform::from_scale(Vec3::ONE * MOTHERSHIP_SCALE).with_translation(world_pos.extend(0.0)),
-                text: Text::from_section("$", fonts.p1_font.clone()),
-                ..default()
-            }).id();
-        
-        if let Some(mut e_coms) = commands.get_entity(shipbuilder_ship.root) {
-            e_coms.add_child(piece);
-        }
 
-        shipbuilder_ship.pieces[x][y] = Some(piece);
-        
-        ship.pieces[x][y] = '$';
+        if input.pressed(destroy_key) {
+            shipbuilder_ship.pieces[x][y] = None;
+            ship.pieces[x][y] = '\0';
+        }
+        else {
+                
+            let piece = commands.spawn(
+                Text2dBundle
+                { 
+                    transform: Transform::from_scale(Vec3::ONE * MOTHERSHIP_SCALE).with_translation(world_pos.extend(0.0)),
+                    text: Text::from_section("$", fonts.p1_font.clone()),
+                    ..default()
+                }).id();
+            
+            // Make the spawned piece a child of the shipbuilder root so it'll be destroyed when destroying the root
+            if let Some(mut e_coms) = commands.get_entity(shipbuilder_ship.root) {
+                e_coms.add_child(piece);
+            }
+
+            shipbuilder_ship.pieces[x][y] = Some(piece);
+            ship.pieces[x][y] = '$';
+        }
     }
 }
