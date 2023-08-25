@@ -1,13 +1,7 @@
 use bevy::prelude::*;
-use bevy::window::PrimaryWindow;
-use crate::components::MainCamera;
-use crate::constants::DOLLAR;
-use crate::constants::EMPTY_CHAR;
-use crate::constants::SUB_MAX_HEIGHT;
-use crate::constants::SUB_MAX_WIDTH;
-use crate::constants::SUB_SCALE;
-use crate::constants::SUB_STRUCTURE_SPACING;
-use crate::constants::SUB_PIECES;
+use bevy::window::*;
+use crate::components::*;
+use crate::constants::*;
 use crate::events::*;
 use crate::enums::*;
 use crate::resources::*;
