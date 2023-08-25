@@ -58,6 +58,8 @@
 
     - linear and angular velocity determined by number of fully powered thrusters
 
+    - you cant see the other player so you have to use sonar to highlight them for a brief amount of time
+
 ## STRETCH GOALS ##
 
 - reactor meltdown/explosion

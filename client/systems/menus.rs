@@ -120,8 +120,6 @@ pub fn handle_menu_buttons(
     }
 }
 
-
-// sub builder
 pub fn setup_sub_builder(
     mut commands: Commands,
     fonts: Res<FontResource>,
