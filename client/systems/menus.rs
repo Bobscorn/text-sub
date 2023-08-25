@@ -63,7 +63,7 @@ pub fn setup_mainmenu(
                 ..default()
             }, 
             InteractButton::from_clicked(colors.button_normal, colors.button_pressed), 
-            MyButton{ identifier: ButtonType::subBuilderButton })
+            MyButton{ identifier: ButtonType::SubBuilderButton })
         ).with_children(|button_parent| {
             button_parent.spawn(TextBundle::from_section("sub Builder", TextStyle{
                 font: fonts.font.clone(),
@@ -108,9 +108,9 @@ pub fn handle_menu_buttons(
                 info!("Play button pressed, going into matchmaking.");
                 next_state.set(GameState::MatchMaking);
             },
-            ButtonType::subBuilderButton => {
+            ButtonType::SubBuilderButton => {
                 info!("sub builder button pressed, going into.... something......");
-                next_state.set(GameState::subBuilding);
+                next_state.set(GameState::SubBuilding);
             },
             ButtonType::BackToMenuButton => {
                 info!("Back to Menu button pressed, going back.");
@@ -126,7 +126,7 @@ pub fn setup_sub_builder(
     mut commands: Commands,
     fonts: Res<FontResource>,
     colors: Res<Colors>,
-    sub: Res<sub>
+    sub: Res<Submarine>
 ) {
     //
     let mut root_commands = commands.spawn(
@@ -221,7 +221,7 @@ pub fn setup_sub_builder(
                             background_color: colors.button_normal.into(),
                             ..default()
                         }, 
-                        subBuilderButton{ character: piece },
+                        SubBuilderButton{ character: piece },
                         InteractButton::from_clicked(colors.button_normal, colors.button_pressed)
                     )).with_children(|button_parent| {
                         button_parent.spawn(TextBundle{ text: Text::from_section(piece, fonts.p1_font.clone()), ..default() });
@@ -245,12 +245,12 @@ pub fn setup_sub_builder(
         ..default()
     }).id();
 
-    commands.insert_resource(subBuilderPreview{ ent: preview_ent, piece: DOLLAR });
+    commands.insert_resource(SubBuilderPreview{ ent: preview_ent, piece: DOLLAR });
 
 
     // Add the subbuildersub resource
     // Copy entities from the sub resource
-    let mut builder_sub = subbuildersub::default();
+    let mut builder_sub = SubBuilder::default();
     builder_sub.root = commands.spawn(SpatialBundle::default()).with_children(|root| {
 
         let left: i32 = -25;
@@ -283,8 +283,8 @@ pub fn setup_sub_builder(
 
 pub fn exit_sub_builder(
     mut commands: Commands,
-    builder_sub: Res<subbuildersub>,
-    preview: Res<subBuilderPreview>,
+    builder_sub: Res<SubBuilder>,
+    preview: Res<SubBuilderPreview>,
     menu: Res<UIMenu>
 ) {
     if let Some(root_entity) = commands.get_entity(menu.ui) {
@@ -296,12 +296,12 @@ pub fn exit_sub_builder(
     if let Some(e_coms) = commands.get_entity(builder_sub.root) {
         e_coms.despawn_recursive();
     }
-    commands.remove_resource::<subbuildersub>();
+    commands.remove_resource::<SubBuilder>();
 
     if let Some(e_coms) = commands.get_entity(preview.ent) {
         e_coms.despawn_recursive();
     }
-    commands.remove_resource::<subBuilderPreview>();
+    commands.remove_resource::<SubBuilderPreview>();
 }
 
 pub fn sub_builder_navigation_buttons(
@@ -319,15 +319,15 @@ pub fn sub_builder_navigation_buttons(
 }
 
 pub fn sub_builder_piece_buttons(
-    mut preview: ResMut<subBuilderPreview>,
+    mut preview: ResMut<SubBuilderPreview>,
     button_query: Query<
         (
             &Interaction,
-            &subBuilderButton
+            &SubBuilderButton
         ),
         (Changed<Interaction>, With<Button>)
     >,
-    mut text_query: Query<&mut Text, (Without<Button>, Without<Interaction>, Without<subBuilderButton>)>
+    mut text_query: Query<&mut Text, (Without<Button>, Without<Interaction>, Without<SubBuilderButton>)>
 ) {
     for (interaction, builder_button) in &button_query {
         match *interaction {
@@ -349,14 +349,14 @@ pub fn do_sub_builder_parts(
     window_query: Query<&Window, With<PrimaryWindow>>,
     cam_query: Query<(&Camera, &GlobalTransform), With<MainCamera>>,
     // For getting and moving preview v
-    preview_opt: Option<Res<subBuilderPreview>>,
+    preview_opt: Option<Res<SubBuilderPreview>>,
     mut trans_query: Query<&mut Transform, (Without<Camera>, Without<Window>)>,
     // For destroying and placing pieces v
     input: Res<Input<MouseButton>>,
     fonts: Res<FontResource>,
     over_ui: Res<UiHandling>,
-    mut sub: ResMut<sub>,
-    mut subbuilder_sub: ResMut<subbuildersub>,
+    mut sub: ResMut<Submarine>,
+    mut subbuilder_sub: ResMut<SubBuilder>,
 ) {
     if over_ui.is_pointer_over_ui {
         return;

@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
 
-use crate::constants::{SUB_MAX_WIDTH, SUB_MAX_HEIGHT, EMPTY_CHAR};
+use crate::constants::*;
 
 #[derive(Resource)]
 pub struct UIMenu {
@@ -9,7 +9,7 @@ pub struct UIMenu {
 }
 
 #[derive(Resource)]
-pub struct subBuilderPreview {
+pub struct SubBuilderPreview {
     pub ent: Entity,
     pub piece: char
 }
@@ -36,24 +36,24 @@ pub struct Colors {
 }
 
 #[derive(Resource)]
-pub struct sub {
+pub struct Submarine {
     pub pieces: [[char; SUB_MAX_HEIGHT]; SUB_MAX_WIDTH]
 }
 
-impl Default for sub {
+impl Default for Submarine {
     fn default() -> Self {
-        sub{ pieces: [[EMPTY_CHAR; SUB_MAX_HEIGHT]; SUB_MAX_WIDTH] }
+        Submarine{ pieces: [[EMPTY_CHAR; SUB_MAX_HEIGHT]; SUB_MAX_WIDTH] }
     }
 }
 
 #[derive(Resource)]
-pub struct subbuildersub {
+pub struct SubBuilder {
     pub root: Entity,
     pub pieces: [[Option<Entity>; SUB_MAX_HEIGHT]; SUB_MAX_WIDTH]
 }
 
-impl Default for subbuildersub {
+impl Default for SubBuilder {
     fn default() -> Self {
-        subbuildersub { root: Entity::PLACEHOLDER, pieces: [[None; SUB_MAX_HEIGHT]; SUB_MAX_WIDTH] }
+        SubBuilder { root: Entity::PLACEHOLDER, pieces: [[None; SUB_MAX_HEIGHT]; SUB_MAX_WIDTH] }
     }
 }

@@ -3,7 +3,7 @@ use bevy::prelude::*;
 #[derive(PartialEq)]
 pub enum ButtonType {
     PlayButton,
-    subBuilderButton,
+    SubBuilderButton,
     BackToMenuButton
 }
 
@@ -11,7 +11,7 @@ pub enum ButtonType {
 pub enum GameState {
     #[default]
     AssetLoading,
-    subBuilding,
+    SubBuilding,
     MainMenu,
     MatchMaking,
     InGame,

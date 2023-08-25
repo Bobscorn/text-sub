@@ -7,7 +7,7 @@ pub struct MyButton {
 }
 
 #[derive(Component)]
-pub struct subBuilderButton {
+pub struct SubBuilderButton {
     pub character: char,
 }
 
