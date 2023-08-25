@@ -3,6 +3,16 @@ use bevy_asset_loader::prelude::*;
 
 use crate::constants::{SUB_MAX_WIDTH, SUB_MAX_HEIGHT, EMPTY_CHAR};
 
+#[derive(Resource)]
+pub struct UIMenu {
+    pub ui: Entity
+}
+
+#[derive(Resource)]
+pub struct subBuilderPreview {
+    pub ent: Entity,
+    pub piece: char
+}
 
 #[derive(Resource)]
 pub struct LocalPlayerHandle(pub usize);

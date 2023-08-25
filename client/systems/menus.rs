@@ -11,37 +11,10 @@ use crate::constants::SUB_PIECES;
 use crate::events::*;
 use crate::enums::*;
 use crate::resources::*;
+use crate::components::*;
 
 use super::ui::InteractButton;
 use super::ui::UiHandling;
-
-#[derive(PartialEq)]
-pub enum ButtonType {
-    PlayButton,
-    subBuilderButton,
-    BackToMenuButton
-}
-
-#[derive(Resource)]
-pub struct UIMenu {
-    pub ui: Entity
-}
-
-#[derive(Resource)]
-pub struct subBuilderPreview {
-    pub ent: Entity,
-    pub piece: char
-}
-
-#[derive(Component)]
-pub struct MyButton {
-    pub identifier: ButtonType
-}
-
-#[derive(Component)]
-pub struct subBuilderButton {
-    pub character: char,
-}
 
 pub fn setup_mainmenu(
     mut commands: Commands,

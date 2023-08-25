@@ -1,4 +1,15 @@
 use bevy::prelude::*;
+use crate::enums::*;
+
+#[derive(Component)]
+pub struct MyButton {
+    pub identifier: ButtonType
+}
+
+#[derive(Component)]
+pub struct subBuilderButton {
+    pub character: char,
+}
 
 #[derive(Component, Reflect, Default)]
 pub struct Velocity {
