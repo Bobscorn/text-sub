@@ -1,4 +1,4 @@
-# Feature List #
+ b  # Feature List #
 
 - 2 player deathmatch
 
@@ -8,19 +8,17 @@
 
     - no letters, numbers or control sequences
 
-    - [] \\|/ - light armor
+    - []\\|/() - light armor
 
-    - = torpedo launcher (turrets, launchers can be rotated)
+    - ? torpedo launcher (turrets, launchers can be rotated)
 
     - % - fighter sub/drone (shoots mini-torpedo)
 
-    - ` ~ ! - torpedo missiles
+    - ! - torpedo missiles
 
-    - . stars
+    - . underwater debris
 
     - \* could be explosion sparks?
-
-    - () shield entities
 
     - \+ (plus), # (hash) heavy armor
 
@@ -30,13 +28,7 @@
 
     - $ thruster exhaust?
 
-    - ? minigun turret
-
-    - ' bullet
-
-    - : hangar shield door?
-
-    - <> thrusters
+    - <> propellers
 
 - each character has a unique set of components
 
@@ -49,6 +41,8 @@
     - build a mothersub out of ascii characters
 
     - click and drag to draw lots of a type of character
+
+     -name labels should display above a component button when you hover over it
  
 - battle stage: 
 
@@ -57,6 +51,10 @@
     - click and hold in open space to shoot a laser
 
     - right click and aim once to shoot a torpedo
+
+    - bubbles and debris created on impact that float upwards
+
+    - impact points should break off and float. all components should do this
 
 ## STRETCH GOALS ##
 
@@ -69,3 +67,5 @@
 - decrease integrity of torpedoes when hit by a bullet
 
 - Thrust to Weight Ratio speed calculation
+
+- energy system. you can only use the thrusters and torpedo launchers that are fully powered by available generation.
