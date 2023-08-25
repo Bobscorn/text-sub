@@ -26,9 +26,9 @@
 
     - {} reactor enclosure
 
-    - $ thruster exhaust?
-
     - <> propellers
+
+    - o bubbles
 
 - each character has a unique set of components
 
@@ -68,4 +68,4 @@
 
 - Thrust to Weight Ratio speed calculation
 
-- energy system. you can only use the thrusters and torpedo launchers that are fully powered by available generation.
+- energy system. you can only use the propellers and torpedo launchers that are fully powered by available generation.
