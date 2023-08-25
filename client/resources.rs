@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
 
-use crate::constants::{MOTHERsub_MAX_WIDTH, MOTHERsub_MAX_HEIGHT, EMPTY_CHAR};
+use crate::constants::{SUB_MAX_WIDTH, SUB_MAX_HEIGHT, EMPTY_CHAR};
 
 
 #[derive(Resource)]
@@ -27,23 +27,23 @@ pub struct Colors {
 
 #[derive(Resource)]
 pub struct sub {
-    pub pieces: [[char; MOTHERsub_MAX_HEIGHT]; MOTHERsub_MAX_WIDTH]
+    pub pieces: [[char; SUB_MAX_HEIGHT]; SUB_MAX_WIDTH]
 }
 
 impl Default for sub {
     fn default() -> Self {
-        sub{ pieces: [[EMPTY_CHAR; MOTHERsub_MAX_HEIGHT]; MOTHERsub_MAX_WIDTH] }
+        sub{ pieces: [[EMPTY_CHAR; SUB_MAX_HEIGHT]; SUB_MAX_WIDTH] }
     }
 }
 
 #[derive(Resource)]
 pub struct subbuildersub {
     pub root: Entity,
-    pub pieces: [[Option<Entity>; MOTHERsub_MAX_HEIGHT]; MOTHERsub_MAX_WIDTH]
+    pub pieces: [[Option<Entity>; SUB_MAX_HEIGHT]; SUB_MAX_WIDTH]
 }
 
 impl Default for subbuildersub {
     fn default() -> Self {
-        subbuildersub { root: Entity::PLACEHOLDER, pieces: [[None; MOTHERsub_MAX_HEIGHT]; MOTHERsub_MAX_WIDTH] }
+        subbuildersub { root: Entity::PLACEHOLDER, pieces: [[None; SUB_MAX_HEIGHT]; SUB_MAX_WIDTH] }
     }
 }

@@ -1,11 +1,11 @@
 
-pub const MOTHERsub_SPEED: f32 = 0.25;
+pub const SUB_SPEED: f32 = 0.25;
 pub const ROTATION_SPEED: f32 = 0.025;
 
-pub const MOTHERsub_STRUCTURE_SPACING: f32 = 3.5;
-pub const MOTHERsub_SCALE: f32 = 0.2;
-pub const MOTHERsub_MAX_WIDTH: usize = 50;
-pub const MOTHERsub_MAX_HEIGHT: usize = 40;
+pub const SUB_STRUCTURE_SPACING: f32 = 3.5;
+pub const SUB_SCALE: f32 = 0.2;
+pub const SUB_MAX_WIDTH: usize = 50;
+pub const SUB_MAX_HEIGHT: usize = 40;
 
 pub const TEXT_FONT_SIZE: f32 = 30.0;
 

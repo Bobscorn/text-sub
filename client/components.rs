@@ -105,7 +105,7 @@ pub struct HangarDoor {
 }
 
 #[derive(Component)]
-pub struct Thruster {
+pub struct Propeller {
 
 }
 

@@ -3,10 +3,10 @@ use bevy::window::PrimaryWindow;
 use crate::components::MainCamera;
 use crate::constants::DOLLAR;
 use crate::constants::EMPTY_CHAR;
-use crate::constants::MOTHERsub_MAX_HEIGHT;
-use crate::constants::MOTHERsub_MAX_WIDTH;
-use crate::constants::MOTHERsub_SCALE;
-use crate::constants::MOTHERsub_STRUCTURE_SPACING;
+use crate::constants::SUB_MAX_HEIGHT;
+use crate::constants::SUB_MAX_WIDTH;
+use crate::constants::SUB_SCALE;
+use crate::constants::SUB_STRUCTURE_SPACING;
 use crate::constants::sub_PIECES;
 use crate::events::*;
 use crate::enums::*;
@@ -268,7 +268,7 @@ pub fn setup_sub_builder(
     // Temporarily insert sub builder preview resource
     let preview_ent = commands.spawn(Text2dBundle{
         text: Text::from_section("$", fonts.preview_font.clone()),
-        transform: Transform::from_translation(Vec3::new(-4000.0, 0.0, 2.0)).with_scale(Vec3::ONE * MOTHERsub_SCALE),
+        transform: Transform::from_translation(Vec3::new(-4000.0, 0.0, 2.0)).with_scale(Vec3::ONE * SUB_SCALE),
         ..default()
     }).id();
 
@@ -282,19 +282,19 @@ pub fn setup_sub_builder(
 
         let left: i32 = -25;
         let bottom: i32 = -20;
-        for x in 0..MOTHERsub_MAX_WIDTH {
-            for y in 0..MOTHERsub_MAX_HEIGHT {
+        for x in 0..SUB_MAX_WIDTH {
+            for y in 0..SUB_MAX_HEIGHT {
                 if sub.pieces[x][y] == EMPTY_CHAR {
                     continue;
                 }
 
-                let pos = Vec3::new((x as i32 + left) as f32 * MOTHERsub_STRUCTURE_SPACING, (y as i32 + bottom) as f32 * MOTHERsub_STRUCTURE_SPACING, 0.0);
+                let pos = Vec3::new((x as i32 + left) as f32 * SUB_STRUCTURE_SPACING, (y as i32 + bottom) as f32 * SUB_STRUCTURE_SPACING, 0.0);
                 info!("Spawning '{}' at {:?} grid: ({}, {})", sub.pieces[x][y], pos, x, y);
 
                 let ent = root.spawn(
                     Text2dBundle{
                         text: Text::from_section(sub.pieces[x][y], fonts.p1_font.clone()),
-                        transform: Transform::from_scale(Vec3::ONE * MOTHERsub_SCALE).with_translation(pos),
+                        transform: Transform::from_scale(Vec3::ONE * SUB_SCALE).with_translation(pos),
                         ..default()
                         }
                 ).id();
@@ -413,12 +413,12 @@ pub fn do_sub_builder_parts(
     };
 
     let world_pos = camera_ray.origin.truncate();
-    let grid_pos = Vec2::new(world_pos.x / MOTHERsub_STRUCTURE_SPACING, world_pos.y / MOTHERsub_STRUCTURE_SPACING).round();
+    let grid_pos = Vec2::new(world_pos.x / SUB_STRUCTURE_SPACING, world_pos.y / SUB_STRUCTURE_SPACING).round();
 
     // Round to the nearest grid position
     let world_pos = Vec2::new(
-        grid_pos.x * MOTHERsub_STRUCTURE_SPACING, 
-        grid_pos.y * MOTHERsub_STRUCTURE_SPACING
+        grid_pos.x * SUB_STRUCTURE_SPACING, 
+        grid_pos.y * SUB_STRUCTURE_SPACING
     );
     // ^
     // Convert mouse position to world position
@@ -431,8 +431,8 @@ pub fn do_sub_builder_parts(
     if input.pressed(destroy_key) {
         let left = -25;
         let bottom = -20;
-        let x = (grid_pos.x as i32 - left).clamp(0, MOTHERsub_MAX_WIDTH as i32 - 1) as usize;
-        let y = (grid_pos.y as i32 - bottom).clamp(0, MOTHERsub_MAX_HEIGHT as i32 - 1) as usize;
+        let x = (grid_pos.x as i32 - left).clamp(0, SUB_MAX_WIDTH as i32 - 1) as usize;
+        let y = (grid_pos.y as i32 - bottom).clamp(0, SUB_MAX_HEIGHT as i32 - 1) as usize;
 
         if let Some(ent) = subbuilder_sub.pieces[x][y] {
             if let Some(e_coms) = commands.get_entity(ent) {
@@ -464,8 +464,8 @@ pub fn do_sub_builder_parts(
     if input.pressed(place_key) {
         let left = -25;
         let bottom = -20;
-        let x = (grid_pos.x as i32 - left).clamp(0, MOTHERsub_MAX_WIDTH as i32 - 1) as usize;
-        let y = (grid_pos.y as i32 - bottom).clamp(0, MOTHERsub_MAX_HEIGHT as i32 - 1) as usize;
+        let x = (grid_pos.x as i32 - left).clamp(0, SUB_MAX_WIDTH as i32 - 1) as usize;
+        let y = (grid_pos.y as i32 - bottom).clamp(0, SUB_MAX_HEIGHT as i32 - 1) as usize;
 
         if sub.pieces[x][y] != EMPTY_CHAR {
             return;
@@ -475,7 +475,7 @@ pub fn do_sub_builder_parts(
         let piece = commands.spawn(
             Text2dBundle
             { 
-                transform: Transform::from_scale(Vec3::ONE * MOTHERsub_SCALE).with_translation(world_pos.extend(0.0)),
+                transform: Transform::from_scale(Vec3::ONE * SUB_SCALE).with_translation(world_pos.extend(0.0)),
                 text: Text::from_section(preview.piece, fonts.p1_font.clone()),
                 ..default()
             }).id();

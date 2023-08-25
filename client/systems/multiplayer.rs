@@ -80,7 +80,7 @@ pub fn player_action(
         let direction = direction(input);
 
         if direction != Vec2::ZERO { //player did not move
-            let move_delta = direction * MOTHERsub_SPEED;
+            let move_delta = direction * SUB_SPEED;
             velocity.value += move_delta;
         }
 
@@ -105,9 +105,9 @@ pub fn spawn_mothersub(
     //let sub_width = 5.5 * MOTHERsub_STRUCTURE_SPACING;
     //let min_gap = 0.1; // 0.1 = 10% of window width
     //let pos = (0.25 * win_width).max(min_gap * view_width + sub_width * 0.5);
-    let pos = MOTHERsub_STRUCTURE_SPACING * 10.5;
+    let pos = SUB_STRUCTURE_SPACING * 10.5;
 
-    let bottom_left = Vec3::new(-(MOTHERsub_STRUCTURE_SPACING * 5.5), -(MOTHERsub_STRUCTURE_SPACING * 2.5), 0.);
+    let bottom_left = Vec3::new(-(SUB_STRUCTURE_SPACING * 5.5), -(SUB_STRUCTURE_SPACING * 2.5), 0.);
 
 
     let width = 11;
@@ -138,7 +138,7 @@ pub fn spawn_mothersub(
                                     sections: vec![TextSection::new(chars[(x + y) % 13], fonts.p1_font.clone())],
                                     ..default()
                                 },
-                                transform: Transform::from_scale(Vec3::ONE * MOTHERsub_SCALE).with_translation(bottom_left + Vec3::new(x as f32 * MOTHERsub_STRUCTURE_SPACING, y as f32 * MOTHERsub_STRUCTURE_SPACING, 0.)),
+                                transform: Transform::from_scale(Vec3::ONE * SUB_SCALE).with_translation(bottom_left + Vec3::new(x as f32 * SUB_STRUCTURE_SPACING, y as f32 * SUB_STRUCTURE_SPACING, 0.)),
                                 ..default()
                             }, 
                             Structure{ integrity: 5, max_integrity: 5 }
