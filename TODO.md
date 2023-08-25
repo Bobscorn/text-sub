@@ -1,11 +1,15 @@
-- direction of torpedo should rotate with ship
+- ship builder
 
-- Add labels over every component
+    - Add labels over every component
 
-- Add rotation Q, E for components
+    - Add rotation Q, E for components
 
-- Save button to store the created sub in client cache
+    - Save button to store the created sub in client cache
 
-- change explosions into text, not sprites
+- fixes
 
-- change torpedos into text, not sprites
+    - direction of torpedo should rotate with ship
+
+    - change explosions into text, not sprites
+
+    - change torpedos into text, not sprites
