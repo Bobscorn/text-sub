@@ -5,7 +5,6 @@ use crate::constants::*;
 use crate::events::*;
 use crate::enums::*;
 use crate::resources::*;
-use crate::components::*;
 
 use super::ui::InteractButton;
 use super::ui::UiHandling;
