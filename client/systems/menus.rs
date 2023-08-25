@@ -6,6 +6,7 @@ use crate::constants::MOTHERSHIP_MAX_HEIGHT;
 use crate::constants::MOTHERSHIP_MAX_WIDTH;
 use crate::constants::MOTHERSHIP_SCALE;
 use crate::constants::MOTHERSHIP_STRUCTURE_SPACING;
+use crate::constants::SHIP_PIECES;
 use crate::events::*;
 use crate::enums::*;
 use crate::resources::*;
@@ -37,7 +38,7 @@ pub struct MyButton {
 
 #[derive(Component)]
 pub struct ShipBuilderButton {
-    pub character: String,
+    pub character: char,
 }
 
 pub fn setup_mainmenu(
@@ -224,24 +225,33 @@ pub fn setup_ship_builder(
                 style: Style {
                     size: Size { width: Val::Percent(100.0), height: Val::Percent(30.0) },
                     align_items: AlignItems::Center,
-                    justify_content: JustifyContent::Center,
-                    flex_direction: FlexDirection::Column,
+                    justify_content: JustifyContent::SpaceEvenly,
+                    flex_direction: FlexDirection::Row,
+                    flex_wrap: FlexWrap::Wrap,
                     ..default()
                 },
                 background_color: colors.node_background.into(),
                 ..default()
             }).with_children(|node_parent| {
-                // for now just a simple button
-                node_parent.spawn((ButtonBundle {
-                    style: Style {
-                        size: Size { width: Val::Px(40.0), height: Val::Px(40.0) },
-                        align_items: AlignItems::Center,
-                        justify_content: JustifyContent::Center,
-                        ..default()
-                    },
-                    background_color: colors.button_normal.into(),
-                    ..default()
-                }, InteractButton::from_clicked(colors.button_normal, colors.button_pressed)));
+                // Spawn buttons for all characters
+                for piece in SHIP_PIECES {
+                    node_parent.spawn(
+                        (ButtonBundle {
+                            style: Style {
+                                size: Size { width: Val::Px(40.0), height: Val::Px(40.0) },
+                                align_items: AlignItems::Center,
+                                justify_content: JustifyContent::Center,
+                                ..default()
+                            },
+                            background_color: colors.button_normal.into(),
+                            ..default()
+                        }, 
+                        ShipBuilderButton{ character: piece },
+                        InteractButton::from_clicked(colors.button_normal, colors.button_pressed)
+                    )).with_children(|button_parent| {
+                        button_parent.spawn(TextBundle{ text: Text::from_section(piece, fonts.p1_font.clone()), ..default() });
+                    });
+                }
             });
         });
     });
@@ -256,7 +266,7 @@ pub fn setup_ship_builder(
     // Temporarily insert ship builder preview resource
     let preview_ent = commands.spawn(Text2dBundle{
         text: Text::from_section("$", fonts.preview_font.clone()),
-        transform: Transform::from_translation(Vec3::new(-4000.0, 0.0, 0.0)).with_scale(Vec3::ONE * MOTHERSHIP_SCALE),
+        transform: Transform::from_translation(Vec3::new(-4000.0, 0.0, 2.0)).with_scale(Vec3::ONE * MOTHERSHIP_SCALE),
         ..default()
     }).id();
 
@@ -387,7 +397,7 @@ pub fn do_ship_builder_parts(
     // Move preview if it exists
     if let Some(preview) = preview_opt {
         if let Ok(mut trans) = trans_query.get_mut(preview.ent) {
-            trans.translation = world_pos.extend(0.0);
+            trans.translation = world_pos.extend(2.0);
         }
     }
 
