@@ -1,6 +1,8 @@
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
 
+use crate::constants::{MOTHERSHIP_MAX_WIDTH, MOTHERSHIP_MAX_HEIGHT, EMPTY_CHAR};
+
 
 #[derive(Resource)]
 pub struct LocalPlayerHandle(pub usize);
@@ -21,4 +23,27 @@ pub struct Colors {
     pub node_background: Color,
     pub button_normal: Color,
     pub button_pressed: Color
+}
+
+#[derive(Resource)]
+pub struct Ship {
+    pub pieces: [[char; MOTHERSHIP_MAX_HEIGHT]; MOTHERSHIP_MAX_WIDTH]
+}
+
+impl Default for Ship {
+    fn default() -> Self {
+        Ship{ pieces: [[EMPTY_CHAR; MOTHERSHIP_MAX_HEIGHT]; MOTHERSHIP_MAX_WIDTH] }
+    }
+}
+
+#[derive(Resource)]
+pub struct ShipbuilderShip {
+    pub root: Entity,
+    pub pieces: [[Option<Entity>; MOTHERSHIP_MAX_HEIGHT]; MOTHERSHIP_MAX_WIDTH]
+}
+
+impl Default for ShipbuilderShip {
+    fn default() -> Self {
+        ShipbuilderShip { root: Entity::PLACEHOLDER, pieces: [[None; MOTHERSHIP_MAX_HEIGHT]; MOTHERSHIP_MAX_WIDTH] }
+    }
 }

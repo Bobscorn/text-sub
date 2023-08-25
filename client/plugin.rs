@@ -87,5 +87,6 @@ pub fn setup_world(mut commands: Commands, mut font_res: ResMut<FontResource>, a
     font_res.preview_font = TextStyle{ font: font.clone(), font_size: TEXT_FONT_SIZE, color: colors.ship_text.with_a(0.2) };
     
     commands.insert_resource(colors);
+    commands.insert_resource(Ship::default());
 }
 

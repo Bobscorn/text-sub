@@ -2,11 +2,14 @@
 pub const MOTHERSHIP_SPEED: f32 = 0.25;
 pub const ROTATION_SPEED: f32 = 0.025;
 
-pub const MOTHERSHIP_STRUCTURE_SPACING: f32 = 15.0;
+pub const MOTHERSHIP_STRUCTURE_SPACING: f32 = 3.5;
 pub const MOTHERSHIP_SCALE: f32 = 0.2;
+pub const MOTHERSHIP_MAX_WIDTH: usize = 50;
+pub const MOTHERSHIP_MAX_HEIGHT: usize = 40;
 
 pub const TEXT_FONT_SIZE: f32 = 30.0;
 
+pub const EMPTY_CHAR: char = '\0';
 pub const SQUARE_OPEN: char = '[';
 pub const SQUARE_CLOSE: char = ']';
 pub const ANGLE_OPEN: char = '<';

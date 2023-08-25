@@ -20,8 +20,8 @@ DRAFT FOR SHIP BUILDER AND MAIN MENU:
         - Shift + Scroll wheel/Page Up/Page Down to zoom in or out
 
 Update 0.1:
-- Getting the ship builder and in match versions of ships to look the same is proving difficult,
-- The scales are for some reason not matching up
+~~- Getting the ship builder and in match versions of ships to look the same is proving difficult,~~
+~~- The scales are for some reason not matching up~~
 Update 0.2:
 - How to send/store ship data?
 - Initially a resource made the most sense
@@ -29,3 +29,14 @@ Update 0.2:
     - Maybe try send socket-level message?
 - Remembering that any entity with a rollback component gets synchronised there's also the possibility to create an 'update ship' entity
     - This can update players' resources that contain the ship data and a system can consume the 'update ship' entity and update both the visual and resource data
+Update 0.3:
+- Turns out the scales in the multiplayer.rs file were not the way they were expected
+- it was applying the translation and then the scale, which meant the scale factor was affecting the translation.
+- Fixed by doing 
+    ```rust
+    Transform::from_scale(Vec3::ONE * MOTHERSHIP_SCALE).with_translation(pos)
+    ```
+    instead of 
+    ```rust
+    Transform::from_scale(Vec3::ONE * MOTHERSHIP_SCALE) * Transform::from_translation(pos)
+    ```

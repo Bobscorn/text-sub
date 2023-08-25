@@ -1,6 +1,9 @@
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 use crate::components::MainCamera;
+use crate::constants::EMPTY_CHAR;
+use crate::constants::MOTHERSHIP_MAX_HEIGHT;
+use crate::constants::MOTHERSHIP_MAX_WIDTH;
 use crate::constants::MOTHERSHIP_SCALE;
 use crate::constants::MOTHERSHIP_STRUCTURE_SPACING;
 use crate::events::*;
@@ -146,7 +149,8 @@ pub fn handle_menu_buttons(
 pub fn setup_ship_builder(
     mut commands: Commands,
     fonts: Res<FontResource>,
-    colors: Res<Colors>
+    colors: Res<Colors>,
+    ship: Res<Ship>
 ) {
     //
     let mut root_commands = commands.spawn(
@@ -254,13 +258,48 @@ pub fn setup_ship_builder(
         text: Text::from_section("$", fonts.preview_font.clone()),
         transform: Transform::from_translation(Vec3::new(-4000.0, 0.0, 0.0)).with_scale(Vec3::ONE * MOTHERSHIP_SCALE),
         ..default()
-     }).id();
+    }).id();
 
-     commands.insert_resource(ShipBuilderPreview{ ent: preview_ent });
+    commands.insert_resource(ShipBuilderPreview{ ent: preview_ent });
+
+
+    // Add the ShipbuilderShip resource
+    // Copy entities from the Ship resource
+    let mut builder_ship = ShipbuilderShip::default();
+    builder_ship.root = commands.spawn(SpatialBundle::default()).with_children(|root| {
+
+        let left: i32 = -25;
+        let bottom: i32 = -20;
+        for x in 0..MOTHERSHIP_MAX_WIDTH {
+            for y in 0..MOTHERSHIP_MAX_HEIGHT {
+                if ship.pieces[x][y] == EMPTY_CHAR {
+                    continue;
+                }
+
+                let pos = Vec3::new((x as i32 + left) as f32 * MOTHERSHIP_STRUCTURE_SPACING, (y as i32 + bottom) as f32 * MOTHERSHIP_STRUCTURE_SPACING, 0.0);
+                info!("Spawning '{}' at {:?} grid: ({}, {})", ship.pieces[x][y], pos, x, y);
+
+                let ent = root.spawn(
+                    Text2dBundle{
+                        text: Text::from_section(ship.pieces[x][y], fonts.p1_font.clone()),
+                        transform: Transform::from_scale(Vec3::ONE * MOTHERSHIP_SCALE).with_translation(pos),
+                        ..default()
+                        }
+                ).id();
+
+                builder_ship.pieces[x][y] = Some(ent);
+            }
+        }
+    }).id();
+
+    commands.insert_resource(builder_ship);
+
 }
 
 pub fn exit_ship_builder(
     mut commands: Commands,
+    builder_ship: Res<ShipbuilderShip>,
+    preview: Res<ShipBuilderPreview>,
     menu: Res<UIMenu>
 ) {
     if let Some(root_entity) = commands.get_entity(menu.ui) {
@@ -268,6 +307,16 @@ pub fn exit_ship_builder(
     }
 
     commands.remove_resource::<UIMenu>();
+
+    if let Some(e_coms) = commands.get_entity(builder_ship.root) {
+        e_coms.despawn_recursive();
+    }
+    commands.remove_resource::<ShipbuilderShip>();
+
+    if let Some(e_coms) = commands.get_entity(preview.ent) {
+        e_coms.despawn_recursive();
+    }
+    commands.remove_resource::<ShipBuilderPreview>();
 }
 
 pub fn handle_ship_builder_buttons(
@@ -289,6 +338,8 @@ pub fn do_ship_builder_parts(
     mut commands: Commands,
     window_query: Query<&Window, With<PrimaryWindow>>,
     cam_query: Query<(&Camera, &GlobalTransform), With<MainCamera>>,
+    mut ship: ResMut<Ship>,
+    mut shipbuilder_ship: ResMut<ShipbuilderShip>,
     input: Res<Input<MouseButton>>,
     over_ui: Res<UiHandling>,
     fonts: Res<FontResource>,
@@ -325,11 +376,12 @@ pub fn do_ship_builder_parts(
 
     // *wipes forehead* phew that took a lot of matching
     let world_pos = ray.origin.truncate();
+    let grid_pos = Vec2::new(world_pos.x / MOTHERSHIP_STRUCTURE_SPACING, world_pos.y / MOTHERSHIP_STRUCTURE_SPACING).round();
 
     // Round to the nearest grid position
     let world_pos = Vec2::new(
-        (world_pos.x / MOTHERSHIP_STRUCTURE_SPACING).round() * MOTHERSHIP_STRUCTURE_SPACING, 
-        (world_pos.y / MOTHERSHIP_STRUCTURE_SPACING).round() * MOTHERSHIP_STRUCTURE_SPACING
+        grid_pos.x * MOTHERSHIP_STRUCTURE_SPACING, 
+        grid_pos.y * MOTHERSHIP_STRUCTURE_SPACING
     );
 
     // Move preview if it exists
@@ -340,14 +392,33 @@ pub fn do_ship_builder_parts(
     }
 
     if input.just_pressed(MouseButton::Left) {
-        info!("Just clicked on {:?}!", world_pos);
+        let left = -25;
+        let bottom = -20;
+        let x = (grid_pos.x as i32 - left).clamp(0, MOTHERSHIP_MAX_WIDTH as i32 - 1) as usize;
+        let y = (grid_pos.y as i32 - bottom).clamp(0, MOTHERSHIP_MAX_HEIGHT as i32 - 1) as usize;
+        info!("Just clicked on {:?}, grid: ({}, {})", world_pos, x, y);
+
+        if let Some(ent) = shipbuilder_ship.pieces[x][y] {
+            if let Some(e_coms) = commands.get_entity(ent) {
+                e_coms.despawn_recursive();
+            }
+            shipbuilder_ship.pieces[x][y] = None;
+        }
     
-        commands.spawn(
+        let piece = commands.spawn(
             Text2dBundle
             { 
-                transform: Transform::from_translation(world_pos.extend(0.0)).with_scale(Vec3::ONE * MOTHERSHIP_SCALE),
+                transform: Transform::from_scale(Vec3::ONE * MOTHERSHIP_SCALE).with_translation(world_pos.extend(0.0)),
                 text: Text::from_section("$", fonts.p1_font.clone()),
                 ..default()
-            });
+            }).id();
+        
+        if let Some(mut e_coms) = commands.get_entity(shipbuilder_ship.root) {
+            e_coms.add_child(piece);
+        }
+
+        shipbuilder_ship.pieces[x][y] = Some(piece);
+        
+        ship.pieces[x][y] = '$';
     }
 }
