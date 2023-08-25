@@ -42,7 +42,7 @@
 
     - click and drag to draw lots of a type of character
 
-     -name labels should display above a component button when you hover over it
+    - name labels should display above a component button when you hover over it
  
 - battle stage: 
 
@@ -55,6 +55,8 @@
     - bubbles and debris created on impact that float upwards
 
     - impact points should break off and float. all components should do this
+
+    - linear and angular velocity determined by number of fully powered thrusters
 
 ## STRETCH GOALS ##
 
