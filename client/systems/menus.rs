@@ -2,6 +2,8 @@ use std::f32::consts::PI;
 
 use bevy::prelude::*;
 use bevy::window::*;
+use bevy_pkv::*;
+
 use crate::components::*;
 use crate::constants::*;
 use crate::events::*;
@@ -89,7 +91,9 @@ pub fn handle_menu_buttons(
             With<Button>
         )
     >,
-    mut next_state: ResMut<NextState<GameState>>
+    mut next_state: ResMut<NextState<GameState>>,
+    mut storage: ResMut<PkvStore>,
+    mut submarine: ResMut<Submarine>,
 ) {
     for (interaction, button_type) in &interaction_query {
         if *interaction != Interaction::Clicked {
@@ -108,6 +112,10 @@ pub fn handle_menu_buttons(
             ButtonType::BackToMenuButton => {
                 info!("Back to Menu button pressed, going back.");
                 next_state.set(GameState::MainMenu);
+            },
+            ButtonType::SaveButton => {
+                info!("Save Button pressed");
+                pkv.set(CACHED_KEY, &submarine).expect("failed to store saved_build");
             }
         }
     }
@@ -117,7 +125,8 @@ pub fn setup_sub_builder(
     mut commands: Commands,
     fonts: Res<FontResource>,
     colors: Res<Colors>,
-    sub: Res<Submarine>
+    sub: Res<Submarine>,
+    mut submarine: ResMut<PkvStore>
 ) {
     //
     let mut root_commands = commands.spawn(
@@ -143,11 +152,13 @@ pub fn setup_sub_builder(
                     size: Size{ width: Val::Percent(100.0), height: Val::Percent(10.0) },
                     align_content: AlignContent::Start,
                     justify_content: JustifyContent::Start,
+                    flex_direction: FlexDirection::Column,
                     ..default()
                 },
                 ..default()
             }
-        ).with_children(|node_parent| {
+        )
+        .with_children(|node_parent| {
             node_parent.spawn(
                 (
                     ButtonBundle {
@@ -163,6 +174,28 @@ pub fn setup_sub_builder(
                 )
             ).with_children(|button_parent| {
                 button_parent.spawn(TextBundle::from_section("Back", TextStyle {
+                    font: fonts.font.clone(),
+                    font_size: 20.0,
+                    color: colors.normal_text
+                }));
+            });
+        })
+        .with_children(|node_parent| {
+            node_parent.spawn(
+                (
+                    ButtonBundle {
+                        style: Style {
+                            size: Size{ width: Val::Px(50.0), height: Val::Px(25.0) },
+                            ..default()
+                        },
+                        background_color: colors.button_normal.into(),
+                        ..default()
+                    },
+                    MyButton { identifier: ButtonType::SaveButton },
+                    InteractButton::from_clicked(colors.button_normal, colors.button_pressed)
+                )
+            ).with_children(|button_parent| {
+                button_parent.spawn(TextBundle::from_section("Save", TextStyle {
                     font: fonts.font.clone(),
                     font_size: 20.0,
                     color: colors.normal_text
@@ -243,6 +276,7 @@ pub fn setup_sub_builder(
         ..default()
     }).id();
 
+    
     commands.insert_resource(
         SubBuilderPreview{ 
             ent: preview_ent, 
@@ -449,8 +483,7 @@ pub fn do_sub_builder_parts(
     let place_key = MouseButton::Left;
     let destroy_key = MouseButton::Right;
 
-    // Do Piece destruction
-    // v
+    // v Do Piece destruction
     if input.pressed(destroy_key) {
         let left = -25;
         let bottom = -20;
@@ -466,11 +499,9 @@ pub fn do_sub_builder_parts(
             sub.pieces[x][y] = '\0';
         }
     }
-    // ^
-    // Piece destruction
+    // ^ Piece destruction
 
-    // Move Preview
-    // v
+    // v Move Preview
     
     let preview = match preview_opt {
         Some(p) => p,
@@ -483,8 +514,7 @@ pub fn do_sub_builder_parts(
     };
 
     preview_trans.translation = world_pos.extend(2.0);
-    // ^
-    // Move Preview
+    // ^ Move Preview
 
     // Piece Placement v
     if input.pressed(place_key) {

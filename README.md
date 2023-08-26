@@ -114,3 +114,5 @@ This is a known bug with the sub detection algorithm. It will work with multi wi
 - wasm server runner: https://github.com/jakobhellermann/wasm-server-runner
 
 - bevy_ui api: https://docs.rs/bevy_ui/latest/bevy_ui/
+
+- bevy_pkg: https://docs.rs/bevy_pkv/0.8.0/bevy_pkv/

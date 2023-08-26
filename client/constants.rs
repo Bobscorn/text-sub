@@ -140,3 +140,7 @@ pub static SUB_PARTS: [&SubPiece; 12] = [
     &ARMOUR1, &ARMOUR2, &ARMOUR3, &ARMOUR4, &ARMOUR5, &ARMOUR6, &ARMOUR7, &ARMOUR8, &ARMOUR9,
     &PROPELLER1, &TORPEDO_LAUNCHER, &REACTOR
 ];
+
+pub const TEAM_KEY: &'static str = "amogus";
+pub const GAME_NAME: &'static str = "Text Sub";
+pub const CACHED_KEY: &'static str = "saved_build";

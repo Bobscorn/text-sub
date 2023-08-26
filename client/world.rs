@@ -5,7 +5,11 @@ use crate::events::*;
 use crate::resources::*;
 use crate::constants::*;
 
-pub fn setup_world(mut commands: Commands, mut font_res: ResMut<FontResource>, asset_server: Res<AssetServer>) {
+pub fn setup_world(mut commands: Commands, 
+    mut font_res: ResMut<FontResource>, 
+    asset_server: Res<AssetServer>,
+    storage: Res<PkvStore>) {
+
     commands.spawn((Camera2dBundle{
         projection: OrthographicProjection { scaling_mode: bevy::render::camera::ScalingMode::FixedVertical(250.0), ..default() },        
         ..default()
@@ -28,5 +32,11 @@ pub fn setup_world(mut commands: Commands, mut font_res: ResMut<FontResource>, a
     font_res.preview_font = TextStyle{ font: font.clone(), font_size: TEXT_FONT_SIZE, color: colors.submarine_text.with_a(0.2) };
     
     commands.insert_resource(colors);
-    commands.insert_resource(Submarine::default());
+
+    //check cache for build
+    let submarine = match storage.get::<Submarine>(CACHED_KEY) {
+        Ok(item) => item,
+        Err(_) => Submarine::default()
+    };
+    commands.insert_resource(submarine);
 }

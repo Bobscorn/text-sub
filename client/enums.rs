@@ -6,7 +6,8 @@ use bevy::prelude::*;
 pub enum ButtonType {
     PlayButton,
     SubBuilderButton,
-    BackToMenuButton
+    BackToMenuButton,
+    SaveButton
 }
 
 #[derive(States, Clone, Eq, PartialEq, Debug, Hash, Default)]
@@ -19,7 +20,7 @@ pub enum GameState {
     InGame,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Default)]
+#[derive(Debug, Clone, Copy, PartialEq, Default, Serialize, Deserialize)]
 pub enum PieceRotation {
     #[default]
     North,

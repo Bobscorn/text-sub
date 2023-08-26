@@ -1,7 +1,5 @@
 - ship builder feature
 
-    - Add labels over every component
-
     - Save button to store the created sub in client cache
 
     - fix not able to draw outside the box

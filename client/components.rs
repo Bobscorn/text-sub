@@ -154,3 +154,6 @@ pub struct MainCamera;
 
 #[derive(Component)]
 pub struct MySubmarineTag;
+
+#[derive(Component)]
+pub struct UnerasablePiece;

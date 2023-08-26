@@ -1,7 +1,10 @@
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
 
-use crate::{constants::*, enums::PieceRotation};
+use crate::{
+    constants::*, 
+    enums::*
+};
 
 pub struct SubPiece {
     pub symbol: char,
@@ -42,7 +45,7 @@ pub struct Colors {
     pub button_pressed: Color
 }
 
-#[derive(Resource)]
+#[derive(Resource, Serialize, Deserialize)]
 pub struct Submarine {
     pub pieces: [[char; SUB_MAX_HEIGHT]; SUB_MAX_WIDTH],
     pub rotations: [[PieceRotation; SUB_MAX_HEIGHT]; SUB_MAX_WIDTH]
