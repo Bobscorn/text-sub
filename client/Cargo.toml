@@ -23,9 +23,9 @@ serde = "1.0.188"
 wasm-bindgen-test = "0.3.13"
 bevy-inspector-egui = "0.18.3"
 
-#own code compilation optimisations
+#dont optimise runtime performance in dev mode
 [profile.dev]
-opt-level = 3
+opt-level = 0
 
 # Enable high optimizations for dependencies (incl. Bevy), but not for our code:
 [profile.dev.package."*"]
