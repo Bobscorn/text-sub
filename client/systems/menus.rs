@@ -298,7 +298,7 @@ pub fn setup_sub_builder(
     commands.insert_resource(
         SubBuilderPreview{ 
             entity: preview_ent, 
-            part: &REACTOR,
+            part: REACTOR.clone(),
             rotation: PieceRotation::default()
         }); 
 
@@ -556,8 +556,10 @@ pub fn do_sub_builder_parts(
         let x: usize = (grid_pos.x as i32 - left).clamp(0, SUB_MAX_WIDTH as i32 - 1) as usize;
         let y = (grid_pos.y as i32 - bottom).clamp(0, SUB_MAX_HEIGHT as i32 - 1) as usize;
 
-        if sub.parts.len() <= x {
-            let diff = sub.parts.len() + 1 - x;
+        let parts_columns_len = sub.parts.len() as i32;
+
+        if parts_columns_len <= x {
+            let diff = parts_columns_len + 1 - (x as i32);
 
             for index in 0..diff {
                 sub.parts.push(Vec::new());
@@ -579,7 +581,7 @@ pub fn do_sub_builder_parts(
             }
         }
 
-        if chosen_column[y] != EMPTY_CHAR { //conclude if the grid slot was taken
+        if sub.parts[x][y] != EMPTY_CHAR { //conclude if the grid slot was taken
             return;
         }
 
@@ -594,13 +596,13 @@ pub fn do_sub_builder_parts(
             }).id();
         
         // Make the spawned part a child of the subbuilder root so it'll be destroyed when destroying the root
-        if let Some(mut e_coms) = commands.get_entity(subbuilder.root) {
+        if let Some(mut e_coms) = commands.get_entity(subbuilder.root.clone()) {
             e_coms.add_child(part);
         }
 
-        chosen_column_builder[y] = Some(part);
-        chosen_column[y] = preview.part.symbol;
-        chosen_column_rotation[y] = preview.rotation;
+        subbuilder.parts[x][y] = Some(part);
+        sub.parts[x][y] = preview.part.symbol;
+        sub.rotations[x][y] = preview.rotation;
     }
     // ^
     // part Placement
