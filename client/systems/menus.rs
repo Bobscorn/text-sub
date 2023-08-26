@@ -241,7 +241,8 @@ pub fn setup_sub_builder(
     commands.insert_resource(
         SubBuilderPreview{ 
             ent: preview_ent, 
-            piece: REACTOR
+            piece: REACTOR,
+            rotation: PieceRotation::North
         }); 
 
 
@@ -264,7 +265,7 @@ pub fn setup_sub_builder(
                 let ent = root.spawn(
                     Text2dBundle{
                         text: Text::from_section(sub.pieces[x][y], fonts.p1_font.clone()),
-                        transform: Transform::from_scale(Vec3::ONE * SUB_SCALE).with_translation(pos),
+                        transform: Transform::from_scale(Vec3::ONE * SUB_SCALE).with_translation(pos).with_rotation(Quat::from_rotation_z(sub.rotations[x][y].rotation_radians())),
                         ..default()
                         }
                 ).id();
@@ -343,7 +344,7 @@ pub fn sub_builder_piece_buttons(
 }
 
 pub fn rotate_sub_preview(
-    preview: Res<SubBuilderPreview>,
+    mut preview: ResMut<SubBuilderPreview>,
     mut query: Query<&mut Transform>,
     input: Res<Input<KeyCode>>
 ) {
@@ -361,6 +362,7 @@ pub fn rotate_sub_preview(
         };
 
         transform.rotate_local_z(PI * 0.5);
+        preview.rotation = preview.rotation.rotated_cw();
     }
     if input.just_pressed(rotate_ccw) {
         let transform = match query.get_mut(preview.ent) {
@@ -369,6 +371,7 @@ pub fn rotate_sub_preview(
         };
 
         transform.rotate_local_z(PI * -0.5);
+        preview.rotation = preview.rotation.rotated_ccw();
     }
 }
 
@@ -492,6 +495,7 @@ pub fn do_sub_builder_parts(
 
         subbuilder_sub.pieces[x][y] = Some(piece);
         sub.pieces[x][y] = preview.piece.symbol;
+        sub.rotations[x][y] = preview.rotation;
     }
     // ^
     // Piece Placement
