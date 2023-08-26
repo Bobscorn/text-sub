@@ -19,3 +19,5 @@
     - change explosions into text, not sprites
 
     - change torpedos into text, not sprites
+
+    - fix player should be in the center of the screen at all times

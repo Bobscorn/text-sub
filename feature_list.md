@@ -10,9 +10,7 @@
 
     - []\\|/() - armour
 
-    - ? torpedo launcher (turrets, launchers can be rotated)
-
-    - % - fighter sub/drone (shoots mini-torpedo)
+    - = torpedo launcher
 
     - ! - torpedo missiles
 
@@ -24,12 +22,10 @@
 
     - {} reactor enclosure
 
-    - <> propellers
+    - propellers
+        + -
 
     - o bubbles
-
-    - not used (YET)
-        + #
 
 - each character has a unique set of components
 
