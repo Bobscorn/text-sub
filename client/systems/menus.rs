@@ -1,3 +1,5 @@
+use std::f32::consts::PI;
+
 use bevy::prelude::*;
 use bevy::window::*;
 use crate::components::*;
@@ -200,7 +202,7 @@ pub fn setup_sub_builder(
                 ..default()
             }).with_children(|node_parent| {
                 // Spawn buttons for all characters
-                for piece in SUB_PIECES {
+                for piece in SUB_PARTS {
                     node_parent.spawn(
                         (ButtonBundle {
                             style: Style {
@@ -212,10 +214,10 @@ pub fn setup_sub_builder(
                             background_color: colors.button_normal.into(),
                             ..default()
                         }, 
-                        SubBuilderButton{ character: piece },
+                        SubBuilderButton{ part: piece },
                         InteractButton::from_clicked(colors.button_normal, colors.button_pressed)
                     )).with_children(|button_parent| {
-                        button_parent.spawn(TextBundle{ text: Text::from_section(piece, fonts.p1_font.clone()), ..default() });
+                        button_parent.spawn(TextBundle{ text: Text::from_section(piece.symbol, fonts.p1_font.clone()), ..default() });
                     });
                 }
             });
@@ -239,10 +241,8 @@ pub fn setup_sub_builder(
     commands.insert_resource(
         SubBuilderPreview{ 
             ent: preview_ent, 
-            piece: SubPiece { //initial part is a reactor
-                symbol = AT,
-                label
-            }}); 
+            piece: REACTOR
+        }); 
 
 
     // Add the subbuildersub resource
@@ -330,8 +330,8 @@ pub fn sub_builder_piece_buttons(
         match *interaction {
             Interaction::Clicked => {
                 if let Ok(mut text) = text_query.get_mut(preview.ent) {
-                    text.sections[0].value = String::from(builder_button.character);
-                    preview.piece = builder_button.character;
+                    text.sections[0].value = String::from(builder_button.part.symbol);
+                    preview.piece = builder_button.part;
                 }
             },
             Interaction::Hovered => {
@@ -426,9 +426,12 @@ pub fn do_sub_builder_parts(
         None => return // return as piece placement depends on preview existing
     };
 
-    if let Ok(mut trans) = trans_query.get_mut(preview.ent) {
-        trans.translation = world_pos.extend(2.0);
-    }
+    let mut preview_trans = match trans_query.get_mut(preview.ent) {
+        Ok(t) => t,
+        Err(_) => return
+    };
+
+    preview_trans.translation = world_pos.extend(2.0);
     // ^
     // Move Preview
 
@@ -443,7 +446,7 @@ pub fn do_sub_builder_parts(
             return;
         }
 
-        info!("Placing piece '{}' at {:?}", preview.piece, world_pos);
+        info!("Placing piece '{}' at {:?}", preview.piece.symbol, world_pos);
         let piece = commands.spawn(
             Text2dBundle
             { 
@@ -458,7 +461,7 @@ pub fn do_sub_builder_parts(
         }
 
         subbuilder_sub.pieces[x][y] = Some(piece);
-        sub.pieces[x][y] = preview.piece;
+        sub.pieces[x][y] = preview.piece.symbol;
     }
     // ^
     // Piece Placement
