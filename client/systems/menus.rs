@@ -342,6 +342,36 @@ pub fn sub_builder_piece_buttons(
     }
 }
 
+pub fn rotate_sub_preview(
+    preview: Res<SubBuilderPreview>,
+    mut query: Query<&mut Transform>,
+    input: Res<Input<KeyCode>>
+) {
+    let rotate_cw = KeyCode::E;
+    let rotate_ccw = KeyCode::Q;
+
+    if !input.any_pressed([rotate_ccw, rotate_cw]) {
+        return;
+    }
+
+    if input.just_pressed(rotate_cw) {
+        let transform = match query.get_mut(preview.ent) {
+            Ok(e) => e,
+            Err(_) => return
+        };
+
+        transform.rotate_local_z(PI * 0.5);
+    }
+    if input.just_pressed(rotate_ccw) {
+        let transform = match query.get_mut(preview.ent) {
+            Ok(e) => e,
+            Err(_) => return
+        };
+
+        transform.rotate_local_z(PI * -0.5);
+    }
+}
+
 pub fn do_sub_builder_parts(
     mut commands: Commands,
     // For converting coordinates v
@@ -450,8 +480,8 @@ pub fn do_sub_builder_parts(
         let piece = commands.spawn(
             Text2dBundle
             { 
-                transform: Transform::from_scale(Vec3::ONE * SUB_SCALE).with_translation(world_pos.extend(0.0)),
-                text: Text::from_section(preview.piece, fonts.p1_font.clone()),
+                transform: Transform::from_scale(Vec3::ONE * SUB_SCALE).with_translation(world_pos.extend(0.0)).with_rotation(preview_trans.rotation),
+                text: Text::from_section(preview.piece.symbol, fonts.p1_font.clone()),
                 ..default()
             }).id();
         
