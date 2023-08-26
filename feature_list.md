@@ -59,6 +59,8 @@
 
 ## STRETCH GOALS ##
 
+- type the text in the builder
+
 - reactor meltdown/explosion
 
 - reflect debris off mothersub hulls if they collide
