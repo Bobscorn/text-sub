@@ -556,9 +556,8 @@ pub fn do_sub_builder_parts(
         let x: usize = (grid_pos.x as i32 - left).clamp(0, SUB_MAX_WIDTH as i32 - 1) as usize;
         let y = (grid_pos.y as i32 - bottom).clamp(0, SUB_MAX_HEIGHT as i32 - 1) as usize;
 
-        let parts_columns_len = sub.parts.len() as i32;
-
-        if parts_columns_len <= x {
+        if sub.parts.len() <= x {
+            let parts_columns_len = sub.parts.len() as i32;
             let diff = parts_columns_len + 1 - (x as i32);
 
             for index in 0..diff {
@@ -568,9 +567,8 @@ pub fn do_sub_builder_parts(
             }
         }
 
-        let parts_rows_len = sub.parts[x].len() as i32;
-
-        if parts_rows_len <= y {
+        if sub.parts[x].len() <= y {
+            let parts_rows_len = sub.parts[x].len() as i32;
             let diff = parts_rows_len + 1 - (y as i32);
 
             for index in 0..diff {
