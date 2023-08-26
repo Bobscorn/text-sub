@@ -50,9 +50,9 @@ impl PieceRotation {
     pub fn rotation_radians(&self) -> f32 {
         match self {
             Self::North => 0.0,
-            Self::East => PI * 0.5,
+            Self::East => PI * 1.5,
             Self::South => PI,
-            Self::West => PI * 1.5
+            Self::West => PI * 0.5
         }
     }
 }

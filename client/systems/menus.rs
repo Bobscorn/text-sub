@@ -378,7 +378,7 @@ pub fn rotate_sub_preview(
             Err(_) => return
         };
 
-        transform.rotate_local_z(PI * 0.5);
+        transform.rotate_local_z(PI * -0.5);
         preview.rotation = preview.rotation.rotated_cw();
     }
     if input.just_pressed(rotate_ccw) {
@@ -387,7 +387,7 @@ pub fn rotate_sub_preview(
             Err(_) => return
         };
 
-        transform.rotate_local_z(PI * -0.5);
+        transform.rotate_local_z(PI * 0.5);
         preview.rotation = preview.rotation.rotated_ccw();
     }
 }
