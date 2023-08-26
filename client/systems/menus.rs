@@ -236,7 +236,13 @@ pub fn setup_sub_builder(
         ..default()
     }).id();
 
-    commands.insert_resource(SubBuilderPreview{ ent: preview_ent, piece: DOLLAR });
+    commands.insert_resource(
+        SubBuilderPreview{ 
+            ent: preview_ent, 
+            piece: SubPiece { //initial part is a reactor
+                symbol = AT,
+                label
+            }}); 
 
 
     // Add the subbuildersub resource
@@ -328,7 +334,9 @@ pub fn sub_builder_piece_buttons(
                     preview.piece = builder_button.character;
                 }
             },
-            Interaction::Hovered => (),
+            Interaction::Hovered => {
+                
+            },
             Interaction::None => ()
         }
     }

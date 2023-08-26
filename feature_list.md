@@ -8,7 +8,7 @@
 
     - no letters, numbers or control sequences
 
-    - []\\|/() - light armor
+    - []\\|/() - armour
 
     - ? torpedo launcher (turrets, launchers can be rotated)
 
@@ -20,8 +20,6 @@
 
     - \* could be explosion sparks?
 
-    - \+ (plus), # (hash) heavy armor
-
     - @ reactor
 
     - {} reactor enclosure
@@ -29,6 +27,9 @@
     - <> propellers
 
     - o bubbles
+
+    - not used (YET)
+        + #
 
 - each character has a unique set of components
 

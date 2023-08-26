@@ -4,6 +4,13 @@ use bevy_asset_loader::prelude::*;
 use crate::constants::*;
 
 #[derive(Resource)]
+pub struct SubPiece {
+    pub symbol: char,
+    pub label: String,
+    pub description: String
+}
+
+#[derive(Resource)]
 pub struct UIMenu {
     pub ui: Entity
 }
@@ -11,7 +18,7 @@ pub struct UIMenu {
 #[derive(Resource)]
 pub struct SubBuilderPreview {
     pub ent: Entity,
-    pub piece: char
+    pub piece: SubPiece
 }
 
 #[derive(Resource)]
