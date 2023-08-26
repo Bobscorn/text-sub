@@ -1,7 +1,7 @@
 use bevy::prelude::*;
-use crate::constants::{SUB_MAX_HEIGHT, SUB_MAX_WIDTH, EMPTY_CHAR};
+use crate::constants::*;
 use crate::enums::*;
-use crate::resources::SubPiece;
+use crate::resources::*;
 
 #[derive(Component)]
 pub struct MyButton {

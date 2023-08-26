@@ -10,7 +10,6 @@ use crate::constants::*;
 use crate::input::*;
 use std::f32::consts::*;
 use crate::events::*;
-use bevy::window::*;
 
 pub fn start_matchbox_socket(mut commands: Commands) {
     let room_url = "ws://127.0.0.1:3536/extreme_bevy?next=2";

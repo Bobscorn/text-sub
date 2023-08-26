@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
 
-use crate::constants::*;
+use crate::{constants::*, enums::PieceRotation};
 
 #[derive(Resource)]
 pub struct SubPiece {

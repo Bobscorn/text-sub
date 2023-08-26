@@ -7,9 +7,7 @@ use crate::constants::*;
 use crate::events::*;
 use crate::enums::*;
 use crate::resources::*;
-
-use super::ui::InteractButton;
-use super::ui::UiHandling;
+use super::ui::*;
 
 pub fn setup_mainmenu(
     mut commands: Commands,
