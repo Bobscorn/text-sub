@@ -97,14 +97,7 @@ pub fn spawn_mothersub(
     mut commands: Commands, 
     fonts: Res<FontResource>, 
     mut rip: ResMut<RollbackIdProvider>,
-    _wind_q: Query<&Window, With<PrimaryWindow>>
 ) {
-    //let window = wind_q.single();
-    //let win_width = window.width();
-
-    //let sub_width = 5.5 * MOTHERsub_STRUCTURE_SPACING;
-    //let min_gap = 0.1; // 0.1 = 10% of window width
-    //let pos = (0.25 * win_width).max(min_gap * view_width + sub_width * 0.5);
     let pos = SUB_STRUCTURE_SPACING * 10.5;
 
     let bottom_left = Vec3::new(-(SUB_STRUCTURE_SPACING * 5.5), -(SUB_STRUCTURE_SPACING * 2.5), 0.);
