@@ -113,7 +113,7 @@ pub fn spawn_mothersub(
         let sub_pos = base_poses[i];
         println!("Spawning sub at {:?}", sub_pos);
         commands.spawn((
-            SpriteBundle{ transform: Transform::from_translation(sub_pos), ..default() }, 
+            SpatialBundle{ transform: Transform::from_translation(sub_pos), ..default() }, 
             Mothersub::default(), 
             Velocity{ value: Vec2::ZERO },
             AngularVelocity::default(),
