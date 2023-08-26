@@ -107,8 +107,8 @@ This is a known bug with the sub detection algorithm. It will work with multi wi
 
 - rocket api: https://api.rocket.rs/v0.5-rc/rocket/
 
-- matchbox: https://github.com/johanhelsing/matchbox/
+- bevy_ggrs api: https://docs.rs/bevy_ggrs/0.12.0/bevy_ggrs/
+
+- bevy_matchbox api: https://docs.rs/bevy_matchbox/0.6.0/bevy_matchbox/
 
 - wasm server runner: https://github.com/jakobhellermann/wasm-server-runner
-
-- bevy_ggrs api: https://docs.rs/bevy_ggrs/0.13.0/bevy_ggrs/
