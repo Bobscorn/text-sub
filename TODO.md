@@ -2,6 +2,8 @@
 
     - fix indexing subbuilder resource panics out of bounds
 
+    - fix menu buttons too far apart
+
     - fix not able to draw outside the box
 
     - fix being able to draw where parts are not connected

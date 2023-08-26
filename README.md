@@ -1,6 +1,6 @@
-# Textsub #
+# Text Sub #
 
-Build a spacesub out of ASCII Symbols and fight in a 2 Player deathmatch.
+Build a submarine out of ASCII Symbols and fight in a multiplayer deathmatch.
 
 ## Setup Bevy to run in the browser ##
 
