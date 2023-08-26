@@ -292,7 +292,7 @@ pub fn setup_sub_builder(
         SubBuilderPreview{ 
             entity: preview_ent, 
             part: &REACTOR,
-            rotation: partRotation::North
+            rotation: PieceRotation::default()
         }); 
 
 
@@ -550,7 +550,7 @@ pub fn do_sub_builder_parts(
         let y = (grid_pos.y as i32 - bottom).clamp(0, SUB_MAX_HEIGHT as i32 - 1) as usize;
 
         if sub.parts.len() <= x {
-            diff = sub.parts.len() + 1 - x;
+            let diff = sub.parts.len() + 1 - x;
 
             for index in 0..diff {
                 sub.parts.push(Vec::new());
@@ -558,12 +558,12 @@ pub fn do_sub_builder_parts(
                 subbuilder.parts.push(Vec::new());
             }
         }
-        chosen_column = sub.parts[x];
-        chosen_column_builder = subbuilder.parts[x];
-        chosen_column_rotation = sub.rotations[x];
+        let chosen_column = sub.parts[x];
+        let chosen_column_builder = subbuilder.parts[x];
+        let chosen_column_rotation = sub.rotations[x];
 
         if chosen_column.len() <= y {
-            diff = chosen_column.len() + 1 - y;
+            let diff = chosen_column.len() + 1 - y;
 
             for index in 0..diff {
                 chosen_column.push(EMPTY_CHAR);

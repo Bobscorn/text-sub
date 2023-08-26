@@ -38,7 +38,7 @@ impl Plugin for GamePlugin {
             .add_systems(OnExit(GameState::MainMenu), exit_main_menu)
             // sub Building
             .add_systems(OnEnter(GameState::SubBuilding), setup_sub_builder)
-            .add_systems(Update, (sub_builder_piece_buttons, do_sub_builder_parts, rotate_sub_preview).run_if(in_state(GameState::SubBuilding)))
+            .add_systems(Update, (sub_builder_part_buttons, do_sub_builder_parts, rotate_sub_preview).run_if(in_state(GameState::SubBuilding)))
             .add_systems(OnExit(GameState::SubBuilding), exit_sub_builder)
             // Match making
             .add_systems(Update, wait_for_players.run_if(in_state(GameState::MatchMaking)))

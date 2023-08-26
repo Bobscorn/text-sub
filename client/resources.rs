@@ -30,7 +30,7 @@ pub struct UIMenu {
 #[derive(Resource)]
 pub struct SubBuilderPreview {
     pub entity: Entity,
-    pub piece: &'static SubPiece,
+    pub part: &'static SubPiece,
     pub rotation: PieceRotation
 }
 
