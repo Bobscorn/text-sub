@@ -11,6 +11,8 @@ mod systems;
 mod enums;
 mod input;
 mod world;
+mod structs;
+mod parts;
 
 use wasm_bindgen::prelude::*;
 use start::start;

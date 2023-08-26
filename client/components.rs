@@ -2,6 +2,7 @@ use bevy::prelude::*;
 use crate::constants::*;
 use crate::enums::*;
 use crate::resources::*;
+use crate::structs::*;
 
 #[derive(Component)]
 pub struct MyButton {
@@ -10,7 +11,7 @@ pub struct MyButton {
 
 #[derive(Component)]
 pub struct SubBuilderButton {
-    pub part: &'static SubPiece,
+    pub part: SubPart,
 }
 
 #[derive(Component, Reflect, Default)]

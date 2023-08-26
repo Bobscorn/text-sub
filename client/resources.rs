@@ -1,25 +1,18 @@
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
 use serde::*;
+use crate::structs::*;
 
 use crate::{
     constants::*, 
     enums::*
 };
 
-
 #[derive(Resource, Default)]
 pub struct FontResource {
     pub font: Handle<Font>,
     pub preview_font: TextStyle,
     pub p1_font: TextStyle,
-}
-
-#[derive(Resource)]
-pub struct SubPiece {
-    pub symbol: char,
-    pub label: &'static str,
-    pub description: &'static str 
 }
 
 #[derive(Resource)]
@@ -30,7 +23,7 @@ pub struct UIMenu {
 #[derive(Resource)]
 pub struct SubBuilderPreview {
     pub entity: Entity,
-    pub part: &'static SubPiece,
+    pub part: SubPart,
     pub rotation: PieceRotation
 }
 

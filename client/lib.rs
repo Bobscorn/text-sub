@@ -11,6 +11,9 @@ mod systems;
 mod enums;
 mod input;
 mod world;
+mod structs;
+mod parts;
+
 use start::start;
 use utils::set_panic_hook;
 use wasm_bindgen::prelude::*;

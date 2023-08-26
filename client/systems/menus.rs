@@ -10,6 +10,8 @@ use crate::events::*;
 use crate::enums::*;
 use crate::resources::*;
 use super::ui::*;
+use crate::structs::*;
+use crate::parts::*;
 
 pub fn setup_mainmenu(
     mut commands: Commands,
@@ -132,7 +134,12 @@ pub fn setup_sub_builder(
     sub: Res<Submarine>,
     mut submarine: ResMut<PkvStore>
 ) {
-    //
+    
+    let sub_parts: [&SubPart; 12] = [
+        &ARMOUR1, &ARMOUR2, &ARMOUR3, &ARMOUR4, &ARMOUR5, &ARMOUR6, &ARMOUR7, &ARMOUR8, &ARMOUR9,
+        &PROPELLER1, &TORPEDO_LAUNCHER, &REACTOR
+    ];
+
     let mut root_commands = commands.spawn(
         NodeBundle{
             style: Style {
@@ -241,7 +248,7 @@ pub fn setup_sub_builder(
                 background_color: colors.node_background.into(),
                 ..default()
             }).with_children(|node_parent| {
-                for part in SUB_PARTS {
+                for part in sub_parts {
                     node_parent.spawn( //button
                         (ButtonBundle {
                             style: Style {
@@ -255,7 +262,7 @@ pub fn setup_sub_builder(
                             background_color: colors.node_background.into(),                            
                             ..default()
                         }, 
-                        SubBuilderButton{ part: part },
+                        SubBuilderButton{ part: part.clone() },
                         InteractButton::from_clicked(colors.node_background, colors.button_pressed)
                     ))
                     .with_children(|button_parent| { //button label
@@ -558,9 +565,9 @@ pub fn do_sub_builder_parts(
                 subbuilder.parts.push(Vec::new());
             }
         }
-        let chosen_column = sub.parts[x];
-        let chosen_column_builder = subbuilder.parts[x];
-        let chosen_column_rotation = sub.rotations[x];
+        let chosen_column = &mut sub.parts[x];
+        let chosen_column_rotation = &mut sub.rotations[x];
+        let chosen_column_builder = &mut subbuilder.parts[x];
 
         if chosen_column.len() <= y {
             let diff = chosen_column.len() + 1 - y;
@@ -572,7 +579,7 @@ pub fn do_sub_builder_parts(
             }
         }
 
-        if chosen_column.len() >= y && chosen_column[y] != EMPTY_CHAR { //conclude if the grid slot was taken
+        if chosen_column[y] != EMPTY_CHAR { //conclude if the grid slot was taken
             return;
         }
 
