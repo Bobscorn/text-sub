@@ -10,6 +10,8 @@
 
     - fix being able to draw where parts are not connected
 
+    - spawn placement grid
+
 - fixes
 
     - direction of torpedo should rotate with ship
