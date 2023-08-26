@@ -112,3 +112,5 @@ This is a known bug with the sub detection algorithm. It will work with multi wi
 - bevy_matchbox api: https://docs.rs/bevy_matchbox/0.6.0/bevy_matchbox/
 
 - wasm server runner: https://github.com/jakobhellermann/wasm-server-runner
+
+- bevy_ui api: https://docs.rs/bevy_ui/latest/bevy_ui/
