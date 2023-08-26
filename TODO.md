@@ -2,8 +2,6 @@
 
     - Add labels over every component
 
-    - Add rotation Q, E for components
-
     - Save button to store the created sub in client cache
 
     - fix not able to draw outside the box
