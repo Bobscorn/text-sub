@@ -567,17 +567,16 @@ pub fn do_sub_builder_parts(
                 subbuilder.parts.push(Vec::new());
             }
         }
-        let chosen_column = &mut sub.parts[x];
-        let chosen_column_rotation = &mut sub.rotations[x];
-        let chosen_column_builder = &mut subbuilder.parts[x];
 
-        if chosen_column.len() <= y {
-            let diff = chosen_column.len() + 1 - y;
+        let parts_rows_len = sub.parts[x].len() as i32;
+
+        if parts_rows_len <= y {
+            let diff = parts_rows_len + 1 - (y as i32);
 
             for index in 0..diff {
-                chosen_column.push(EMPTY_CHAR);
-                chosen_column_rotation.push(PieceRotation::default());
-                chosen_column_builder.push(None);
+                sub.parts[x].push(EMPTY_CHAR);
+                sub.rotations[x].push(PieceRotation::default());
+                subbuilder.parts[x].push(None);
             }
         }
 
