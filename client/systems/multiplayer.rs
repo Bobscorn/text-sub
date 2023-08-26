@@ -40,7 +40,6 @@ pub fn wait_for_players(
     }
 
     info!("All peers have joined, going in game!");
-    crate::log!("All peers have joined, going in game!");
 
     let mut session_builder = ggrs::SessionBuilder::<GgrsConfig>::new()
         .with_num_players(2)
@@ -63,14 +62,14 @@ pub fn wait_for_players(
         .start_p2p_session(channel)
         .expect("Failed to start session");
 
-    commands.insert_resource(bevy_ggrs::Session::P2PSession(ggrs_session));
+    commands.insert_resource(bevy_ggrs::Session::P2P(ggrs_session));
 
     next_state.set(GameState::InGame);
 }
 
 pub fn player_action(
     inputs: Res<PlayerInputs<GgrsConfig>>,
-    mut player_query: Query<(&mut Velocity, &Player, &mut Transform, &mut AngularVelocity), With<Mothersub>>
+    mut player_query: Query<(&mut Velocity, &Player, &mut Transform, &mut AngularVelocity), With<SubsRoot>>
 ) {
     // Basic demonstrational movement for now
     for (mut velocity, player, mut transform, mut angular) in player_query.iter_mut() {
@@ -94,8 +93,7 @@ pub fn player_action(
 
 pub fn spawn_mothersub(
     mut commands: Commands, 
-    fonts: Res<FontResource>, 
-    mut rip: ResMut<RollbackIdProvider>,
+    fonts: Res<FontResource>
 ) {
     let pos = SUB_STRUCTURE_SPACING * 10.5;
 
@@ -114,13 +112,12 @@ pub fn spawn_mothersub(
         println!("Spawning sub at {:?}", sub_pos);
         commands.spawn((
             SpatialBundle{ transform: Transform::from_translation(sub_pos), ..default() }, 
-            Mothersub::default(), 
+            SubsRoot::default(), 
             Velocity{ value: Vec2::ZERO },
             AngularVelocity::default(),
             Player{ handle: i },
-            BulletReady(true),
-            rip.next()
-        ))
+            BulletReady(true)
+        )).add_rollback()
             .with_children(|parent| {
                 for x in 0..width {
                     for y in 0..height {

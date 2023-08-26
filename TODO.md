@@ -1,6 +1,6 @@
 - ship builder feature
 
-    - Save button to store the created sub in client cache
+    - fix indexing subbuilder resource panics out of bounds
 
     - fix not able to draw outside the box
 

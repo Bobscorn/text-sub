@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use crate::components::*;
 use crate::constants::*;
 
-pub fn move_mothersub(time: Res<Time>, mut query: Query<&mut Transform, With<Mothersub>>) {
+pub fn move_mothersub(time: Res<Time>, mut query: Query<&mut Transform, With<SubsRoot>>) {
     let dt = time.delta_seconds();
 
     for mut transform in &mut query {

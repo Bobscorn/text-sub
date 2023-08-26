@@ -1,6 +1,7 @@
 use std::{default, f32::consts::PI};
 
 use bevy::prelude::*;
+use serde::{Serialize, Deserialize};
 
 #[derive(PartialEq)]
 pub enum ButtonType {

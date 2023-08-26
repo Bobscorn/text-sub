@@ -19,8 +19,7 @@ pub fn fire_torpedo(
     mut commands: Commands,
     inputs: Res<PlayerInputs<GgrsConfig>>,
     images: Res<ImageAssets>,
-    mut player_query: Query<(&Transform, &Player, &mut BulletReady)>,
-    mut rip: ResMut<RollbackIdProvider>
+    mut player_query: Query<(&Transform, &Player, &mut BulletReady)>
 ) {
     for (transform, player, mut bullet_ready) in player_query.iter_mut() {
         let (input, _) = inputs[player.handle];
@@ -40,9 +39,8 @@ pub fn fire_torpedo(
                 value: Vec2::new(20., 0.)
             }, Acceleration(
                 Vec2::new(5., 0.)
-            ), 
-            rip.next()
-        ));
+            )
+        )).add_rollback();
 
             bullet_ready.0 = false;
         }

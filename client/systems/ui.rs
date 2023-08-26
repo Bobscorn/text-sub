@@ -45,7 +45,7 @@ pub fn check_ui_interaction(
 ) {
     ui_handling.is_pointer_over_ui = interaction_query
         .iter()
-        .any(|i| matches!(i, Interaction::Clicked | Interaction::Hovered));
+        .any(|i| matches!(i, Interaction::Pressed | Interaction::Hovered));
 }
 
 pub fn handle_interaction_buttons(
@@ -60,7 +60,7 @@ pub fn handle_interaction_buttons(
 ) {
     for (interaction, mut back_color, butt) in &mut interaction_query {
         match *interaction {
-            Interaction::Clicked => {
+            Interaction::Pressed => {
                 *back_color = butt.clicked_color.into();
             },
             Interaction::Hovered => {

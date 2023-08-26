@@ -18,11 +18,12 @@ pub fn setup_mainmenu(
 ) {
     let root = commands.spawn(NodeBundle{
         style: Style {
-            size: Size { width: Val::Percent(100.0), height: Val::Percent(100.0) },
+            width: Val::Percent(100.0), 
+            height: Val::Percent(100.0),
             align_items: AlignItems::Center,
             flex_direction: FlexDirection::Column,
             justify_content: JustifyContent::Center,
-            gap: Size { width: Val::Px(0.0), height: Val::Px(25.0) },
+            column_gap: Val::Px(25.0),
             ..default()
         },
         background_color: colors.menu_background.into(),
@@ -30,7 +31,8 @@ pub fn setup_mainmenu(
     }).with_children(|node_parent| {
         node_parent.spawn((ButtonBundle {
                 style: Style {
-                    size: Size { width: Val::Px(225.0), height: Val::Px(50.0) },
+                    width: Val::Px(225.0), 
+                    height: Val::Px(50.0),
                     justify_content: JustifyContent::Center,
                     align_items: AlignItems::Center,
                     ..default()
@@ -49,7 +51,8 @@ pub fn setup_mainmenu(
         });
         node_parent.spawn((ButtonBundle{ 
                 style: Style {
-                    size: Size { width: Val::Px(225.0), height: Val::Px(50.0) },
+                    width: Val::Px(225.0), 
+                    height: Val::Px(50.0),
                     justify_content: JustifyContent::Center,
                     align_items: AlignItems::Center,
                     ..default()
@@ -93,10 +96,10 @@ pub fn handle_menu_buttons(
     >,
     mut next_state: ResMut<NextState<GameState>>,
     mut storage: ResMut<PkvStore>,
-    mut submarine: ResMut<Submarine>,
+    submarine: Res<Submarine>,
 ) {
     for (interaction, button_type) in &interaction_query {
-        if *interaction != Interaction::Clicked {
+        if *interaction != Interaction::Pressed {
             continue;
         }
 
@@ -115,7 +118,8 @@ pub fn handle_menu_buttons(
             },
             ButtonType::SaveButton => {
                 info!("Save Button pressed");
-                pkv.set(CACHED_KEY, &submarine).expect("failed to store saved_build");
+                let derefed_sub: &Submarine = &submarine;
+                storage.set(CACHED_KEY, derefed_sub).expect("failed to store saved_build");
             }
         }
     }
@@ -132,7 +136,8 @@ pub fn setup_sub_builder(
     let mut root_commands = commands.spawn(
         NodeBundle{
             style: Style {
-                size: Size{ width: Val::Percent(100.0), height: Val::Percent(100.0) },
+                width: Val::Percent(100.0), 
+                height: Val::Percent(100.0),
                 align_items: AlignItems::Center,
                 justify_content: JustifyContent::Center,
                 flex_direction: FlexDirection::Column,
@@ -149,7 +154,8 @@ pub fn setup_sub_builder(
         root_parent.spawn(
             NodeBundle{
                 style: Style {
-                    size: Size{ width: Val::Percent(100.0), height: Val::Percent(10.0) },
+                    width: Val::Percent(100.0), 
+                    height: Val::Percent(10.0),
                     align_content: AlignContent::Start,
                     justify_content: JustifyContent::Start,
                     flex_direction: FlexDirection::Column,
@@ -163,7 +169,8 @@ pub fn setup_sub_builder(
                 (
                     ButtonBundle {
                         style: Style {
-                            size: Size{ width: Val::Px(50.0), height: Val::Px(25.0) },
+                            width: Val::Px(50.0), 
+                            height: Val::Px(25.0),
                             ..default()
                         },
                         background_color: colors.button_normal.into(),
@@ -185,7 +192,8 @@ pub fn setup_sub_builder(
                 (
                     ButtonBundle {
                         style: Style {
-                            size: Size{ width: Val::Px(50.0), height: Val::Px(25.0) },
+                            width: Val::Px(50.0), 
+                            height: Val::Px(25.0),
                             ..default()
                         },
                         background_color: colors.button_normal.into(),
@@ -209,7 +217,8 @@ pub fn setup_sub_builder(
         root_parent.spawn( //Builder UI Container
             NodeBundle{ 
                 style: Style { //Builder UI Style
-                    size: Size { width: Val::Percent(100.0), height: Val::Percent(90.0) },
+                    width: Val::Percent(100.0), 
+                    height: Val::Percent(90.0),
                     align_items: AlignItems::Center,
                     justify_content: JustifyContent::End,
                     flex_direction: FlexDirection::ColumnReverse,
@@ -221,7 +230,8 @@ pub fn setup_sub_builder(
         ).with_children(|root_parent| { 
             root_parent.spawn(NodeBundle { //Buttons Container
                 style: Style {
-                    size: Size { width: Val::Percent(100.0), height: Val::Percent(20.0) },
+                    width: Val::Percent(100.0), 
+                    height: Val::Percent(20.0),
                     align_items: AlignItems::Center,
                     justify_content: JustifyContent::SpaceEvenly,
                     flex_direction: FlexDirection::Row,
@@ -235,7 +245,8 @@ pub fn setup_sub_builder(
                     node_parent.spawn( //button
                         (ButtonBundle {
                             style: Style {
-                                size: Size { width: Val::Px(40.0), height: Val::Px(40.0) },
+                                width: Val::Px(40.0), 
+                                height: Val::Px(40.0),
                                 align_items: AlignItems::Center,
                                 justify_content: JustifyContent::Center,
                                 flex_direction: FlexDirection::ColumnReverse,
@@ -292,25 +303,37 @@ pub fn setup_sub_builder(
 
         let left: i32 = -25;
         let bottom: i32 = -20;
-        for x in 0..SUB_MAX_WIDTH {
-            for y in 0..SUB_MAX_HEIGHT {
-                if sub.pieces[x][y] == EMPTY_CHAR {
+        
+        builder_sub.pieces.clear();
+
+        for x in 0..sub.pieces.len() {
+            let column = &sub.pieces[x];
+            let mut builder_column = Vec::new();
+
+            for y in 0..column.len() {
+                let symbol = sub.pieces[x][y];
+
+                if symbol == EMPTY_CHAR {
+                    builder_column.push(None);
                     continue;
                 }
 
+                let rotations = sub.rotations[x][y];
+
                 let pos = Vec3::new((x as i32 + left) as f32 * SUB_STRUCTURE_SPACING, (y as i32 + bottom) as f32 * SUB_STRUCTURE_SPACING, 0.0);
-                info!("Spawning '{}' at {:?} grid: ({}, {})", sub.pieces[x][y], pos, x, y);
+                info!("Spawning '{symbol}' at {pos:?} grid: ({x}, {y})");
 
                 let ent = root.spawn(
                     Text2dBundle{
-                        text: Text::from_section(sub.pieces[x][y], fonts.p1_font.clone()),
-                        transform: Transform::from_scale(Vec3::ONE * SUB_SCALE).with_translation(pos).with_rotation(Quat::from_rotation_z(sub.rotations[x][y].rotation_radians())),
+                        text: Text::from_section(symbol.to_string(), fonts.p1_font.clone()),
+                        transform: Transform::from_scale(Vec3::ONE * SUB_SCALE).with_translation(pos).with_rotation(Quat::from_rotation_z(rotations.rotation_radians())),
                         ..default()
                         }
                 ).id();
 
-                builder_sub.pieces[x][y] = Some(ent);
+                builder_column.push(Some(ent));
             }
+            builder_sub.pieces.push(builder_column);
         }
     }).id();
 
@@ -370,7 +393,7 @@ pub fn sub_builder_piece_buttons(
 ) {
     for (interaction, builder_button, children) in &button_query {
         match *interaction {
-            Interaction::Clicked => {
+            Interaction::Pressed => {
                 if let Ok(mut text) = text_query.get_mut(preview.ent) {
                     text.sections[0].value = String::from(builder_button.part.symbol);
                     preview.piece = builder_button.part;

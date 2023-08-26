@@ -1,5 +1,7 @@
 use bevy::prelude::*;
-use bevy_ggrs::GGRSSchedule;
+extern crate bevy_ggrs;
+
+use bevy_ggrs::GgrsSchedule;
 use bevy_asset_loader::prelude::*;
 
 use crate::events::*;
@@ -29,23 +31,19 @@ impl Plugin for GamePlugin {
             .insert_resource(FontResource::default())
             .insert_resource(UiHandling::default())
             // General Systems
-            .add_startup_system(setup_world)
-            .add_system(check_ui_interaction)
-            .add_system(handle_interaction_buttons)
-            .add_system(handle_menu_buttons)
+            .add_systems(Startup, setup_world)
+            .add_systems(Update, (check_ui_interaction,handle_interaction_buttons, handle_menu_buttons))
             // Main Menu
-            .add_system(setup_mainmenu.after(setup_world).in_schedule(OnEnter(GameState::MainMenu)))
-            .add_system(exit_main_menu.in_schedule(OnExit(GameState::MainMenu)))
+            .add_systems(OnEnter(GameState::MainMenu), setup_mainmenu.after(setup_world))
+            .add_systems(OnExit(GameState::MainMenu), exit_main_menu)
             // sub Building
-            .add_system(setup_sub_builder.in_schedule(OnEnter(GameState::SubBuilding)))
-            .add_system(sub_builder_piece_buttons.run_if(in_state(GameState::SubBuilding)))
-            .add_system(do_sub_builder_parts.run_if(in_state(GameState::SubBuilding)))
-            .add_system(rotate_sub_preview.run_if(in_state(GameState::SubBuilding)))
-            .add_system(exit_sub_builder.in_schedule(OnExit(GameState::SubBuilding)))
+            .add_systems(OnEnter(GameState::SubBuilding), setup_sub_builder)
+            .add_systems(Update, (sub_builder_piece_buttons, do_sub_builder_parts, rotate_sub_preview).run_if(in_state(GameState::SubBuilding)))
+            .add_systems(OnExit(GameState::SubBuilding), exit_sub_builder)
             // Match making
-            .add_system(wait_for_players.run_if(in_state(GameState::MatchMaking)))
+            .add_systems(Update, wait_for_players.run_if(in_state(GameState::MatchMaking)))
             // In Game
-            .add_systems((
+            .add_systems(GgrsSchedule, (
                 fire_torpedo.after(player_action),
                 player_action.before(move_projectile).before(accelerate_projectile),
                 reload_torpedo.before(fire_torpedo),
@@ -54,10 +52,10 @@ impl Plugin for GamePlugin {
                 process_torpedo_collision.after(move_projectile),
                 do_torpedo_events.after(process_torpedo_collision),
                 do_lifetime.after(do_torpedo_events)
-            ).in_schedule(GGRSSchedule))
-            .add_systems((
+            ))
+            .add_systems(OnEnter(GameState::MatchMaking), (
                 start_matchbox_socket, 
                 spawn_mothersub.after(setup_world)
-            ).in_schedule(OnEnter(GameState::MatchMaking)));
+            ));
     }
 }

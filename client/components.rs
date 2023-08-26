@@ -128,14 +128,14 @@ pub struct FighterDrone {
 }
 
 #[derive(Component)]
-pub struct Mothersub {
-    pub pieces: [[char; SUB_MAX_HEIGHT]; SUB_MAX_WIDTH],
+pub struct SubsRoot {
+    pub pieces: Vec<char>,
     pub num_entities: u32
 }
 
-impl Default for Mothersub {
+impl Default for SubsRoot {
     fn default() -> Self {
-        Mothersub { pieces: [[EMPTY_CHAR; SUB_MAX_HEIGHT]; SUB_MAX_WIDTH], num_entities: 0 }
+        SubsRoot { pieces: Vec::new(), num_entities: 0 }
     }
 }
 

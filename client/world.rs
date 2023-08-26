@@ -1,14 +1,16 @@
 use bevy::prelude::*;
+use bevy_pkv::*;
 
 use crate::components::MainCamera;
 use crate::events::*;
 use crate::resources::*;
 use crate::constants::*;
 
-pub fn setup_world(mut commands: Commands, 
+pub fn setup_world(mut commands: Commands,
     mut font_res: ResMut<FontResource>, 
     asset_server: Res<AssetServer>,
-    storage: Res<PkvStore>) {
+    storage: Res<PkvStore>
+) {
 
     commands.spawn((Camera2dBundle{
         projection: OrthographicProjection { scaling_mode: bevy::render::camera::ScalingMode::FixedVertical(250.0), ..default() },        

@@ -1,11 +1,21 @@
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
+use serde::*;
 
 use crate::{
     constants::*, 
     enums::*
 };
 
+
+#[derive(Resource, Default)]
+pub struct FontResource {
+    pub font: Handle<Font>,
+    pub preview_font: TextStyle,
+    pub p1_font: TextStyle,
+}
+
+#[derive(Resource)]
 pub struct SubPiece {
     pub symbol: char,
     pub label: &'static str,
@@ -47,24 +57,24 @@ pub struct Colors {
 
 #[derive(Resource, Serialize, Deserialize)]
 pub struct Submarine {
-    pub pieces: [[char; SUB_MAX_HEIGHT]; SUB_MAX_WIDTH],
-    pub rotations: [[PieceRotation; SUB_MAX_HEIGHT]; SUB_MAX_WIDTH]
+    pub pieces: Vec<Vec<char>>,
+    pub rotations: Vec<Vec<PieceRotation>>
 }
 
 impl Default for Submarine {
     fn default() -> Self {
-        Submarine{ pieces: [[EMPTY_CHAR; SUB_MAX_HEIGHT]; SUB_MAX_WIDTH], rotations: [[PieceRotation::North; SUB_MAX_HEIGHT]; SUB_MAX_WIDTH] }
+        Submarine{ pieces: Vec::new(), rotations: Vec::new() }
     }
 }
 
 #[derive(Resource)]
 pub struct SubBuilder {
     pub root: Entity,
-    pub pieces: [[Option<Entity>; SUB_MAX_HEIGHT]; SUB_MAX_WIDTH]
+    pub pieces: Vec<Vec<Option<Entity>>>
 }
 
 impl Default for SubBuilder {
     fn default() -> Self {
-        SubBuilder { root: Entity::PLACEHOLDER, pieces: [[None; SUB_MAX_HEIGHT]; SUB_MAX_WIDTH] }
+        SubBuilder { root: Entity::PLACEHOLDER, pieces: Vec::new() }
     }
 }

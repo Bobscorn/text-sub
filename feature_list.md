@@ -1,4 +1,4 @@
- b  # Feature List #
+# Feature List #
 
 - 2 player deathmatch
 
