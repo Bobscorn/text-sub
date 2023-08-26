@@ -21,14 +21,14 @@ pub const SQUARE_CLOSE: char = ']';
 
 pub static ARMOUR1: SubPiece = SubPiece {
     symbol: SQUARE_OPEN,
-    label: String::from(ARMOUR_LABEL),
-    description: String::from(ARMOUR_DESC)
+    label: ARMOUR_LABEL,
+    description: ARMOUR_DESC
 };
 
 pub static ARMOUR2: SubPiece = SubPiece {
     symbol: SQUARE_CLOSE,
-    label: String::from(ARMOUR_LABEL),
-    description: String::from(ARMOUR_DESC)
+    label: ARMOUR_LABEL,
+    description: ARMOUR_DESC
 };
 
 pub const ROUND_OPEN: char = '(';
@@ -36,14 +36,14 @@ pub const ROUND_CLOSE: char = ')';
 
 pub static ARMOUR3: SubPiece = SubPiece {
     symbol: ROUND_OPEN,
-    label: String::from(ARMOUR_LABEL),
-    description: String::from(ARMOUR_DESC)
+    label: ARMOUR_LABEL,
+    description: ARMOUR_DESC
 };
 
 pub static ARMOUR4: SubPiece = SubPiece {
     symbol: ROUND_CLOSE,
-    label: String::from(ARMOUR_LABEL),
-    description: String::from(ARMOUR_DESC)
+    label: ARMOUR_LABEL,
+    description: ARMOUR_DESC
 };
 
 pub const CURLY_OPEN: char = '{';
@@ -51,14 +51,14 @@ pub const CURLY_CLOSE: char = '}';
 
 pub static ARMOUR5: SubPiece = SubPiece {
     symbol: CURLY_OPEN,
-    label: String::from(ARMOUR_LABEL),
-    description: String::from(ARMOUR_DESC)
+    label: ARMOUR_LABEL,
+    description: ARMOUR_DESC
 };
 
 pub static ARMOUR6: SubPiece = SubPiece {
     symbol: CURLY_CLOSE,
-    label: String::from(ARMOUR_LABEL),
-    description: String::from(ARMOUR_DESC)
+    label: ARMOUR_LABEL,
+    description: ARMOUR_DESC
 };
 
 pub const BACKSLASH: char = '\\';
@@ -67,20 +67,20 @@ pub const PIPE: char = '|';
 
 pub static ARMOUR7: SubPiece = SubPiece {
     symbol: BACKSLASH,
-    label: String::from(ARMOUR_LABEL),
-    description: String::from(ARMOUR_DESC)
+    label: ARMOUR_LABEL,
+    description: ARMOUR_DESC
 };
 
 pub static ARMOUR8: SubPiece = SubPiece {
     symbol: FORWARD_SLASH,
-    label: String::from(ARMOUR_LABEL),
-    description: String::from(ARMOUR_DESC)
+    label: ARMOUR_LABEL,
+    description: ARMOUR_DESC
 };
 
 pub static ARMOUR9: SubPiece = SubPiece {
     symbol: PIPE,
-    label: String::from(ARMOUR_LABEL),
-    description: String::from(ARMOUR_DESC)
+    label: ARMOUR_LABEL,
+    description: ARMOUR_DESC
 };
 
 //utilities
@@ -91,14 +91,14 @@ pub const MINUS: char = '-';
 
 pub static PROPELLER1: SubPiece = SubPiece {
     symbol: PLUS,
-    label: String::from(PROPELLER_LABEL),
-    description: String::from(PROPELLER_DESCRIPTION)
+    label: PROPELLER_LABEL,
+    description: PROPELLER_DESCRIPTION
 };
 
 pub static PROPELLER2: SubPiece = SubPiece {
     symbol: MINUS,
-    label: String::from(PROPELLER_LABEL),
-    description: String::from(PROPELLER_DESCRIPTION)
+    label: PROPELLER_LABEL,
+    description: PROPELLER_DESCRIPTION
 };
 
 pub static TORPEDO_LABEL: &'static str = "Torpedo";
@@ -107,8 +107,8 @@ pub const EXCLAMATION: char = '!';
 
 pub static TORPEDO: SubPiece = SubPiece {
     symbol: PLUS,
-    label: String::from(TORPEDO_LABEL),
-    description: String::from(TORPEDO_DESC)
+    label: TORPEDO_LABEL,
+    description: TORPEDO_DESC
 };
 
 pub static TORPEDO_LAUNCHER_LABEL: &'static str = "Torpedo Launcher";
@@ -117,8 +117,8 @@ pub const EQUALS: char = '=';
 
 pub static TORPEDO_LAUNCHER: SubPiece = SubPiece {
     symbol: EQUALS,
-    label: String::from(TORPEDO_LAUNCHER_LABEL),
-    description: String::from(TORPEDO_LAUNCHER_DESC)
+    label: TORPEDO_LAUNCHER_LABEL,
+    description: TORPEDO_LAUNCHER_DESC
 };
 
 pub static REACTOR_LABEL: &'static str = "Reactor";
@@ -127,8 +127,8 @@ pub const AT: char = '@';
 
 pub static REACTOR: SubPiece = SubPiece {
     symbol: AT,
-    label: String::from(REACTOR_LABEL),
-    description: String::from(REACTOR_DESC)
+    label: REACTOR_LABEL,
+    description: REACTOR_DESC
 };
 
 //debris
@@ -136,7 +136,7 @@ pub const TILDE: char = '~';
 pub const FULLSTOP: char = '.';
 pub const BUBBLE: char = 'o';
 
-pub const SUB_PARTS: [SubPiece; 13] = [
-    ARMOUR1, ARMOUR2, ARMOUR3, ARMOUR4, ARMOUR5, ARMOUR6, ARMOUR7, ARMOUR8, ARMOUR9,
-    PROPELLER1, PROPELLER2, TORPEDO, REACTOR
+pub static SUB_PARTS: [&SubPiece; 13] = [
+    &ARMOUR1, &ARMOUR2, &ARMOUR3, &ARMOUR4, &ARMOUR5, &ARMOUR6, &ARMOUR7, &ARMOUR8, &ARMOUR9,
+    &PROPELLER1, &PROPELLER2, &TORPEDO, &REACTOR
 ];

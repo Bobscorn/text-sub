@@ -171,11 +171,11 @@ pub fn setup_sub_builder(
         });
     });
 
-    // sub building buttons
+    //spawn builder UI
     root_commands.with_children(|root_parent| {
-        root_parent.spawn(
+        root_parent.spawn( //Builder UI Container
             NodeBundle{ 
-                style: Style {
+                style: Style { //Builder UI Style
                     size: Size { width: Val::Percent(100.0), height: Val::Percent(90.0) },
                     align_items: AlignItems::Center,
                     justify_content: JustifyContent::End,
@@ -185,9 +185,8 @@ pub fn setup_sub_builder(
                 background_color: Color::rgba(0.0, 0.0, 0.0, 0.0).into(),
                 ..default()
             }
-        ).with_children(|root_parent| {
-            // Spawn the sub building buttons
-            root_parent.spawn(NodeBundle {
+        ).with_children(|root_parent| { 
+            root_parent.spawn(NodeBundle { //Buttons Container
                 style: Style {
                     size: Size { width: Val::Percent(100.0), height: Val::Percent(20.0) },
                     align_items: AlignItems::Center,
@@ -199,9 +198,8 @@ pub fn setup_sub_builder(
                 background_color: colors.node_background.into(),
                 ..default()
             }).with_children(|node_parent| {
-                // Spawn buttons for all characters
                 for piece in SUB_PARTS {
-                    node_parent.spawn(
+                    node_parent.spawn( //button
                         (ButtonBundle {
                             style: Style {
                                 size: Size { width: Val::Px(40.0), height: Val::Px(40.0) },
@@ -214,8 +212,16 @@ pub fn setup_sub_builder(
                         }, 
                         SubBuilderButton{ part: piece },
                         InteractButton::from_clicked(colors.button_normal, colors.button_pressed)
-                    )).with_children(|button_parent| {
-                        button_parent.spawn(TextBundle{ text: Text::from_section(piece.symbol, fonts.p1_font.clone()), ..default() });
+                    ))
+                    .with_children(|button_parent| { //button label
+                        button_parent.spawn(
+                            TextBundle{ text: Text::from_section(piece.symbol, fonts.p1_font.clone()), ..default() }
+                        );
+                    })
+                    .with_children(|root| { //hover text
+                        root.spawn(
+                            TextBundle {text: Text::from_section(piece.label, fonts.p1_font.clone()), visibility: Visibility::Hidden, ..default()}
+                        );
                     });
                 }
             });
@@ -239,7 +245,7 @@ pub fn setup_sub_builder(
     commands.insert_resource(
         SubBuilderPreview{ 
             ent: preview_ent, 
-            piece: REACTOR,
+            piece: &REACTOR,
             rotation: PieceRotation::North
         }); 
 
@@ -319,13 +325,15 @@ pub fn sub_builder_piece_buttons(
     button_query: Query<
         (
             &Interaction,
-            &SubBuilderButton
+            &SubBuilderButton,
+            &Children
         ),
         (Changed<Interaction>, With<Button>)
     >,
-    mut text_query: Query<&mut Text, (Without<Button>, Without<Interaction>, Without<SubBuilderButton>)>
+    mut text_query: Query<&mut Text, (Without<Button>, Without<Interaction>, Without<SubBuilderButton> )>,
+    mut visibility_query: Query<&mut Visibility, (Without<Button>, Without<Interaction>, Without<SubBuilderButton> )>
 ) {
-    for (interaction, builder_button) in &button_query {
+    for (interaction, builder_button, children) in &button_query {
         match *interaction {
             Interaction::Clicked => {
                 if let Ok(mut text) = text_query.get_mut(preview.ent) {
@@ -333,12 +341,23 @@ pub fn sub_builder_piece_buttons(
                     preview.piece = builder_button.part;
                 }
             },
-            Interaction::Hovered => {
-                
-            },
-            Interaction::None => ()
+            Interaction::Hovered => apply_visibility(&mut visibility_query, children, Visibility::Visible),
+            Interaction::None => apply_visibility(&mut visibility_query, children, Visibility::Hidden)
         }
     }
+}
+
+fn apply_visibility(query: &mut Query<&mut Visibility, (Without<Button>, Without<Interaction>, Without<SubBuilderButton> )>, 
+    children: &Children, input: Visibility) {
+
+    let hover_entity = children.get(1).unwrap();
+    let owned_hover_entity = hover_entity.to_owned();
+    
+    let mut vis_comp = match query.get_mut(owned_hover_entity) {
+        Ok(item) => item,
+        Err(_) => panic!("error: Could not find Hover Text Component!"),
+    };
+    *vis_comp = input;
 }
 
 pub fn rotate_sub_preview(
@@ -354,7 +373,7 @@ pub fn rotate_sub_preview(
     }
 
     if input.just_pressed(rotate_cw) {
-        let transform = match query.get_mut(preview.ent) {
+        let mut transform = match query.get_mut(preview.ent) {
             Ok(e) => e,
             Err(_) => return
         };
@@ -363,7 +382,7 @@ pub fn rotate_sub_preview(
         preview.rotation = preview.rotation.rotated_cw();
     }
     if input.just_pressed(rotate_ccw) {
-        let transform = match query.get_mut(preview.ent) {
+        let mut transform = match query.get_mut(preview.ent) {
             Ok(e) => e,
             Err(_) => return
         };

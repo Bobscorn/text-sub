@@ -1,4 +1,4 @@
-- ship builder
+- ship builder feature
 
     - Add labels over every component
 
@@ -12,7 +12,7 @@
 
     - spawn placement grid
 
-- fixes
+- fixes feature
 
     - direction of torpedo should rotate with ship
 
@@ -21,3 +21,5 @@
     - change torpedos into text, not sprites
 
     - fix player should be in the center of the screen at all times
+
+    - send sub builds to other players

@@ -3,11 +3,10 @@ use bevy_asset_loader::prelude::*;
 
 use crate::{constants::*, enums::PieceRotation};
 
-#[derive(Resource)]
 pub struct SubPiece {
     pub symbol: char,
-    pub label: String,
-    pub description: String
+    pub label: &'static str,
+    pub description: &'static str 
 }
 
 #[derive(Resource)]
@@ -18,7 +17,8 @@ pub struct UIMenu {
 #[derive(Resource)]
 pub struct SubBuilderPreview {
     pub ent: Entity,
-    pub piece: SubPiece
+    pub piece: &'static SubPiece,
+    pub rotation: PieceRotation
 }
 
 #[derive(Resource)]
@@ -35,7 +35,7 @@ pub struct ImageAssets {
 #[derive(Resource)]
 pub struct Colors {
     pub normal_text: Color,
-    pub sub_text: Color,
+    pub submarine_text: Color,
     pub menu_background: Color,
     pub node_background: Color,
     pub button_normal: Color,
@@ -44,12 +44,13 @@ pub struct Colors {
 
 #[derive(Resource)]
 pub struct Submarine {
-    pub pieces: [[char; SUB_MAX_HEIGHT]; SUB_MAX_WIDTH]
+    pub pieces: [[char; SUB_MAX_HEIGHT]; SUB_MAX_WIDTH],
+    pub rotations: [[PieceRotation; SUB_MAX_HEIGHT]; SUB_MAX_WIDTH]
 }
 
 impl Default for Submarine {
     fn default() -> Self {
-        Submarine{ pieces: [[EMPTY_CHAR; SUB_MAX_HEIGHT]; SUB_MAX_WIDTH] }
+        Submarine{ pieces: [[EMPTY_CHAR; SUB_MAX_HEIGHT]; SUB_MAX_WIDTH], rotations: [[PieceRotation::North; SUB_MAX_HEIGHT]; SUB_MAX_WIDTH] }
     }
 }
 

@@ -10,7 +10,7 @@ pub struct MyButton {
 
 #[derive(Component)]
 pub struct SubBuilderButton {
-    pub part: SubPiece,
+    pub part: &'static SubPiece,
 }
 
 #[derive(Component, Reflect, Default)]
@@ -151,3 +151,6 @@ pub struct Lifetime {
 
 #[derive(Component)]
 pub struct MainCamera;
+
+#[derive(Component)]
+pub struct MySubmarineTag;
