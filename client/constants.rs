@@ -106,7 +106,7 @@ pub static TORPEDO_DESC: &'static str = "Explodey thing";
 pub const EXCLAMATION: char = '!';
 
 pub static TORPEDO: SubPiece = SubPiece {
-    symbol: PLUS,
+    symbol: EXCLAMATION,
     label: TORPEDO_LABEL,
     description: TORPEDO_DESC
 };
@@ -136,7 +136,7 @@ pub const TILDE: char = '~';
 pub const FULLSTOP: char = '.';
 pub const BUBBLE: char = 'o';
 
-pub static SUB_PARTS: [&SubPiece; 13] = [
+pub static SUB_PARTS: [&SubPiece; 12] = [
     &ARMOUR1, &ARMOUR2, &ARMOUR3, &ARMOUR4, &ARMOUR5, &ARMOUR6, &ARMOUR7, &ARMOUR8, &ARMOUR9,
-    &PROPELLER1, &PROPELLER2, &TORPEDO, &REACTOR
+    &PROPELLER1, &TORPEDO_LAUNCHER, &REACTOR
 ];

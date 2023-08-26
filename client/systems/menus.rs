@@ -58,7 +58,7 @@ pub fn setup_mainmenu(
             InteractButton::from_clicked(colors.button_normal, colors.button_pressed), 
             MyButton{ identifier: ButtonType::SubBuilderButton })
         ).with_children(|button_parent| {
-            button_parent.spawn(TextBundle::from_section("sub Builder", TextStyle{
+            button_parent.spawn(TextBundle::from_section("Sub Builder", TextStyle{
                 font: fonts.font.clone(),
                 font_size: 40.0,
                 color: Color::rgb(0.8, 0.8, 0.8)
@@ -205,22 +205,23 @@ pub fn setup_sub_builder(
                                 size: Size { width: Val::Px(40.0), height: Val::Px(40.0) },
                                 align_items: AlignItems::Center,
                                 justify_content: JustifyContent::Center,
+                                flex_direction: FlexDirection::ColumnReverse,
                                 ..default()
                             },
-                            background_color: colors.button_normal.into(),
+                            background_color: colors.node_background.into(),                            
                             ..default()
                         }, 
                         SubBuilderButton{ part: piece },
-                        InteractButton::from_clicked(colors.button_normal, colors.button_pressed)
+                        InteractButton::from_clicked(colors.node_background, colors.button_pressed)
                     ))
                     .with_children(|button_parent| { //button label
                         button_parent.spawn(
-                            TextBundle{ text: Text::from_section(piece.symbol, fonts.p1_font.clone()), ..default() }
+                            TextBundle{ text: Text::from_section(piece.symbol, fonts.p1_font.clone()), background_color:  colors.node_background.into(), ..default() }
                         );
                     })
                     .with_children(|root| { //hover text
                         root.spawn(
-                            TextBundle {text: Text::from_section(piece.label, fonts.p1_font.clone()), visibility: Visibility::Hidden, ..default()}
+                            TextBundle {text: Text::from_section(piece.label, fonts.p1_font.clone()), background_color: colors.node_background.into(), visibility: Visibility::Hidden, z_index: ZIndex::Global(5), ..default()}
                         );
                     });
                 }
