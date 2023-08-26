@@ -1,5 +1,7 @@
 use bevy::prelude::*;
+use crate::constants::{SUB_MAX_HEIGHT, SUB_MAX_WIDTH, EMPTY_CHAR};
 use crate::enums::*;
+use crate::resources::SubPiece;
 
 #[derive(Component)]
 pub struct MyButton {
@@ -8,7 +10,7 @@ pub struct MyButton {
 
 #[derive(Component)]
 pub struct SubBuilderButton {
-    pub character: char,
+    pub part: SubPiece,
 }
 
 #[derive(Component, Reflect, Default)]
@@ -125,9 +127,16 @@ pub struct FighterDrone {
 
 }
 
-#[derive(Component, Default)]
+#[derive(Component)]
 pub struct Mothersub {
+    pub pieces: [[char; SUB_MAX_HEIGHT]; SUB_MAX_WIDTH],
     pub num_entities: u32
+}
+
+impl Default for Mothersub {
+    fn default() -> Self {
+        Mothersub { pieces: [[EMPTY_CHAR; SUB_MAX_HEIGHT]; SUB_MAX_WIDTH], num_entities: 0 }
+    }
 }
 
 #[derive(Component)]

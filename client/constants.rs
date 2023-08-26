@@ -6,63 +6,137 @@ pub const ROTATION_SPEED: f32 = 0.025;
 
 pub const SUB_STRUCTURE_SPACING: f32 = 3.5;
 pub const SUB_SCALE: f32 = 0.2;
-pub const SUB_MAX_WIDTH: usize = 50;
-pub const SUB_MAX_HEIGHT: usize = 40;
+pub const SUB_MAX_WIDTH: usize = 100;
+pub const SUB_MAX_HEIGHT: usize = 100;
 
 pub const TEXT_FONT_SIZE: f32 = 30.0;
 pub const EMPTY_CHAR: char = '\0';
 
 //armour
 pub const ARMOUR_LABEL: &'static str = "Hull Panel";
-pub const LIGHT_ARMOUR_DESC: &'static str = "Submarine construction part. Suitable for pressurised environments.";
-pub const LIGHT_ARMOUR_DESCRIPTION: &'static str = "";
+pub const ARMOUR_DESC: &'static str = "Submarine construction part. Suitable for pressurised environments.";
+
 pub const SQUARE_OPEN: char = '[';
 pub const SQUARE_CLOSE: char = ']';
 
-pub static LIGHT_ARMOUR1: SubPiece = SubPiece {
+pub static ARMOUR1: SubPiece = SubPiece {
     symbol: SQUARE_OPEN,
-    label: String::from("Light Armour"),
-    description: String::from("")
+    label: String::from(ARMOUR_LABEL),
+    description: String::from(ARMOUR_DESC)
 };
 
-pub static LIGHT_ARMOUR2: SubPiece = SubPiece {
+pub static ARMOUR2: SubPiece = SubPiece {
     symbol: SQUARE_CLOSE,
-    label: String::from(""),
-    description: String::from("")
+    label: String::from(ARMOUR_LABEL),
+    description: String::from(ARMOUR_DESC)
 };
 
-
-pub const ANGLE_OPEN: char = '<';
-pub const ANGLE_CLOSE: char = '>';
 pub const ROUND_OPEN: char = '(';
 pub const ROUND_CLOSE: char = ')';
+
+pub static ARMOUR3: SubPiece = SubPiece {
+    symbol: ROUND_OPEN,
+    label: String::from(ARMOUR_LABEL),
+    description: String::from(ARMOUR_DESC)
+};
+
+pub static ARMOUR4: SubPiece = SubPiece {
+    symbol: ROUND_CLOSE,
+    label: String::from(ARMOUR_LABEL),
+    description: String::from(ARMOUR_DESC)
+};
+
 pub const CURLY_OPEN: char = '{';
-pub const CURL_CLOSE: char = '}';
+pub const CURLY_CLOSE: char = '}';
+
+pub static ARMOUR5: SubPiece = SubPiece {
+    symbol: CURLY_OPEN,
+    label: String::from(ARMOUR_LABEL),
+    description: String::from(ARMOUR_DESC)
+};
+
+pub static ARMOUR6: SubPiece = SubPiece {
+    symbol: CURLY_CLOSE,
+    label: String::from(ARMOUR_LABEL),
+    description: String::from(ARMOUR_DESC)
+};
 
 pub const BACKSLASH: char = '\\';
 pub const FORWARD_SLASH: char = '/';
 pub const PIPE: char = '|';
-pub const EQUALS: char = '=';
-pub const PERCENT: char = '%';
-pub const TILDE: char = '~';
 
-pub const FULLSTOP: char = '.';
+pub static ARMOUR7: SubPiece = SubPiece {
+    symbol: BACKSLASH,
+    label: String::from(ARMOUR_LABEL),
+    description: String::from(ARMOUR_DESC)
+};
+
+pub static ARMOUR8: SubPiece = SubPiece {
+    symbol: FORWARD_SLASH,
+    label: String::from(ARMOUR_LABEL),
+    description: String::from(ARMOUR_DESC)
+};
+
+pub static ARMOUR9: SubPiece = SubPiece {
+    symbol: PIPE,
+    label: String::from(ARMOUR_LABEL),
+    description: String::from(ARMOUR_DESC)
+};
+
+//utilities
+pub static PROPELLER_LABEL: &'static str = "Propeller";
+pub static PROPELLER_DESCRIPTION: &'static str = "Used for propulsion in the watery depths.";
 pub const PLUS: char = '+';
 pub const MINUS: char = '-';
-pub const BACKTICK: char = '`';
 
-pub const STAR: char = '*';
+pub static PROPELLER1: SubPiece = SubPiece {
+    symbol: PLUS,
+    label: String::from(PROPELLER_LABEL),
+    description: String::from(PROPELLER_DESCRIPTION)
+};
+
+pub static PROPELLER2: SubPiece = SubPiece {
+    symbol: MINUS,
+    label: String::from(PROPELLER_LABEL),
+    description: String::from(PROPELLER_DESCRIPTION)
+};
+
+pub static TORPEDO_LABEL: &'static str = "Torpedo";
+pub static TORPEDO_DESC: &'static str = "Explodey thing";
 pub const EXCLAMATION: char = '!';
-pub const AT: char = '@';
-pub const DOLLAR: char = '$';
-pub const QUESTION: char = '?';
-pub const APOSTROPHE: char = '\'';
-pub const COLON: char = ':';
 
-pub const SUB_PIECES: [char; 25] = [
-    SQUARE_OPEN, SQUARE_CLOSE, ANGLE_OPEN, ANGLE_CLOSE, 
-    ROUND_OPEN, ROUND_CLOSE, CURLY_OPEN, CURL_CLOSE, 
-    BACKSLASH, FORWARD_SLASH, PIPE, EQUALS, PERCENT, TILDE,
-    FULLSTOP, PLUS, MINUS, BACKTICK, STAR, EXCLAMATION,
-    AT, DOLLAR, QUESTION, APOSTROPHE, COLON
-    ];
+pub static TORPEDO: SubPiece = SubPiece {
+    symbol: PLUS,
+    label: String::from(TORPEDO_LABEL),
+    description: String::from(TORPEDO_DESC)
+};
+
+pub static TORPEDO_LAUNCHER_LABEL: &'static str = "Torpedo Launcher";
+pub static TORPEDO_LAUNCHER_DESC: &'static str = "Throws explodey things.";
+pub const EQUALS: char = '=';
+
+pub static TORPEDO_LAUNCHER: SubPiece = SubPiece {
+    symbol: EQUALS,
+    label: String::from(TORPEDO_LAUNCHER_LABEL),
+    description: String::from(TORPEDO_LAUNCHER_DESC)
+};
+
+pub static REACTOR_LABEL: &'static str = "Reactor";
+pub static REACTOR_DESC: &'static str = "Generates power using unholy science.";
+pub const AT: char = '@';
+
+pub static REACTOR: SubPiece = SubPiece {
+    symbol: AT,
+    label: String::from(REACTOR_LABEL),
+    description: String::from(REACTOR_DESC)
+};
+
+//debris
+pub const TILDE: char = '~';
+pub const FULLSTOP: char = '.';
+pub const BUBBLE: char = 'o';
+
+pub const SUB_PARTS: [SubPiece; 13] = [
+    ARMOUR1, ARMOUR2, ARMOUR3, ARMOUR4, ARMOUR5, ARMOUR6, ARMOUR7, ARMOUR8, ARMOUR9,
+    PROPELLER1, PROPELLER2, TORPEDO, REACTOR
+];
