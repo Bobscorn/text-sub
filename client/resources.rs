@@ -29,7 +29,7 @@ pub struct UIMenu {
 
 #[derive(Resource)]
 pub struct SubBuilderPreview {
-    pub ent: Entity,
+    pub entity: Entity,
     pub piece: &'static SubPiece,
     pub rotation: PieceRotation
 }
@@ -57,24 +57,24 @@ pub struct Colors {
 
 #[derive(Resource, Serialize, Deserialize)]
 pub struct Submarine {
-    pub pieces: Vec<Vec<char>>,
+    pub parts: Vec<Vec<char>>,
     pub rotations: Vec<Vec<PieceRotation>>
 }
 
 impl Default for Submarine {
     fn default() -> Self {
-        Submarine{ pieces: Vec::new(), rotations: Vec::new() }
+        Submarine{ parts: Vec::new(), rotations: Vec::new() }
     }
 }
 
 #[derive(Resource)]
 pub struct SubBuilder {
     pub root: Entity,
-    pub pieces: Vec<Vec<Option<Entity>>>
+    pub parts: Vec<Vec<Option<Entity>>>
 }
 
 impl Default for SubBuilder {
     fn default() -> Self {
-        SubBuilder { root: Entity::PLACEHOLDER, pieces: Vec::new() }
+        SubBuilder { root: Entity::PLACEHOLDER, parts: Vec::new() }
     }
 }

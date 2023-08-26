@@ -241,7 +241,7 @@ pub fn setup_sub_builder(
                 background_color: colors.node_background.into(),
                 ..default()
             }).with_children(|node_parent| {
-                for piece in SUB_PARTS {
+                for part in SUB_PARTS {
                     node_parent.spawn( //button
                         (ButtonBundle {
                             style: Style {
@@ -255,17 +255,17 @@ pub fn setup_sub_builder(
                             background_color: colors.node_background.into(),                            
                             ..default()
                         }, 
-                        SubBuilderButton{ part: piece },
+                        SubBuilderButton{ part: part },
                         InteractButton::from_clicked(colors.node_background, colors.button_pressed)
                     ))
                     .with_children(|button_parent| { //button label
                         button_parent.spawn(
-                            TextBundle{ text: Text::from_section(piece.symbol, fonts.p1_font.clone()), background_color:  colors.node_background.into(), ..default() }
+                            TextBundle{ text: Text::from_section(part.symbol, fonts.p1_font.clone()), background_color:  colors.node_background.into(), ..default() }
                         );
                     })
                     .with_children(|root| { //hover text
                         root.spawn(
-                            TextBundle {text: Text::from_section(piece.label, fonts.p1_font.clone()), background_color: colors.node_background.into(), visibility: Visibility::Hidden, z_index: ZIndex::Global(5), ..default()}
+                            TextBundle {text: Text::from_section(part.label, fonts.p1_font.clone()), background_color: colors.node_background.into(), visibility: Visibility::Hidden, z_index: ZIndex::Global(5), ..default()}
                         );
                     });
                 }
@@ -290,9 +290,9 @@ pub fn setup_sub_builder(
     
     commands.insert_resource(
         SubBuilderPreview{ 
-            ent: preview_ent, 
-            piece: &REACTOR,
-            rotation: PieceRotation::North
+            entity: preview_ent, 
+            part: &REACTOR,
+            rotation: partRotation::North
         }); 
 
 
@@ -304,14 +304,14 @@ pub fn setup_sub_builder(
         let left: i32 = -25;
         let bottom: i32 = -20;
         
-        builder_sub.pieces.clear();
+        builder_sub.parts.clear();
 
-        for x in 0..sub.pieces.len() {
-            let column = &sub.pieces[x];
+        for x in 0..sub.parts.len() {
+            let column = &sub.parts[x];
             let mut builder_column = Vec::new();
 
             for y in 0..column.len() {
-                let symbol = sub.pieces[x][y];
+                let symbol = sub.parts[x][y];
 
                 if symbol == EMPTY_CHAR {
                     builder_column.push(None);
@@ -333,9 +333,10 @@ pub fn setup_sub_builder(
 
                 builder_column.push(Some(ent));
             }
-            builder_sub.pieces.push(builder_column);
+            builder_sub.parts.push(builder_column);
         }
-    }).id();
+    })
+    .id();
 
     commands.insert_resource(builder_sub);
 
@@ -358,7 +359,7 @@ pub fn exit_sub_builder(
     }
     commands.remove_resource::<SubBuilder>();
 
-    if let Some(e_coms) = commands.get_entity(preview.ent) {
+    if let Some(e_coms) = commands.get_entity(preview.entity) {
         e_coms.despawn_recursive();
     }
     commands.remove_resource::<SubBuilderPreview>();
@@ -378,7 +379,7 @@ pub fn sub_builder_navigation_buttons(
 
 }
 
-pub fn sub_builder_piece_buttons(
+pub fn sub_builder_part_buttons(
     mut preview: ResMut<SubBuilderPreview>,
     button_query: Query<
         (
@@ -394,9 +395,9 @@ pub fn sub_builder_piece_buttons(
     for (interaction, builder_button, children) in &button_query {
         match *interaction {
             Interaction::Pressed => {
-                if let Ok(mut text) = text_query.get_mut(preview.ent) {
+                if let Ok(mut text) = text_query.get_mut(preview.entity) {
                     text.sections[0].value = String::from(builder_button.part.symbol);
-                    preview.piece = builder_button.part;
+                    preview.part = builder_button.part;
                 }
             },
             Interaction::Hovered => apply_visibility(&mut visibility_query, children, Visibility::Visible),
@@ -431,7 +432,7 @@ pub fn rotate_sub_preview(
     }
 
     if input.just_pressed(rotate_cw) {
-        let mut transform = match query.get_mut(preview.ent) {
+        let mut transform = match query.get_mut(preview.entity) {
             Ok(e) => e,
             Err(_) => return
         };
@@ -440,7 +441,7 @@ pub fn rotate_sub_preview(
         preview.rotation = preview.rotation.rotated_cw();
     }
     if input.just_pressed(rotate_ccw) {
-        let mut transform = match query.get_mut(preview.ent) {
+        let mut transform = match query.get_mut(preview.entity) {
             Ok(e) => e,
             Err(_) => return
         };
@@ -458,12 +459,12 @@ pub fn do_sub_builder_parts(
     // For getting and moving preview v
     preview_opt: Option<Res<SubBuilderPreview>>,
     mut trans_query: Query<&mut Transform, (Without<Camera>, Without<Window>)>,
-    // For destroying and placing pieces v
+    // For destroying and placing sub parts v
     input: Res<Input<MouseButton>>,
     fonts: Res<FontResource>,
     over_ui: Res<UiHandling>,
     mut sub: ResMut<Submarine>,
-    mut subbuilder_sub: ResMut<SubBuilder>,
+    mut subbuilder: ResMut<SubBuilder>,
 ) {
     if over_ui.is_pointer_over_ui {
         return;
@@ -506,32 +507,32 @@ pub fn do_sub_builder_parts(
     let place_key = MouseButton::Left;
     let destroy_key = MouseButton::Right;
 
-    // v Do Piece destruction
+    // v Do part destruction
     if input.pressed(destroy_key) {
         let left = -25;
         let bottom = -20;
         let x = (grid_pos.x as i32 - left).clamp(0, SUB_MAX_WIDTH as i32 - 1) as usize;
         let y = (grid_pos.y as i32 - bottom).clamp(0, SUB_MAX_HEIGHT as i32 - 1) as usize;
 
-        if let Some(ent) = subbuilder_sub.pieces[x][y] {
+        if let Some(ent) = subbuilder.parts[x][y] {
             if let Some(e_coms) = commands.get_entity(ent) {
                 e_coms.despawn_recursive();
             }
-            subbuilder_sub.pieces[x][y] = None;
-            info!("Deleting sub builder piece '{}' at: {:?}", sub.pieces[x][y], world_pos);
-            sub.pieces[x][y] = '\0';
+            subbuilder.parts[x][y] = None;
+            info!("Deleting sub builder part '{}' at: {:?}", sub.parts[x][y], world_pos);
+            sub.parts[x][y] = '\0';
         }
     }
-    // ^ Piece destruction
+    // ^ part destruction
 
     // v Move Preview
     
     let preview = match preview_opt {
         Some(p) => p,
-        None => return // return as piece placement depends on preview existing
+        None => return // return as part placement depends on preview existing
     };
 
-    let mut preview_trans = match trans_query.get_mut(preview.ent) {
+    let mut preview_trans = match trans_query.get_mut(preview.entity) {
         Ok(t) => t,
         Err(_) => return
     };
@@ -539,35 +540,61 @@ pub fn do_sub_builder_parts(
     preview_trans.translation = world_pos.extend(2.0);
     // ^ Move Preview
 
-    // Piece Placement v
+    // part Placement v
     if input.pressed(place_key) {
         let left = -25;
         let bottom = -20;
-        let x = (grid_pos.x as i32 - left).clamp(0, SUB_MAX_WIDTH as i32 - 1) as usize;
+        
+        //derive grid coordinates
+        let x: usize = (grid_pos.x as i32 - left).clamp(0, SUB_MAX_WIDTH as i32 - 1) as usize;
         let y = (grid_pos.y as i32 - bottom).clamp(0, SUB_MAX_HEIGHT as i32 - 1) as usize;
 
-        if sub.pieces[x][y] != EMPTY_CHAR {
+        if sub.parts.len() <= x {
+            diff = sub.parts.len() + 1 - x;
+
+            for index in 0..diff {
+                sub.parts.push(Vec::new());
+                sub.rotations.push(Vec::new());
+                subbuilder.parts.push(Vec::new());
+            }
+        }
+        chosen_column = sub.parts[x];
+        chosen_column_builder = subbuilder.parts[x];
+        chosen_column_rotation = sub.rotations[x];
+
+        if chosen_column.len() <= y {
+            diff = chosen_column.len() + 1 - y;
+
+            for index in 0..diff {
+                chosen_column.push(EMPTY_CHAR);
+                chosen_column_rotation.push(PieceRotation::default());
+                chosen_column_builder.push(None);
+            }
+        }
+
+        if chosen_column.len() >= y && chosen_column[y] != EMPTY_CHAR { //conclude if the grid slot was taken
             return;
         }
 
-        info!("Placing piece '{}' at {:?}", preview.piece.symbol, world_pos);
-        let piece = commands.spawn(
+        info!("Placing part '{}' at {:?}", preview.part.symbol, world_pos);
+        
+        let part = commands.spawn(
             Text2dBundle
             { 
                 transform: Transform::from_scale(Vec3::ONE * SUB_SCALE).with_translation(world_pos.extend(0.0)).with_rotation(preview_trans.rotation),
-                text: Text::from_section(preview.piece.symbol, fonts.p1_font.clone()),
+                text: Text::from_section(preview.part.symbol, fonts.p1_font.clone()),
                 ..default()
             }).id();
         
-        // Make the spawned piece a child of the subbuilder root so it'll be destroyed when destroying the root
-        if let Some(mut e_coms) = commands.get_entity(subbuilder_sub.root) {
-            e_coms.add_child(piece);
+        // Make the spawned part a child of the subbuilder root so it'll be destroyed when destroying the root
+        if let Some(mut e_coms) = commands.get_entity(subbuilder.root) {
+            e_coms.add_child(part);
         }
 
-        subbuilder_sub.pieces[x][y] = Some(piece);
-        sub.pieces[x][y] = preview.piece.symbol;
-        sub.rotations[x][y] = preview.rotation;
+        chosen_column_builder[y] = Some(part);
+        chosen_column[y] = preview.part.symbol;
+        chosen_column_rotation[y] = preview.rotation;
     }
     // ^
-    // Piece Placement
+    // part Placement
 }

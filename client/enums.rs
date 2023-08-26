@@ -31,6 +31,10 @@ pub enum PieceRotation {
 }
 
 impl PieceRotation {
+    pub fn default() -> PieceRotation {
+        PieceRotation::North
+    }
+
     pub fn rotated_cw(&self) -> Self {
         match self {
             Self::North => Self::East,

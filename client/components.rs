@@ -129,13 +129,13 @@ pub struct FighterDrone {
 
 #[derive(Component)]
 pub struct SubsRoot {
-    pub pieces: Vec<char>,
+    pub parts: Vec<char>,
     pub num_entities: u32
 }
 
 impl Default for SubsRoot {
     fn default() -> Self {
-        SubsRoot { pieces: Vec::new(), num_entities: 0 }
+        SubsRoot { parts: Vec::new(), num_entities: 0 }
     }
 }
 
