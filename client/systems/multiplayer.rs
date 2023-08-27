@@ -25,7 +25,8 @@ pub fn start_matchbox_socket(mut commands: Commands) {
 pub fn wait_for_players(
     mut socket: ResMut<MatchboxSocket<SingleChannel>>,
     mut commands: Commands,
-    mut next_state: ResMut<NextState<GameState>>
+    mut next_state: ResMut<NextState<GameState>>,
+    sub: Res<Submarine>
 ) {
     if socket.get_channel(0).is_err() {
         return; // We've already started
@@ -39,32 +40,21 @@ pub fn wait_for_players(
         return; // Not enough players yet
     }
 
-    info!("All peers have joined, going in game!");
+    info!("Going to synchronise ships state");
+    // Move channel out of socket to synchronise ships then give to ggrs
+    let mut channel = socket.take_channel(0).unwrap();
 
-    let mut session_builder = ggrs::SessionBuilder::<GgrsConfig>::new()
-        .with_num_players(2)
-        .with_input_delay(2);
-
-    for (i, player) in players.into_iter().enumerate() {
-        if player == PlayerType::Local {
-            commands.insert_resource(LocalPlayerHandle(i));
-        }
-        session_builder = session_builder
-            .add_player(player, i)
-            .expect("Failed to add player");
+    // Send our ship to all other peers
+    for (_, player) in players.clone().into_iter().enumerate() {
+        let PlayerType::<PeerId>::Remote(peer_id) = player else {
+            continue;
+        };
+        channel.send(serde_json::to_vec(&SyncShipsMessageType::SyncShip(sub.clone())).unwrap().into(), peer_id);
     }
 
-    // Move channel out of socket to give to ggrs
-    let channel = socket.take_channel(0).unwrap();
-
-    // Start the GGRS Session
-    let ggrs_session = session_builder
-        .start_p2p_session(channel)
-        .expect("Failed to start session");
-
-    commands.insert_resource(bevy_ggrs::Session::P2P(ggrs_session));
-
-    next_state.set(GameState::InGame);
+    // Send it off to the Ship Syncing state (in sync_ships.rs)
+    commands.insert_resource(SyncSubsSocket{ players, channel: Some(channel), synced: false, ready: false });
+    next_state.set(GameState::SubSyncing);
 }
 
 pub fn player_action(

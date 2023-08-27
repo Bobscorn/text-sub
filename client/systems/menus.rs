@@ -625,9 +625,6 @@ pub fn do_sub_builder_parts(
             return;
         }
 
-        //only place if there is a neighbouring part
-        todo!();
-
         info!("Placing part '{}' at {:?}", preview.part.symbol, world_pos);
         
         let part = commands.spawn(
@@ -651,7 +648,3 @@ pub fn do_sub_builder_parts(
     // part Placement
 }
 
-///Returns true if adjacent part detected
-fn check_adjacent_parts(ResMut: &Submarine) -> bool {
-
-}

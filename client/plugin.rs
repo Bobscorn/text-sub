@@ -10,6 +10,7 @@ use crate::resources::*;
 use crate::systems::movement::*;
 use crate::systems::menus::*;
 use crate::systems::multiplayer::*;
+use crate::systems::sync_ships::synchronise_peer_ships;
 use crate::systems::torpedos::*;
 use crate::systems::utils::*;
 use crate::systems::ui::*;
@@ -42,6 +43,8 @@ impl Plugin for GamePlugin {
             .add_systems(OnExit(GameState::SubBuilding), exit_sub_builder)
             // Match making
             .add_systems(Update, wait_for_players.run_if(in_state(GameState::MatchMaking)))
+            // Sub synchronisation
+            .add_systems(Update, synchronise_peer_ships.run_if(in_state(GameState::SubSyncing)))
             // In Game
             .add_systems(GgrsSchedule, (
                 fire_torpedo.after(player_action),
