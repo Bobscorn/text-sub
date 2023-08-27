@@ -3,6 +3,8 @@ use std::{default, f32::consts::PI};
 use bevy::prelude::*;
 use serde::{Serialize, Deserialize};
 
+use crate::resources::Submarine;
+
 #[derive(PartialEq)]
 pub enum ButtonType {
     PlayButton,
@@ -18,10 +20,11 @@ pub enum GameState {
     SubBuilding,
     MainMenu,
     MatchMaking,
+    SubSyncing,
     InGame,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Default, Serialize, Deserialize, Reflect)]
 pub enum PieceRotation {
     #[default]
     North,
@@ -61,4 +64,12 @@ impl PieceRotation {
             Self::West => PI * 0.5
         }
     }
+}
+
+#[derive(Serialize, Deserialize)]
+pub enum SyncShipsMessageType {
+    SyncShip(Submarine),
+    SyncShipAck,
+    ReadyToStart,
+    ReadyToStartAck
 }
