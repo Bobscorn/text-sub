@@ -18,10 +18,10 @@ bevy_matchbox = { version = "0.7", features = ["ggrs"] }
 bevy_asset_loader = "0.17"
 bevy_pkv = "0.8.0"
 serde = "1.0.188"
+bevy-inspector-egui = "0.19"
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3.13"
-bevy-inspector-egui = "0.18.3"
 
 #dont optimise runtime performance in dev mode
 [profile.dev]

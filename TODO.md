@@ -1,7 +1,5 @@
 - ship builder feature
 
-    - fix menu buttons not far enough apart
-
     - fix not able to draw outside the box
 
     - fix being able to draw where parts are not connected

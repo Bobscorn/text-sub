@@ -1,13 +1,13 @@
 use bevy::prelude::*;
 use bevy_ggrs::*;
 use bevy_pkv::*;
+use bevy_inspector_egui::quick::*;
 
 use crate::components::*;
 use crate::plugin::GamePlugin;
 use crate::input::*;
 use crate::implementations::*;
 use crate::constants::*;
-// use bevy_inspector_egui::quick::WorldInspectorPlugin;
 
 pub fn start() {
     let mut app = App::new();
@@ -30,7 +30,7 @@ pub fn start() {
             ..default()
         }))
         .add_plugin(GamePlugin)
-        // .add_plugin(WorldInspectorPlugin::new())
+        .add_plugin(WorldInspectorPlugin::new())
         .insert_resource(PkvStore::new(TEAM_KEY, GAME_NAME))
         .run();
 }
