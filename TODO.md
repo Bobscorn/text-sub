@@ -1,9 +1,5 @@
 - ship builder feature
 
-    - fix builder buttons are out of line
-
-    - fix hover text should trigger over the actual char
-
     - fix menu buttons not far enough apart
 
     - fix not able to draw outside the box

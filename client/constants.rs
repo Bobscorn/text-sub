@@ -27,13 +27,13 @@ pub const FORWARD_SLASH: char = '/';
 pub const PIPE: char = '|';
 
 //utilities
-pub static PROPELLER_LABEL: &'static str = "Propeller";
+pub static PROPELLER_LABEL: &'static str = "Propeller "; //must be 10 long to make symbol buttons line up
 pub static PROPELLER_DESCRIPTION: &'static str = "Used for propulsion in the watery depths.";
 pub const PLUS: char = '+';
 pub const MINUS: char = '-';
 
 
-pub static TORPEDO_LABEL: &'static str = "Torpedo";
+pub static TORPEDO_LABEL: &'static str = "Torpedo   ";
 pub static TORPEDO_DESC: &'static str = "Explodey thing";
 pub const EXCLAMATION: char = '!';
 
@@ -42,7 +42,7 @@ pub static TORPEDO_LAUNCHER_LABEL: &'static str = "Torpedo Launcher";
 pub static TORPEDO_LAUNCHER_DESC: &'static str = "Throws explodey things.";
 pub const EQUALS: char = '=';
 
-pub static REACTOR_LABEL: &'static str = "Reactor";
+pub static REACTOR_LABEL: &'static str = "Reactor   ";
 pub static REACTOR_DESC: &'static str = "Generates power using unholy science.";
 pub const AT: char = '@';
 

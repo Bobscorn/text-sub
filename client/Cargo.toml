@@ -35,6 +35,9 @@ opt-level = 0
 # Tell `rustc` to optimize for small code size.
 opt-level = "s"
 
+[profile.release.package."*"]
+opt-level = 3
+
 [[bin]]
 name = "textsub"
 path = "main.rs"
