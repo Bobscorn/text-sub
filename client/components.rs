@@ -5,6 +5,12 @@ use crate::resources::*;
 use crate::structs::*;
 
 #[derive(Component)]
+pub struct SymbolButton {}
+
+#[derive(Component)]
+pub struct HoverText {}
+
+#[derive(Component)]
 pub struct MyButton {
     pub identifier: ButtonType
 }

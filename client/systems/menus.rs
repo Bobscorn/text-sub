@@ -249,31 +249,33 @@ pub fn setup_sub_builder(
                 ..default()
             }).with_children(|node_parent| {
                 for part in sub_parts {
-                    node_parent.spawn( //button
-                        (ButtonBundle {
-                            style: Style {
-                                width: Val::Px(40.0), 
-                                height: Val::Px(40.0),
-                                align_items: AlignItems::Center,
-                                justify_content: JustifyContent::Center,
-                                flex_direction: FlexDirection::ColumnReverse,
+                    node_parent.spawn(( //symbol button
+                            ButtonBundle {
+                                style: Style {
+                                    width: Val::Px(40.0), 
+                                    height: Val::Px(100.0),
+                                    align_items: AlignItems::Center,
+                                    justify_content: JustifyContent::Center,
+                                    flex_direction: FlexDirection::ColumnReverse,
+                                    ..default()
+                                },
+                                background_color: colors.node_background.into(),                            
                                 ..default()
-                            },
-                            background_color: colors.node_background.into(),                            
-                            ..default()
-                        }, 
-                        SubBuilderButton{ part: part.clone() },
-                        InteractButton::from_clicked(colors.node_background, colors.button_pressed)
+                            }, 
+                            SubBuilderButton{ part: part.clone() },
+                            InteractButton::from_clicked(colors.node_background, colors.button_pressed),
+                            SymbolButton {}
                     ))
                     .with_children(|button_parent| { //button label
                         button_parent.spawn(
-                            TextBundle{ text: Text::from_section(part.symbol, fonts.p1_font.clone()), background_color:  colors.node_background.into(), ..default() }
+                            TextBundle{ text: Text::from_section(part.symbol, fonts.p1_font.clone()), background_color: colors.node_background.into(), ..default() }
                         );
                     })
                     .with_children(|root| { //hover text
-                        root.spawn(
-                            TextBundle {text: Text::from_section(part.label, fonts.p1_font.clone()), background_color: colors.node_background.into(), visibility: Visibility::Hidden, z_index: ZIndex::Global(5), ..default()}
-                        );
+                        root.spawn((
+                            TextBundle {text: Text::from_section(part.label, fonts.p1_font.clone()), background_color: colors.node_background.into(), visibility: Visibility::Hidden, z_index: ZIndex::Global(5), ..default()},
+                            HoverText {}
+                        ));
                     });
                 }
             });
@@ -285,7 +287,34 @@ pub fn setup_sub_builder(
 
     // Spawn the placement grid
 
-    // TODO: that ^
+    let rows = 20;
+    let columns = 20;
+    let column_height = 20.0;
+    let row_width = 20.0;
+    let x_start = Vec3::new(-(SUB_STRUCTURE_SPACING * (columns as f32 + 0.5) * 0.5), 0.0, 2.0); //divide the structure spacing by 2
+    let y_start = Vec3::new(0.0, -(SUB_STRUCTURE_SPACING * (rows as f32 + 0.5) * 0.5), 2.0);
+    for x in 0..columns {
+        commands.spawn(SpriteBundle{
+            sprite: Sprite { 
+                color: Color::rgb(0.35, 0.35, 0.35), 
+                custom_size: Some(Vec2::new(2.0, column_height)), 
+                ..default() 
+            },
+            transform: Transform::from_translation(x_start + Vec3::new(SUB_STRUCTURE_SPACING, 0.0, 0.0) * (x as f32)),
+            ..default()
+        });
+    }
+    for y in 0..rows {
+        commands.spawn(SpriteBundle{
+            sprite: Sprite { 
+                color: Color::rgb(0.35, 0.35, 0.35), 
+                custom_size: Some(Vec2::new(row_width, 2.0)), 
+                ..default() 
+            },
+            transform: Transform::from_translation(y_start + Vec3::new(0.0, SUB_STRUCTURE_SPACING, 0.0) * (y as f32)),
+            ..default()
+        });
+    }
 
     // Temporarily insert sub builder preview resource
     let preview_ent = commands.spawn(Text2dBundle{
@@ -389,15 +418,10 @@ pub fn sub_builder_navigation_buttons(
 pub fn sub_builder_part_buttons(
     mut preview: ResMut<SubBuilderPreview>,
     button_query: Query<
-        (
-            &Interaction,
-            &SubBuilderButton,
-            &Children
-        ),
-        (Changed<Interaction>, With<Button>)
-    >,
-    mut text_query: Query<&mut Text, (Without<Button>, Without<Interaction>, Without<SubBuilderButton> )>,
-    mut visibility_query: Query<&mut Visibility, (Without<Button>, Without<Interaction>, Without<SubBuilderButton> )>
+        (&Interaction, &SubBuilderButton, &Children),
+        (Changed<Interaction>, With<Button>, With<SymbolButton>)>,
+    mut text_query: Query<&mut Text, (With<SymbolButton>, Without<Button>, Without<Interaction>, Without<SubBuilderButton> )>,
+    mut visibility_query: Query<&mut Visibility, (With<HoverText>, Without<Button>, Without<Interaction>, Without<SubBuilderButton> )>
 ) {
     for (interaction, builder_button, children) in &button_query {
         match *interaction {
@@ -413,7 +437,7 @@ pub fn sub_builder_part_buttons(
     }
 }
 
-fn apply_visibility(query: &mut Query<&mut Visibility, (Without<Button>, Without<Interaction>, Without<SubBuilderButton> )>, 
+fn apply_visibility(query: &mut Query<&mut Visibility, (With<HoverText>, Without<Button>, Without<Interaction>, Without<SubBuilderButton> )>, 
     children: &Children, input: Visibility) {
 
     let hover_entity = children.get(1).unwrap();
@@ -558,9 +582,9 @@ pub fn do_sub_builder_parts(
 
         if sub.parts.len() <= x {
             let parts_columns_len = sub.parts.len() as i32;
-            let diff = parts_columns_len + 1 - (x as i32);
+            let diff = (x as i32) - parts_columns_len + 1;
 
-            for index in 0..diff {
+            for _index in 0..diff {
                 sub.parts.push(Vec::new());
                 sub.rotations.push(Vec::new());
                 subbuilder.parts.push(Vec::new());
@@ -569,9 +593,9 @@ pub fn do_sub_builder_parts(
 
         if sub.parts[x].len() <= y {
             let parts_rows_len = sub.parts[x].len() as i32;
-            let diff = parts_rows_len + 1 - (y as i32);
+            let diff = (y as i32) - parts_rows_len + 1;
 
-            for index in 0..diff {
+            for _index in 0..diff {
                 sub.parts[x].push(EMPTY_CHAR);
                 sub.rotations[x].push(PieceRotation::default());
                 subbuilder.parts[x].push(None);
