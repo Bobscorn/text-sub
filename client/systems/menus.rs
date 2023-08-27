@@ -266,16 +266,16 @@ pub fn setup_sub_builder(
                             InteractButton::from_clicked(colors.node_background, colors.button_pressed),
                             SymbolButton {}
                     ))
-                    .with_children(|button_parent| { //button label
-                        button_parent.spawn(
-                            TextBundle{ text: Text::from_section(part.symbol, fonts.p1_font.clone()), background_color: colors.node_background.into(), ..default() }
-                        );
-                    })
                     .with_children(|root| { //hover text
                         root.spawn((
                             TextBundle {text: Text::from_section(part.label, fonts.p1_font.clone()), background_color: colors.node_background.into(), visibility: Visibility::Hidden, z_index: ZIndex::Global(5), ..default()},
                             HoverText {}
                         ));
+                    })
+                    .with_children(|button_parent| { //button label
+                        button_parent.spawn(
+                            TextBundle{ text: Text::from_section(part.symbol, fonts.p1_font.clone()), background_color: colors.node_background.into(), ..default() }
+                        );
                     });
                 }
             });

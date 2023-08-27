@@ -27,7 +27,7 @@ pub const FORWARD_SLASH: char = '/';
 pub const PIPE: char = '|';
 
 //utilities
-pub static PROPELLER_LABEL: &'static str = "Propeller "; //must be 10 long to make symbol buttons line up
+pub static PROPELLER_LABEL: &'static str = "Propeller ";
 pub static PROPELLER_DESCRIPTION: &'static str = "Used for propulsion in the watery depths.";
 pub const PLUS: char = '+';
 pub const MINUS: char = '-';
