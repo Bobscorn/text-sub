@@ -1,12 +1,12 @@
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
+use bevy_ggrs::ggrs::PlayerType;
+use bevy_matchbox::matchbox_socket::WebRtcChannel;
+use bevy_matchbox::prelude::PeerId;
 use serde::*;
 use crate::structs::*;
 
-use crate::{
-    constants::*, 
-    enums::*
-};
+use crate::enums::*;
 
 #[derive(Resource, Default)]
 pub struct FontResource {
@@ -48,7 +48,7 @@ pub struct Colors {
     pub button_pressed: Color
 }
 
-#[derive(Resource, Serialize, Deserialize)]
+#[derive(Resource, Serialize, Deserialize, Clone)]
 pub struct Submarine {
     pub parts: Vec<Vec<char>>,
     pub rotations: Vec<Vec<PieceRotation>>
@@ -57,6 +57,18 @@ pub struct Submarine {
 impl Default for Submarine {
     fn default() -> Self {
         Submarine{ parts: Vec::new(), rotations: Vec::new() }
+    }
+}
+
+#[derive(Resource, Serialize, Deserialize)]
+pub struct EnemySubmarine {
+    pub parts: Vec<Vec<char>>,
+    pub rotations: Vec<Vec<PieceRotation>>
+}
+
+impl Default for EnemySubmarine {
+    fn default() -> Self {
+        EnemySubmarine{ parts: Vec::new(), rotations: Vec::new() }
     }
 }
 
@@ -70,4 +82,12 @@ impl Default for SubBuilder {
     fn default() -> Self {
         SubBuilder { root: Entity::PLACEHOLDER, parts: Vec::new() }
     }
+}
+
+#[derive(Resource)]
+pub struct SyncSubsSocket {
+    pub players: Vec<PlayerType<PeerId>>,
+    pub channel: Option<WebRtcChannel>,
+    pub synced: bool,
+    pub ready: bool
 }
