@@ -37,6 +37,12 @@ pub fn setup_mainmenu(
                     height: Val::Px(50.0),
                     justify_content: JustifyContent::Center,
                     align_items: AlignItems::Center,
+                    margin: UiRect {
+                        left: Val::Px(10.),
+                        right: Val::Px(10.),
+                        top: Val::Px(10.),
+                        bottom: Val::Px(10.)
+                    },
                     ..default()
                 },
                 background_color: colors.button_normal.into(),
@@ -154,7 +160,7 @@ pub fn setup_sub_builder(
         }
     );
 
-    // Back Button
+    // Navigation buttons
     // README: To make UI work with multiple screen/window sizes, use a mix of the flex 
     // sizing stuff (margin, padding, border, flex_shrink, flex_grow) and the min/max sizing stuff
     root_commands.with_children(|root_parent| {
@@ -166,6 +172,12 @@ pub fn setup_sub_builder(
                     align_content: AlignContent::Start,
                     justify_content: JustifyContent::Start,
                     flex_direction: FlexDirection::Column,
+                    margin: UiRect {
+                        left: Val::Px(10.),
+                        right: Val::Px(10.),
+                        top: Val::Px(10.),
+                        bottom: Val::Px(10.)
+                    },
                     ..default()
                 },
                 ..default()
@@ -210,7 +222,7 @@ pub fn setup_sub_builder(
                     InteractButton::from_clicked(colors.button_normal, colors.button_pressed)
                 )
             ).with_children(|button_parent| {
-                button_parent.spawn(TextBundle::from_section("Save", TextStyle {
+                button_parent.spawn(TextBundle::from_section("Save", TextStyle { //save button
                     font: fonts.font.clone(),
                     font_size: 20.0,
                     color: colors.normal_text
@@ -268,13 +280,20 @@ pub fn setup_sub_builder(
                     ))
                     .with_children(|root| { //hover text
                         root.spawn((
-                            TextBundle {text: Text::from_section(part.label, fonts.p1_font.clone()), background_color: colors.node_background.into(), visibility: Visibility::Hidden, z_index: ZIndex::Global(5), ..default()},
+                            TextBundle {text: Text::from_section(part.label, fonts.p1_font.clone()), background_color: colors.node_background.into(), 
+                                visibility: Visibility::Hidden, z_index: ZIndex::Global(5),
+                                ..default()},
                             HoverText {}
                         ));
                     })
                     .with_children(|button_parent| { //button label
                         button_parent.spawn(
-                            TextBundle{ text: Text::from_section(part.symbol, fonts.p1_font.clone()), background_color: colors.node_background.into(), ..default() }
+                            TextBundle{ text: Text::from_section(part.symbol, fonts.p1_font.clone()), background_color: colors.node_background.into(), 
+                                style: Style {
+                                    position_type: PositionType::Absolute,
+                                    ..default()
+                                },
+                                ..default() }
                         );
                     });
                 }
