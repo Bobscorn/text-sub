@@ -440,7 +440,7 @@ pub fn sub_builder_part_buttons(
 fn apply_visibility(query: &mut Query<&mut Visibility, (With<HoverText>, Without<Button>, Without<Interaction>, Without<SubBuilderButton> )>, 
     children: &Children, input: Visibility) {
 
-    let hover_entity = children.get(1).unwrap();
+    let hover_entity = children.get(0).unwrap();
     let owned_hover_entity = hover_entity.to_owned();
     
     let mut vis_comp = match query.get_mut(owned_hover_entity) {
