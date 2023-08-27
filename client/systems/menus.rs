@@ -296,7 +296,7 @@ pub fn setup_sub_builder(
     for x in 0..columns {
         commands.spawn(SpriteBundle{
             sprite: Sprite { 
-                color: Color::rgb(0.35, 0.35, 0.35), 
+                color: Color::rgb(0.85, 0.85, 0.85), 
                 custom_size: Some(Vec2::new(2.0, column_height)), 
                 ..default() 
             },
@@ -307,7 +307,7 @@ pub fn setup_sub_builder(
     for y in 0..rows {
         commands.spawn(SpriteBundle{
             sprite: Sprite { 
-                color: Color::rgb(0.35, 0.35, 0.35), 
+                color: Color::rgb(0.85, 0.85, 0.85), 
                 custom_size: Some(Vec2::new(row_width, 2.0)), 
                 ..default() 
             },
